@@ -10,7 +10,7 @@ class BaseLabel:
         # ラベルファイルのパスを設定
         self.__label_path:str = label_path
         # BeautifulSoupでスクレイピング
-        self.soup:bs = bs(open(label_path),features='xml') if label_path else None
+        self.soup = bs(open(label_path),features='xml') if label_path else None
 
         # データ取得先のリストを宣言
         self.__link_labels:DataFrame = None
@@ -149,22 +149,38 @@ class GlobalLabel(BaseLabel):
 
     def set_link_locs(self) -> DataFrame:
         lists = []
-        
+
         tags = self.soup.find_all(name='link:loc')
         for tag in tags:
             dict = {
                 'xlink_type': tag.get('xlink:type'),
-                'xlink:href': tag.get('xlink:href'),
-                
+                'xlink_href': tag.get('xlink:href'),
+                'xlink_label': tag.get('xlink:label')
             }
-        return super().set_link_locs()
+
+            lists.append(dict)
+
+        return DataFrame(lists)
 
     def set_link_label_arcs(self) -> DataFrame:
-        return super().set_link_label_arcs()
+        lists = []
+
+        tags = self.soup.find_all(name='link:labelArc')
+        for tag in tags:
+            dict = {
+                'xlink_type': tag.get('xlink:type'),
+                'xlink_arcrole': tag.get('xlink:arcrole'),
+                'xlink_from': tag.get('xlink:from'),
+                'xlink_to': tag.get('xlink:to')
+            }
+
+            lists.append(dict)
+
+        return DataFrame(lists)
 
 if __name__ == '__main__':
     local_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14-lab.xml"
     global_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/taxnomy/jpcrp_2023-12-01_lab.xml"
     l_label = GlobalLabel(global_label_path)
     print(l_label.link_labels)
-    l_label.link_labels.to_csv('hhh.csv')
+    l_label.link_locs.to_csv('hhh.csv')
