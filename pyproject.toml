@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "disclosure-api2"
+name = "PyXBRLTools"
 version = "1.1.18"
 description = "timery disclosure download API"
 authors = ["kent <kent2980@gmail.com>"]
 readme = "README.md"
-packages = [{include = "disclosure_api2"}]
+packages = [{include = "PyXBRLTools"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
