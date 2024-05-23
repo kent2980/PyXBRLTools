@@ -154,8 +154,8 @@ class GlobalLabel(BaseLabel):
         return super().set_link_label_arcs()
 
 if __name__ == '__main__':
-    local_label_path = "/Users/user/Vscode/python/disclosure_api2/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14-lab.xml"
-    global_label_path = "/Users/user/Vscode/python/disclosure_api2/doc/taxnomy/jpcrp_2023-12-01_lab.xml"
+    local_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14-lab.xml"
+    global_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/taxnomy/jpcrp_2023-12-01_lab.xml"
     l_label = GlobalLabel(global_label_path)
     print(l_label.link_labels)
     l_label.link_labels.to_csv('hhh.csv')
