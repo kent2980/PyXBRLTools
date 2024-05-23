@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "disclosure-api2"
+version = "1.1.18"
+description = "timery disclosure download API"
+authors = ["kent <kent2980@gmail.com>"]
+readme = "README.md"
+packages = [{include = "disclosure_api2"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pandas = "^1.5.1"
+requests = "^2.28.1"
+tqdm = "^4.64.1"
+bs4 = "^0.0.1"
+lxml = "^4.6.3"
+pymysql = "^1.0.2"
+jaconv = "^0.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
