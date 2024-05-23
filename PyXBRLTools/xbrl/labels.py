@@ -148,6 +148,15 @@ class GlobalLabel(BaseLabel):
         return DataFrame(lists)
 
     def set_link_locs(self) -> DataFrame:
+        lists = []
+        
+        tags = self.soup.find_all(name='link:loc')
+        for tag in tags:
+            dict = {
+                'xlink_type': tag.get('xlink:type'),
+                'xlink:href': tag.get('xlink:href'),
+                
+            }
         return super().set_link_locs()
 
     def set_link_label_arcs(self) -> DataFrame:
