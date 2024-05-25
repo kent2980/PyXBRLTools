@@ -7,156 +7,166 @@ import shutil
 import requests
 from urllib.parse import urlparse
 
-def extract_zip(zip_path, extract_to=None):
-    """
-    ZIPファイルを指定されたディレクトリに展開します。
+class Utils:
 
-    Args:
-        zip_path (str): ZIPファイルのパス。
-        extract_to (str, optional): ファイルを展開するディレクトリ。デフォルトはZIPファイルと同じディレクトリ。
+    def extract_zip(zip_path, extract_to=None):
+        """
+        ZIPファイルを指定されたディレクトリに展開します。
 
-    Raises:
-        FileNotFoundError: ZIPファイルが存在しない場合に発生。
-        Exception: 展開に失敗した場合に発生。
-    """
-    if not os.path.exists(zip_path):
-        raise FileNotFoundError(f"ZIPファイル {zip_path} が存在しません。")
+        Args:
+            zip_path (str): ZIPファイルのパス。
+            extract_to (str, optional): ファイルを展開するディレクトリ。デフォルトはZIPファイルと同じディレクトリ。
 
-    if extract_to is None:
-        extract_to = os.path.dirname(zip_path)
+        Raises:
+            FileNotFoundError: ZIPファイルが存在しない場合に発生。
+            Exception: 展開に失敗した場合に発生。
+        """
+        if not os.path.exists(zip_path):
+            raise FileNotFoundError(f"ZIPファイル {zip_path} が存在しません。")
 
-    try:
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_to)
-    except Exception as e:
-        raise Exception(f"ZIPファイル {zip_path} の展開に失敗しました: {e}")
+        if extract_to is None:
+            extract_to = os.path.dirname(zip_path)
 
-def format_date(date_str):
-    """
-    日付文字列を受け取り、統一的なフォーマット 'YYYY-MM-DD' に変換する。
-
-    Args:
-        date_str (str): "令和4年10月3日"、"2023年10月3日"、"2023-10-3" のいずれかの形式の日付文字列。
-
-    Returns:
-        str: 'YYYY-MM-DD' 形式の日付文字列。
-
-    Raises:
-        ValueError: 引数がサポートされていない形式の日付文字列の場合。
-
-    Examples:
-        >>> format_date('令和4年10月3日')
-        '2022-10-03'
-        >>> format_date('2023年10月3日')
-        '2023-10-03'
-        >>> format_date('2023-10-3')
-        '2023-10-03'
-    """
-
-    # "元号yy年MM月DD日"のフォーマット
-    try:
-        jd = JDate.strptime(date_str, '%g%e年%m月%d日')
-        result = jd.strftime('%Y-%m-%d')
-        date_obj = result
-
-    except ValueError:
         try:
-            # "YYYY年MM月DD日"のフォーマット
-            date_obj = datetime.strptime(
-                date_str, '%Y年%m月%d日').strftime('%Y-%m-%d')
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_to)
+        except Exception as e:
+            raise Exception(f"ZIPファイル {zip_path} の展開に失敗しました: {e}")
+
+    def format_date(date_str):
+        """
+        日付文字列を受け取り、統一的なフォーマット 'YYYY-MM-DD' に変換する。
+
+        Args:
+            date_str (str): "令和4年10月3日"、"2023年10月3日"、"2023-10-3" のいずれかの形式の日付文字列。
+
+        Returns:
+            str: 'YYYY-MM-DD' 形式の日付文字列。
+
+        Raises:
+            ValueError: 引数がサポートされていない形式の日付文字列の場合。
+
+        Examples:
+            >>> format_date('令和4年10月3日')
+            '2022-10-03'
+            >>> format_date('2023年10月3日')
+            '2023-10-03'
+            >>> format_date('2023-10-3')
+            '2023-10-03'
+        """
+
+        # "元号yy年MM月DD日"のフォーマット
+        try:
+            jd = JDate.strptime(date_str, '%g%e年%m月%d日')
+            result = jd.strftime('%Y-%m-%d')
+            date_obj = result
+
         except ValueError:
-            # "YYYY-MM-DD"のフォーマット
-            date_obj = datetime.strptime(
-                date_str, '%Y-%m-%d').strftime('%Y-%m-%d')
-
-    return date_obj
-
-def initialize_directory(directory_path:str):
-    """
-    指定されたディレクトリ内のすべてのファイルとサブディレクトリを削除します。
-
-    :param directory_path: 初期化するディレクトリのパス
-    """
-    if not os.path.exists(directory_path):
-        # ディレクトリが存在しない場合は作成
-        os.makedirs(directory_path)
-    else:
-        # ディレクトリが存在する場合は、中身を全て削除
-        for filename in os.listdir(directory_path):
-            file_path = os.path.join(directory_path, filename)
             try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)  # ファイルまたはシンボリックリンクを削除
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)  # ディレクトリを削除
-            except Exception as e:
-                print(f'Failed to delete {file_path}. Reason: {e}')
+                # "YYYY年MM月DD日"のフォーマット
+                date_obj = datetime.strptime(
+                    date_str, '%Y年%m月%d日').strftime('%Y-%m-%d')
+            except ValueError:
+                # "YYYY-MM-DD"のフォーマット
+                date_obj = datetime.strptime(
+                    date_str, '%Y-%m-%d').strftime('%Y-%m-%d')
 
-def find_filename_with_keyword(directory_path, keyword):
-    """
-    指定されたディレクトリから再帰的にファイルを検索し、
-    ファイル名にキーワードを含むファイルのパスをリストとして返します。
+        return date_obj
 
-    :param directory_path: 検索対象のディレクトリのパス
-    :param keyword: 検索するキーワード
-    :return: キーワードを含むファイル名のパスのリスト
-    """
-    matching_files = []
+    def initialize_directory(directory_path:str):
+        """
+        指定されたディレクトリ内のすべてのファイルとサブディレクトリを削除します。
 
-    for root, dirs, files in os.walk(directory_path):
-        for filename in files:
-            if keyword in filename:
-                file_path = os.path.join(root, filename)
-                matching_files.append(file_path)
+        :param directory_path: 初期化するディレクトリのパス
+        """
+        if not os.path.exists(directory_path):
+            # ディレクトリが存在しない場合は作成
+            os.makedirs(directory_path)
+        else:
+            # ディレクトリが存在する場合は、中身を全て削除
+            for filename in os.listdir(directory_path):
+                file_path = os.path.join(directory_path, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)  # ファイルまたはシンボリックリンクを削除
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)  # ディレクトリを削除
+                except Exception as e:
+                    print(f'Failed to delete {file_path}. Reason: {e}')
 
-    return matching_files
+    def find_filename_with_keyword(directory_path, keyword):
+        """
+        指定されたディレクトリから再帰的にファイルを検索し、
+        ファイル名にキーワードを含むファイルのパスをリストとして返します。
 
-import os
-import re
+        :param directory_path: 検索対象のディレクトリのパス
+        :param keyword: 検索するキーワード
+        :return: キーワードを含むファイル名のパスのリスト
+        """
+        matching_files = []
 
-def find_filename_with_regex(directory_path, pattern):
-    """
-    指定されたディレクトリから再帰的にファイルを検索し、
-    ファイル名が指定された正規表現パターンにマッチするファイルのパスをリストとして返します。
+        for root, dirs, files in os.walk(directory_path):
+            for filename in files:
+                if keyword in filename:
+                    file_path = os.path.join(root, filename)
+                    matching_files.append(file_path)
 
-    :param directory_path: 検索対象のディレクトリのパス
-    :param pattern: 正規表現パターン
-    :return: パターンにマッチするファイル名のパスのリスト
-    """
-    matching_files = []
-    regex = re.compile(pattern)
+        return matching_files
 
-    for root, dirs, files in os.walk(directory_path):
-        for filename in files:
-            if regex.search(filename):
-                file_path = os.path.join(root, filename)
-                matching_files.append(file_path)
+    import os
+    import re
 
-    return matching_files
+    def find_filename_with_regex(directory_path, pattern):
+        """
+        指定されたディレクトリから再帰的にファイルを検索し、
+        ファイル名が指定された正規表現パターンにマッチするファイルのパスをリストとして返します。
 
-def download_file_to_dir(url, directory):
-    """
-    URLからファイルをダウンロードし、指定されたディレクトリにそのファイル名で保存します。
+        :param directory_path: 検索対象のディレクトリのパス
+        :param pattern: 正規表現パターン
+        :return: パターンにマッチするファイル名のパスのリスト
+        """
+        matching_files = []
+        regex = re.compile(pattern)
 
-    :param url: ダウンロードしたいファイルのURL
-    :param directory: 保存するディレクトリのパス
-    """
-    # URLからファイル名を取得
-    parsed_url = urlparse(url)
-    filename = os.path.basename(parsed_url.path)
+        for root, dirs, files in os.walk(directory_path):
+            for filename in files:
+                if regex.search(filename):
+                    file_path = os.path.join(root, filename)
+                    matching_files.append(file_path)
 
-    # 完全なファイルパスを作成
-    file_path = os.path.join(directory, filename)
+        return matching_files
 
-    # ディレクトリが存在しない場合は作成
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    def download_file_to_dir(url, directory):
+        """
+        URLからファイルをダウンロードし、指定されたディレクトリにそのファイル名で保存します。
 
-    # ファイルをダウンロードして保存
-    with requests.get(url, stream=True) as response:
-        response.raise_for_status()
-        with open(file_path, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
+        :param url: ダウンロードしたいファイルのURL
+        :param directory: 保存するディレクトリのパス
+        """
+        # URLからファイル名を取得
+        parsed_url = urlparse(url)
+        filename = os.path.basename(parsed_url.path)
 
-    return file_path  # ダウンロードしたファイルのパスを返す
+        # 完全なファイルパスを作成
+        file_path = os.path.join(directory, filename)
+
+        # ディレクトリが存在しない場合は作成
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # ファイルをダウンロードして保存
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            with open(file_path, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+
+        return file_path  # ダウンロードしたファイルのパスを返す
+
+    def is_element_text(element):
+        if element is not None:
+            return element.text
+        return None
+
+    def zenkaku_space_trim(str:str):
+        return str.replace('　', '')

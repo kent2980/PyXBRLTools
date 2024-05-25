@@ -1,10 +1,10 @@
 from pandas import DataFrame
 import re
 from bs4 import BeautifulSoup as bs
-from utils import extract_zip, initialize_directory, find_filename_with_regex, find_filename_with_keyword, download_file_to_dir
+from utils import Utils
 import time
 import os
-from xbrl.labels import LocalLabel, GlobalLabel
+from xbrl_parser.xml_label_parser import XmlLocalLabel, XmlGlobalLabel
 
 class LabelManager:
 
@@ -36,7 +36,7 @@ class LabelManager:
         label_links = []
         print(self.xbrl_dir_path)
         # 指定されたディレクトリ内で正規表現にマッチするファイル名を検索します。
-        files = find_filename_with_regex(self.xbrl_dir_path, "^.*xsd$")
+        files = Utils.find_filename_with_regex(self.xbrl_dir_path, "^.*xsd$")
 
         # 各ファイルに対して処理を行います。
         for file in files:
@@ -108,9 +108,9 @@ class LabelManager:
         # ローカルラベルファイルを抽出する
         local_filename = self.label_links_df.query("link_type == 'local'")
         for index, row in local_filename.iterrows():
-            files = find_filename_with_keyword(self.xbrl_dir_path, row['link'])
+            files = Utils.find_filename_with_keyword(self.xbrl_dir_path, row['link'])
             for file in files:
-                labels = LocalLabel(file)
+                labels = XmlLocalLabel(file)
                 local_label_df = labels.link_labels
 
         return local_label_df
@@ -125,8 +125,8 @@ class LabelManager:
 if __name__ == '__main__':
     zip_path:str = "/Users/user/Vscode/python/disclosure_api2/doc/dummy.zip"
     extra_dir:str = "/Users/user/Vscode/python/disclosure_api2/doc/extract_to_dir"
-    extract_zip(zip_path,extra_dir)
+    Utils.extract_zip(zip_path,extra_dir)
 
     lm = LabelManager(extra_dir)
 
-    # initialize_directory(extra_dir)
+    Utils.initialize_directory(extra_dir)

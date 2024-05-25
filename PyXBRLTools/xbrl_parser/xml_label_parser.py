@@ -1,33 +1,34 @@
 from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
+from abc import ABC, abstractmethod
 
-class BaseLabel:
+class BaseXmlLabelParser(ABC):
     """
     XMLラベルファイルを解析し、その内容をPandasのDataFrameに格納する基底クラスです。
     """
-    def __init__(self, label_path:str = None) -> None:
+    def __init__(self, file_path:str) -> None:
 
         # ラベルファイルのパスを設定
-        self.__label_path:str = label_path
+        self.__file_path:str = file_path
         # BeautifulSoupでスクレイピング
-        self.soup = bs(open(label_path),features='xml') if label_path else None
+        self.soup = bs(open(file_path),features='xml')
 
-        # データ取得先のリストを宣言
-        self.__link_labels:DataFrame = None
-        self.__link_locs:DataFrame = None
-        self.__link_label_arcs:DataFrame = None
+        self.__link_labels = None
+        self.__link_locs = None
+        self.__link_label_arcs = None
 
         # ラベルファイルのパスが設定済みの場合、タグを取得する
         self.__set_df()
 
     @property
-    def label_path(self):
-        return self.__label_path
+    def file_path(self):
+        return self.__file_path
 
-    @label_path.setter
-    def label_path(self, label_path:str):
-        self.__label_path = label_path
-        self.load_label_file(label_path)
+    @file_path.setter
+    def file_path(self, file_path:str):
+        self.__file_path = file_path
+        self.soup = bs(open(file_path), features='xml')
+        self.__set_df()
 
     @property
     def link_labels(self):
@@ -44,35 +45,33 @@ class BaseLabel:
         """<link:labelArc>要素を含むDataFrameを取得します。"""
         return self.__link_label_arcs
 
-    def load_label_file(self, path:str):
-        with open(path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='xml')
-        self.__set_df()
-
     def __set_df(self):
         """
         ラベルパスが設定済みの場合、<link:label>、<link:loc>、<link:labelArc>タグを取得してDataFrameに格納します。
         """
-        if self.label_path is not None:
-            self.__link_labels = self.set_link_labels()
-            self.__link_locs = self.set_link_locs()
-            self.__link_label_arcs = self.set_link_label_arcs()
+        if self.file_path is not None:
+            self.__link_labels = self.get_link_labels()
+            self.__link_locs = self.get_link_locs()
+            self.__link_label_arcs = self.get_link_label_arcs()
 
-    def set_link_labels(self) -> DataFrame:
+    @abstractmethod
+    def get_link_labels(self) -> DataFrame:
         pass
 
-    def set_link_locs(self) -> DataFrame:
+    @abstractmethod
+    def get_link_locs(self) -> DataFrame:
         pass
 
-    def set_link_label_arcs(self) -> DataFrame:
+    @abstractmethod
+    def get_link_label_arcs(self) -> DataFrame:
         pass
 
-class LocalLabel(BaseLabel):
+class XmlLocalLabel(BaseXmlLabelParser):
 
-    def __init__(self, label_path: str = None) -> None:
-        super().__init__(label_path)
+    def __init__(self, file_path: str = None) -> None:
+        super().__init__(file_path)
 
-    def set_link_labels(self) -> DataFrame:
+    def get_link_labels(self) -> DataFrame:
         """<link:label>要素からデータを抽出し、DataFrameを作成します。"""
         lists = []
 
@@ -81,8 +80,7 @@ class LocalLabel(BaseLabel):
             dict = {
                 'xml_lang': tag.get('xml:lang'),
                 'xlink_type': tag.get('xlink:type'),
-                'name_space': tag.get('xlink:label').split('_')[0],
-                'xlink_label': tag.get('xlink:label').split('_')[1],
+                'xlink_label': tag.get('xlink:label'),
                 'xlink_role': tag.get('xlink:role'),
                 'xlink_text': tag.text
             }
@@ -90,7 +88,7 @@ class LocalLabel(BaseLabel):
 
         return DataFrame(lists)
 
-    def set_link_locs(self) -> DataFrame:
+    def get_link_locs(self) -> DataFrame:
         """<link:loc>要素からデータを抽出し、DataFrameを作成します。"""
         lists = []
 
@@ -98,15 +96,14 @@ class LocalLabel(BaseLabel):
         for tag in tags:
             dict = {
                 'xlink_type': tag.get('xlink:type'),
-                'xlink:href': tag.get('xlink:href').split('#')[0],
-                'name_space': tag.get('xlink:label').split('_')[0],
-                'xlink_label': tag.get('xlink:label').split('_')[1]
+                'xlink_href': tag.get('xlink:href'),
+                'xlink_label': tag.get('xlink:label')
             }
             lists.append(dict)
 
         return DataFrame(lists)
 
-    def set_link_label_arcs(self) -> DataFrame:
+    def get_link_label_arcs(self) -> DataFrame:
         """<link:labelArc>要素からデータを抽出し、DataFrameを作成します。"""
         lists = []
 
@@ -114,10 +111,8 @@ class LocalLabel(BaseLabel):
         for tag in tags:
             dict = {
                 'xlink_type': tag.get('xlink:type'),
-                'xlink_from_namespace': tag.get('xlink:from').split('_')[0],
-                'xlink_from_label': tag.get('xlink:from').split('_')[1],
-                'xlink_to_namespace': tag.get('xlink:to').split('_')[0],
-                'xlink_to_label': '_'.join(tag.get('xlink:to').split('_')[1:]),
+                'xlink_from': tag.get('xlink:from').split('_')[0],
+                'xlink_to': tag.get('xlink:to').split('_')[0],
                 'xlink_arcrole': tag.get('xlink:arcrole'),
                 'order': tag.get('order')
             }
@@ -125,11 +120,11 @@ class LocalLabel(BaseLabel):
 
         return DataFrame(lists)
 
-class GlobalLabel(BaseLabel):
-    def __init__(self, label_path: str = None) -> None:
-        super().__init__(label_path)
+class XmlGlobalLabel(BaseXmlLabelParser):
+    def __init__(self, file_path: str = None) -> None:
+        super().__init__(file_path)
 
-    def set_link_labels(self) -> DataFrame:
+    def get_link_labels(self) -> DataFrame:
         lists = []
 
         tags = self.soup.find_all(name='link:label')
@@ -137,7 +132,7 @@ class GlobalLabel(BaseLabel):
             dict = {
                 'xml_lang': tag.get('xml:lang'),
                 'xlink_type': tag.get('xlink:type'),
-                'xlink_label': '_'.join(tag.get('xlink:label').split('_')[1:]),
+                'xlink_label': tag.get('xlink:label'),
                 'xlink_role': tag.get('xlink:role'),
                 'id': tag.get('id'),
                 'xlink_text': tag.text
@@ -147,7 +142,7 @@ class GlobalLabel(BaseLabel):
 
         return DataFrame(lists)
 
-    def set_link_locs(self) -> DataFrame:
+    def get_link_locs(self) -> DataFrame:
         lists = []
 
         tags = self.soup.find_all(name='link:loc')
@@ -162,7 +157,7 @@ class GlobalLabel(BaseLabel):
 
         return DataFrame(lists)
 
-    def set_link_label_arcs(self) -> DataFrame:
+    def get_link_label_arcs(self) -> DataFrame:
         lists = []
 
         tags = self.soup.find_all(name='link:labelArc')
@@ -179,8 +174,8 @@ class GlobalLabel(BaseLabel):
         return DataFrame(lists)
 
 if __name__ == '__main__':
-    local_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14-lab.xml"
-    global_label_path = "/Users/user/Vscode/python/PyXBRLTools/doc/taxnomy/jpcrp_2023-12-01_lab.xml"
-    l_label = GlobalLabel(global_label_path)
+    local_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14-lab.xml"
+    global_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/taxnomy/jpcrp_2023-12-01_lab.xml"
+    l_label = XmlGlobalLabel(global_file_path)
     print(l_label.link_labels)
     l_label.link_locs.to_csv('hhh.csv')
