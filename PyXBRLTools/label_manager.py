@@ -1,132 +1,234 @@
-from pandas import DataFrame
-import re
-from bs4 import BeautifulSoup as bs
-from utils import Utils
-import time
+from xbrl_parser.xbrl_parser_controller import XbrlParserController
 import os
-from xbrl_parser.xml_label_parser import XmlLocalLabel, XmlGlobalLabel
+from utils import Utils
+import pandas as pd
+from abc import ABC, abstractmethod
+import time
 
-class LabelManager:
+class BaseLabelManager(ABC):
+    """
+    XBRLラベルの基底クラスです。
 
-    def __init__(self, xbrl_dir_path:str):
-        print("init")
-        self.xbrl_dir_path = xbrl_dir_path
-        self.taxonomy_dir = '/Users/user/Vscode/python/disclosure_api2/doc/taxnomy'
-        self.label_links_df:DataFrame = DataFrame()
-        self.label_pd:DataFrame = DataFrame()
+    Attributes:
+        dir_path (str): ディレクトリのパス。
+    """
 
-        # labelデータレームの初期化を行います。
-        self.init_label_df()
+    def __init__(self, dir_path:str):
+        self.__dir_path = dir_path
 
-    def init_label_df(self):
-        # ラベルリンクのDataFrameを取得します。
-        label_links_df: DataFrame = self.find_label_links_df()
-        # 取得したラベルファイルをtaxonomy_dirにダウンロードします。
-        self.get_label_files(label_links_df, self.taxonomy_dir)
-        # ローカルパスを設定したDataFrameを更新します。
-        self.label_links_df = self.set_local_path(label_links_df, self.taxonomy_dir)
-        # ローカルラベルのDataFrameを取得します。
-        self.get_local_label_df()
-        # グローバルラベルのDataFrameを取得します。
-        self.get_global_label_df(self.label_links_df)
+    @property
+    def dir_path(self):
+        """ディレクトリのパスを取得します。"""
+        return self.__dir_path
 
+    @abstractmethod
+    def get_link_label(self, xlink_href:str):
+        """
+        xlink:href属性に基づいてラベルを取得するための抽象メソッドです。
 
-    def find_label_links_df(self) -> DataFrame:
-        # ラベルリンクの情報を格納するためのリストを初期化します。
-        label_links = []
-        print(self.xbrl_dir_path)
+        Args:
+            xlink_href (str): 取得したいラベルのxlink:href属性。
+
+        Returns:
+            実装に依存します。
+        """
+        pass
+
+class LabelManager(BaseLabelManager):
+    """
+    XBRLラベルを管理するためのクラスです。
+
+    BaseLabelManager を継承しています。
+    """
+
+    def __get_xlink_href(self, name_space) -> str | None:
+        """
+        指定された名前空間に対応するリンクベース参照を含むファイルの xlink:href 属性を返します。
+
+        Args:
+            name_space (str): 名前空間の文字列。
+
+        Returns:
+            str | None: 見つかった場合はxlink:href属性の値、見つからなければNone。
+        """
+
         # 指定されたディレクトリ内で正規表現にマッチするファイル名を検索します。
-        files = Utils.find_filename_with_regex(self.xbrl_dir_path, "^.*xsd$")
+        files = Utils.find_filename_with_regex(self.dir_path, "^.*xsd$")
+        if not files:  # Early return if no files are found
+            return None
 
-        # 各ファイルに対して処理を行います。
+        # Collect parser DataFrames in a list
+        parser_dfs = []
         for file in files:
-            # ファイルタイプを決定します（'Attachment'が含まれる場合は'Attachment'、それ以外は'Summary'）。
-            type = "Attachment" if "Attachment" in file else "Summary"
+            parser = XbrlParserController.xml_schema_parser(file)
+            parser_df = parser.link_base_refs
+            parser_dfs.append(parser_df)
 
-            # 対象のファイルをスクレイピングするためにBeautifulSoupオブジェクトを作成します。
-            soup = bs(open(file), features='xml')
+        # Concatenate all DataFrames at once
+        combined_df = pd.concat(parser_dfs, ignore_index=True)
 
-            # ラベルリンクを参照する要素を全て検索します。
-            link_refs = soup.find_all(attrs={'xlink:role':'http://www.xbrl.org/2003/role/labelLinkbaseRef'})
+        # Use query with regex to filter rows
+        query_string = f"xlink_role == 'http://www.xbrl.org/2003/role/labelLinkbaseRef' and xlink_href.str.contains(r'{name_space}.*lab\.xml$', regex=True)"
+        filtered_df = combined_df.query(query_string)
 
-            # 取得したラベルリンク参照に対して処理を行います。
-            for link_ref in link_refs:
-                # 'xlink:href'属性からラベルリンクを取得します。
-                label_link = link_ref.get('xlink:href')
+        if not filtered_df.empty:
+            value = filtered_df.iloc[0]['xlink_href']
+            return value
+        else:
+            return None
 
-                # リンクがラベルXMLファイルを指しているか確認します。
-                if re.search('^.*lab.xml$', label_link):
-                    # リンクに関する情報を辞書に格納します。
-                    link_dic = {}
-                    link_dic['doc_type'] = type
-                    # リンクタイプを決定します（'http'を含む場合は'global'、それ以外は'local'）。
-                    link_dic['link_type'] = 'global' if 'http' in label_link else 'local'
-                    link_dic['link'] = label_link
-                    # 辞書をリストに追加します。
-                    label_links.append(link_dic)
+    def __get_local_file_path(self, label_path:str) -> str:
+        """
+        ローカルファイルシステム上でのラベルファイルのパスを取得します。
 
-        # リストからDataFrameを作成します。
-        label_links_df = DataFrame(label_links)
-        # 空のカラム'local_path'をDataFrameに追加します。
-        label_links_df['local_path'] = ''
-        # DataFrameを返却します。
-        return label_links_df
+        Args:
+            label_path (str): ラベルファイルのパス。
 
-    def get_label_files(self, label_links_df: DataFrame, taxonomy_dir: str):
-        # データフレームからlink_typeが'global'である行を取得します。
-        global_label_df = label_links_df.query("link_type == 'global'")
+        Returns:
+            str: ファイルのフルパス。
+        """
 
-        # タクソノミーディレクトリを走査してファイルをダウンロードします。
-        for index, row in global_label_df.iterrows():
-            # タクソノミーディレクトリ内にファイルが存在しない場合、ダウンロードを実施
-            file_name = os.path.basename(row['link'])
-            local_file_path = os.path.join(taxonomy_dir, file_name)
-            if not os.path.isfile(local_file_path):
-                # リンクからファイルをダウンロードして、タクソノミーディレクトリに保存します。
-                download_file_to_dir(row['link'], taxonomy_dir)
-                # ダウンロードしたファイルのパスをDataFrameに記録します。
-                label_links_df.at[index, 'local_path'] = local_file_path
-                # サーバーへの負荷を防ぐために、次の処理まで2秒間待機します。
-                time.sleep(2)
+        file_path = ""
+        for root, dirs, files in os.walk(self.dir_path):
+            if label_path in files:
+                file_path = os.path.join(root, label_path)
 
-    def set_local_path(self,label_links_df:DataFrame, taxonomy_dir:str):
-        # タクソノミーディレクトリを再度走査して、各ファイルのローカルパスを更新します。
-        for root, dirs, files in os.walk(taxonomy_dir):
-            for file in files:
-                # すべてのラベルリンクについてチェックし、対応するローカルパスをDataFrameに設定します。
-                for index, row in label_links_df.iterrows():
-                    if file in row['link']:
-                        # ここでfileではなくos.path.join(root, file)を使用して正しいパスを設定します。
-                        label_links_df.at[index, 'local_path'] = os.path.join(root, file)
+        return file_path
 
-        # 結果のDataFrameを出力します。
-        print(label_links_df)
-        return label_links_df
+    def __get_global_file_path(self, label_path:str) -> str:
+        """
+        グローバルファイルシステム上でのラベルファイルのパスを取得し、必要に応じてダウンロードします。
 
-    def get_local_label_df(self) -> DataFrame:
+        Args:
+            label_path (str): ラベルファイルのURL。
 
-        # ローカルラベルファイルを抽出する
-        local_filename = self.label_links_df.query("link_type == 'local'")
-        for index, row in local_filename.iterrows():
-            files = Utils.find_filename_with_keyword(self.xbrl_dir_path, row['link'])
-            for file in files:
-                labels = XmlLocalLabel(file)
-                local_label_df = labels.link_labels
+        Returns:
+            str: ダウンロード後のファイルのローカルパス。
+        """
 
-        return local_label_df
+        file_path = '/'.join(label_path.split('/')[3:])
+        file_path = '/'.join([self.dir_path, file_path])
+        dir_path = '/'.join(file_path.split('/')[:-1])
 
-    def get_global_label_df(self, label_files_df:DataFrame)-> DataFrame:
-        label_files_df = label_files_df.query("link_type == 'global'")
-        for index, row in label_files_df.iterrows():
-            print(row['local_path'])
-            soup = bs(open(row['local_path']), features='xml')
-            print(soup)
+        os.makedirs(dir_path, exist_ok=True)
+        if not os.path.exists(file_path):
+            # ファイルが存在しない場合
+            Utils.download_file_to_dir(label_path,dir_path)
+            time.sleep(2)
+
+        return file_path
+
+    def __get_file_path(self, label_uri:str) -> str:
+        """
+        ラベルURIに基づいてファイルパスを取得します。
+
+        Args:
+            label_uri (str): ラベルのURI。
+
+        Returns:
+            str: ファイルパス。
+        """
+
+        file_path = ""
+        if "http" in label_uri:
+            file_path = self.__get_global_file_path(label_uri)
+        else:
+            file_path = self.__get_local_file_path(label_uri)
+
+        return file_path
+
+    def __get_xlink_label(self, file_path:str, xlink_name:str) -> str:
+        """
+        指定されたファイル内でxlink:name属性が一致するラベルを検索します。
+
+        Args:
+            file_path (str): 検索対象のファイルパス。
+            xlink_name (str): 検索するxlink:name属性の値。
+
+        Returns:
+            str: 見つかったラベル。
+        """
+
+        label_parser = XbrlParserController.xml_label_parser(file_path)
+        loc_df = label_parser.link_locs
+        loc_df = loc_df.query(f"xlink_href == '{xlink_name}'")
+        return loc_df.iloc[0]['xlink_label']
+
+    def __get_arc_to_label(self, file_path:str, xlink_label:str) -> list:
+        """
+        指定されたラベルからアークを通じて関連付けられているラベルのリストを取得します。
+
+        Args:
+            file_path (str): ファイルパス。
+            xlink_label (str): xlink:label属性の値。
+
+        Returns:
+            list: 関連付けられているラベルのリスト。
+        """
+
+        label_parser = XbrlParserController.xml_label_parser(file_path)
+        arc_df = label_parser.link_label_arcs
+        arc_df = arc_df.query(f"xlink_from == '{xlink_label}'")
+        return arc_df['xlink_to'].to_list()
+
+    def __get_label_list(self, file_path:str, arc_list:list) -> list:
+        """
+        指定されたアークリストに基づいてラベルのリストを取得します。
+
+        Args:
+            file_path (str): ファイルパス。
+            arc_list (list): アークのリスト。
+
+        Returns:
+            list: ラベルのテキストのリスト。
+        """
+
+        label_parser = XbrlParserController.xml_label_parser(file_path)
+        label_df = label_parser.link_labels
+        label_df = label_df[label_df['xlink_label'].isin(arc_list)]
+        # target_row = label_df.query("xlink_role == 'http://www.xbrl.org/2003/role/label'")
+        label_text = label_df['text'].to_list()
+
+        return label_text
+
+    def get_link_label(self, xlink_name: str, role_number:int) -> str | None:
+        """
+        指定されたxlink:nameと役割番号に基づいてラベルを取得します。
+
+        Args:
+            xlink_name (str): xlink:name属性の値。
+            role_number (int): 役割番号。
+
+        Returns:
+            str | None: 見つかったラベル、またはrole_numberが無効な場合はNone。
+        """
+
+        # 名前空間を取得する
+        name_space = xlink_name.split('_')[0]
+        # ラベルファイルのパスを取得する
+        label_uri = self.__get_xlink_href(name_space)
+        # ローカルラベルとグローバルラベルで処理を分岐
+        file_path = self.__get_file_path(label_uri)
+
+        xlink_label = self.__get_xlink_label(file_path,xlink_name)
+        arc_list = self.__get_arc_to_label(file_path, xlink_label)
+        labels = self.__get_label_list(file_path, arc_list)
+
+        try:
+          return labels[role_number]
+        except IndexError as e:
+          print('role_numberが存在しません。')
+          return None
 
 if __name__ == '__main__':
-    zip_path:str = "/Users/user/Vscode/python/disclosure_api2/doc/dummy.zip"
-    extra_dir:str = "/Users/user/Vscode/python/disclosure_api2/doc/extract_to_dir"
-    Utils.extract_zip(zip_path,extra_dir)
+    zip_path:str = "/Users/user/Vscode/python/PyXBRLTools/doc/dummy.zip"
+    extra_dir:str = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir"
+    url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2023-12-01/label/jpcrp_2023-12-01_lab.xml"
+    # Utils.extract_zip(zip_path,extra_dir)
 
     lm = LabelManager(extra_dir)
-
-    Utils.initialize_directory(extra_dir)
+    g_label_name = "jppfs_cor_IncreaseDecreaseInProvisionForDirectorsRetirementBenefitsOpeCF"
+    l_label_name = "tse-acedjpfr-57210_LossOnValuationOfStocksOfSubsidiariesOpeCF"
+    label_str = lm.get_link_label(g_label_name, 0)
+    print(label_str)
+    # Utils.initialize_directory(extra_dir)

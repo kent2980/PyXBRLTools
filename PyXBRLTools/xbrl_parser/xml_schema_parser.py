@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 from abc import ABC, abstractmethod
+import os
 
 class BaseXmlSchemaParser(ABC):
 
@@ -108,6 +109,11 @@ class XmlSchemaParser(BaseXmlSchemaParser):
         return DataFrame(lists)
 
 if __name__ == '__main__':
-    file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-44440-2024-03-31-01-2024-05-14.xsd"
+    file_path = "doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13.xsd"
+    output_dir = "extract_csv/schema"
     xsds = XmlSchemaParser(file_path)
-    print(xsds.elements)
+
+    os.makedirs(output_dir,exist_ok=True)
+    xsds.link_base_refs.to_csv(f"{output_dir}/linkBaseRef.csv",encoding='utf-8-sig')
+    xsds.import_schemas.to_csv(f"{output_dir}/importSchema.csv",encoding='utf-8-sig')
+    xsds.elements.to_csv(f"{output_dir}/element.csv",encoding='utf-8-sig')

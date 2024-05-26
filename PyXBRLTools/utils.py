@@ -6,6 +6,7 @@ from datetimejp import JDate
 import shutil
 import requests
 from urllib.parse import urlparse
+import unicodedata
 
 class Utils:
 
@@ -170,3 +171,9 @@ class Utils:
 
     def zenkaku_space_trim(str:str):
         return str.replace('　', '')
+
+    def normalize_text(text: str) -> str:
+        """
+        テキストを正規化します。
+        """
+        return re.sub(" ", "", unicodedata.normalize('NFKC', text))

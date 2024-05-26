@@ -1,3 +1,5 @@
 /sample/
 *.csv
 main
+extract_csv
+doc
