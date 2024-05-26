@@ -13,16 +13,29 @@ class BaseLabelManager(ABC):
         dir_path (str): ディレクトリのパス。
     """
 
-    def __init__(self, dir_path:str):
+    def __init__(self, dir_path:str, xlink_name:str):
         self.__dir_path = dir_path
+        self.__xlink_name = xlink_name
 
     @property
     def dir_path(self):
         """ディレクトリのパスを取得します。"""
         return self.__dir_path
 
+    @dir_path.setter
+    def dir_path(self, dir_path:str):
+        self.__dir_path = dir_path
+
+    @property
+    def xlink_name(self):
+        return self.__xlink_name
+
+    @xlink_name.setter
+    def xlink_name(self, xlink_name:str):
+        self.__xlink_name = xlink_name
+
     @abstractmethod
-    def get_link_label(self, xlink_href:str):
+    def get_link_label(self, xlink_href:str) -> str | None:
         """
         xlink:href属性に基づいてラベルを取得するための抽象メソッドです。
 
@@ -30,8 +43,20 @@ class BaseLabelManager(ABC):
             xlink_href (str): 取得したいラベルのxlink:href属性。
 
         Returns:
-            実装に依存します。
+            str | None: 見つかったラベル、またはrole_numberが無効な場合はNone。
         """
+        pass
+
+    @abstractmethod
+    def get_locs_table_df(self) -> pd.DataFrame:
+        pass
+
+    @abstractmethod
+    def get_arcs_table_df(self) -> pd.DataFrame:
+        pass
+
+    @abstractmethod
+    def get_labels_table_df(self) -> pd.DataFrame:
         pass
 
 class LabelManager(BaseLabelManager):
@@ -40,6 +65,11 @@ class LabelManager(BaseLabelManager):
 
     BaseLabelManager を継承しています。
     """
+
+    def __init__(self, dir_path: str, xlink_name: str):
+        super().__init__(dir_path, xlink_name)
+        self.__file_path = self.__get_file_path(xlink_name)
+        self.__label_parser = XbrlParserController.xml_label_parser(self.__file_path)
 
     def __get_xlink_href(self, name_space) -> str | None:
         """
@@ -118,7 +148,7 @@ class LabelManager(BaseLabelManager):
 
         return file_path
 
-    def __get_file_path(self, label_uri:str) -> str:
+    def __get_file_path(self, xlink_name:str) -> str:
         """
         ラベルURIに基づいてファイルパスを取得します。
 
@@ -129,6 +159,11 @@ class LabelManager(BaseLabelManager):
             str: ファイルパス。
         """
 
+        # 名前空間を取得する
+        name_space = xlink_name.split('_')[0]
+        # ラベルファイルのパスを取得する
+        label_uri = self.__get_xlink_href(name_space)
+
         file_path = ""
         if "http" in label_uri:
             file_path = self.__get_global_file_path(label_uri)
@@ -137,7 +172,7 @@ class LabelManager(BaseLabelManager):
 
         return file_path
 
-    def __get_xlink_label(self, file_path:str, xlink_name:str) -> str:
+    def __get_loc_xlink_label_df(self, xlink_name:str) -> pd.DataFrame:
         """
         指定されたファイル内でxlink:name属性が一致するラベルを検索します。
 
@@ -149,12 +184,12 @@ class LabelManager(BaseLabelManager):
             str: 見つかったラベル。
         """
 
-        label_parser = XbrlParserController.xml_label_parser(file_path)
-        loc_df = label_parser.link_locs
+        loc_df = self.__label_parser.link_locs
         loc_df = loc_df.query(f"xlink_href == '{xlink_name}'")
-        return loc_df.iloc[0]['xlink_label']
 
-    def __get_arc_to_label(self, file_path:str, xlink_label:str) -> list:
+        return loc_df
+
+    def __get_arc_to_df(self, xlink_label:str) -> pd.DataFrame:
         """
         指定されたラベルからアークを通じて関連付けられているラベルのリストを取得します。
 
@@ -166,12 +201,12 @@ class LabelManager(BaseLabelManager):
             list: 関連付けられているラベルのリスト。
         """
 
-        label_parser = XbrlParserController.xml_label_parser(file_path)
-        arc_df = label_parser.link_label_arcs
+        arc_df = self.__label_parser.link_label_arcs
         arc_df = arc_df.query(f"xlink_from == '{xlink_label}'")
-        return arc_df['xlink_to'].to_list()
 
-    def __get_label_list(self, file_path:str, arc_list:list) -> list:
+        return arc_df
+
+    def __get_label_df(self, arc_list:list) -> pd.DataFrame:
         """
         指定されたアークリストに基づいてラベルのリストを取得します。
 
@@ -183,15 +218,12 @@ class LabelManager(BaseLabelManager):
             list: ラベルのテキストのリスト。
         """
 
-        label_parser = XbrlParserController.xml_label_parser(file_path)
-        label_df = label_parser.link_labels
+        label_df = self.__label_parser.link_labels
         label_df = label_df[label_df['xlink_label'].isin(arc_list)]
-        # target_row = label_df.query("xlink_role == 'http://www.xbrl.org/2003/role/label'")
-        label_text = label_df['text'].to_list()
 
-        return label_text
+        return label_df
 
-    def get_link_label(self, xlink_name: str, role_number:int) -> str | None:
+    def get_link_label(self, role_number:int) -> str | None:
         """
         指定されたxlink:nameと役割番号に基づいてラベルを取得します。
 
@@ -203,22 +235,48 @@ class LabelManager(BaseLabelManager):
             str | None: 見つかったラベル、またはrole_numberが無効な場合はNone。
         """
 
-        # 名前空間を取得する
-        name_space = xlink_name.split('_')[0]
-        # ラベルファイルのパスを取得する
-        label_uri = self.__get_xlink_href(name_space)
         # ローカルラベルとグローバルラベルで処理を分岐
-        file_path = self.__get_file_path(label_uri)
-
-        xlink_label = self.__get_xlink_label(file_path,xlink_name)
-        arc_list = self.__get_arc_to_label(file_path, xlink_label)
-        labels = self.__get_label_list(file_path, arc_list)
+        # file_path = self.__get_file_path(xlink_name)
+        # locタグからxlink_labelを取得する
+        xlink_label = self.__get_loc_xlink_label_df(self.xlink_name).iloc[0]['xlink_label']
+        # arcタグからxlink_toのリストを取得する
+        arc_list = self.__get_arc_to_df(xlink_label)['xlink_to'].to_list()
+        # 勘定ラベルのリストを取得する
+        labels = self.__get_label_df(arc_list)['text'].to_list()
 
         try:
-          return labels[role_number]
+            return labels[role_number]
         except IndexError as e:
-          print('role_numberが存在しません。')
-          return None
+            print('role_numberが存在しません。')
+            return None
+
+    def get_locs_table_df(self) -> pd.DataFrame:
+
+        # file_path = self.__get_file_path(xlink_name)
+
+        xlink_label_df = self.__get_loc_xlink_label_df(self.xlink_name)
+
+        return xlink_label_df
+
+    def get_arcs_table_df(self) -> pd.DataFrame:
+
+        # locタグからxlink_labelを取得する
+        xlink_label = self.__get_loc_xlink_label_df(self.xlink_name).iloc[0]['xlink_label']
+
+        arcs_df = self.__get_arc_to_df(xlink_label)
+
+        return arcs_df
+
+    def get_labels_table_df(self) -> pd.DataFrame:
+
+        # locタグからxlink_labelを取得する
+        xlink_label = self.__get_loc_xlink_label_df(self.xlink_name).iloc[0]['xlink_label']
+        # arcタグからxlink_toのリストを取得する
+        arc_list = self.__get_arc_to_df(xlink_label)['xlink_to'].to_list()
+        # 勘定ラベルのリストを取得する
+        labels_df = self.__get_label_df(arc_list)
+
+        return labels_df
 
 if __name__ == '__main__':
     zip_path:str = "/Users/user/Vscode/python/PyXBRLTools/doc/dummy.zip"
@@ -226,9 +284,12 @@ if __name__ == '__main__':
     url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2023-12-01/label/jpcrp_2023-12-01_lab.xml"
     # Utils.extract_zip(zip_path,extra_dir)
 
-    lm = LabelManager(extra_dir)
     g_label_name = "jppfs_cor_IncreaseDecreaseInProvisionForDirectorsRetirementBenefitsOpeCF"
     l_label_name = "tse-acedjpfr-57210_LossOnValuationOfStocksOfSubsidiariesOpeCF"
-    label_str = lm.get_link_label(g_label_name, 0)
+    lm = LabelManager(extra_dir, g_label_name)
+    label_str = lm.get_link_label(0)
     print(label_str)
+    print(lm.get_locs_table_df())
+    print(lm.get_arcs_table_df())
+    print(lm.get_labels_table_df())
     # Utils.initialize_directory(extra_dir)
