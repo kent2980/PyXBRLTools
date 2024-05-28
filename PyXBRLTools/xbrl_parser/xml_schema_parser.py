@@ -4,63 +4,78 @@ from abc import ABC, abstractmethod
 import os
 
 class BaseXmlSchemaParser(ABC):
+    """ XMLスキーマパーサの基底クラスです。
+    XMLスキーマの情報を取得するクラスです。
+    """
 
     def __init__(self, file_path:str) -> None:
+        """ BaseXmlSchemaParserのコンストラクタです。
+
+        Args:
+            file_path (str): XMLファイルのパス。
+        """
         self.__file_path = file_path
-        self.soup = bs(open(self.__file_path), features='xml')
-
-        self.__import_schemas:DataFrame = None
-        self.__link_base_refs:DataFrame = None
-        self.__elements:DataFrame = None
-
-        self.__set_df()
-
-    def __set_df(self):
-        if self.__file_path is not None:
-            self.__import_schemas:DataFrame = self.get_import_schemas()
-            self.__link_base_refs:DataFrame = self.get_link_base_refs()
-            self.__elements:DataFrame = self.get_elements()
+        with open(file_path, 'r', encoding='utf-8') as file:
+            self.soup = bs(file, features='lxml-xml')
 
     @property
-    def file_path(self):
+    def file_path(self) -> str:
+        """ ファイルパスを取得します。
+
+        returns:
+            str: ファイルパス。
+        """
         return self.__file_path
 
     @file_path.setter
     def file_path(self, file_path:str):
+        """ ファイルパスを設定します。
+
+        Args:
+            file_path (str): ファイルパス。
+        """
         self.__file_path = file_path
-        self.soup = bs(open(file_path), features='xml')
-        self.__set_df()
-
-    @property
-    def import_schemas(self):
-        return self.__import_schemas
-
-    @property
-    def link_base_refs(self):
-        return self.__link_base_refs
-
-    @property
-    def elements(self):
-        return self.__elements
+        with open(file_path, 'r', encoding='utf-8') as file:
+            self.soup = bs(file, features='lxml-xml')
 
     @abstractmethod
-    def get_import_schemas(self):
+    def get_import_schemas(self) -> DataFrame:
+        """ importスキーマを取得します。"""
         pass
 
     @abstractmethod
-    def get_link_base_refs(self):
+    def get_link_base_refs(self) -> DataFrame:
+        """ link_base_refsを取得します。"""
         pass
 
     @abstractmethod
-    def get_elements(self):
+    def get_elements(self) -> DataFrame:
+        """ elementsを取得します。"""
         pass
 
 class XmlSchemaParser(BaseXmlSchemaParser):
+    """
+    XMLスキーマパーサの具象クラスです。
+    XMLスキーマの情報を取得するクラスです。
+    """
 
-    def __init__(self, file_path: str) -> None:
-        super().__init__(file_path)
+    def get_import_schemas(self) -> DataFrame:
+        """ importスキーマを取得します。
 
-    def get_import_schemas(self):
+        returns:
+            DataFrame: importスキーマテーブルのDataFrame。
+
+        example:
+        get_import_schemas()の出力例
+        >>> df = get_import_schemas()
+            print(df)
+        output:
+        |    | schema_location | name_space |
+        |----|-----------------|------------|
+        | 0  | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/instance |
+        | 1  | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/instance |
+        | 2  | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/instance |
+        """
         lists = []
 
         tags = self.soup.find_all(name='import')
@@ -74,7 +89,23 @@ class XmlSchemaParser(BaseXmlSchemaParser):
 
         return DataFrame(lists)
 
-    def get_link_base_refs(self):
+    def get_link_base_refs(self) -> DataFrame:
+        """ link_base_refsを取得します。
+
+        returns:
+            DataFrame: link_base_refsテーブルのDataFrame。
+
+        example:
+        get_link_base_refs()の出力例
+        >>> df = get_link_base_refs()
+            print(df)
+        output:
+        |    | xlink_type | xlink_href | xlink_role | xlink_arcrole |
+        |----|------------|------------|------------|---------------|
+        | 0  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
+        | 1  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
+        | 2  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
+        """
         lists = []
 
         tags = self.soup.find_all(name='link:linkbaseRef')
@@ -90,7 +121,23 @@ class XmlSchemaParser(BaseXmlSchemaParser):
 
         return DataFrame(lists)
 
-    def get_elements(self):
+    def get_elements(self) -> DataFrame:
+        """ elementsを取得します。
+
+        returns:
+            DataFrame: elementsテーブルのDataFrame。
+
+        example:
+        get_elements()の出力例
+        >>> df = get_elements()
+            print(df)
+        output:
+        |    | id | xbrli_balance | xbrli_period_type | name | nillable | substitution_group | type |
+        |----|----|---------------|-------------------|------|----------|--------------------|------|
+        | 0  | jpcrp_cor:DocumentType | credit | duration | ドキュメントタイプ | false | xbrli:item | xbrli:stringItemType |
+        | 1  | jpcrp_cor:DocumentType | debit | duration | ドキュメントタイプ | false | xbrli:item | xbrli:stringItemType |
+        | 2  | jpcrp_cor:DocumentType | credit | duration | ドキュメントタイプ | false | xbrli:item | xbrli:stringItemType |
+        """
         lists = []
 
         tags = self.soup.find_all(name='element')
@@ -114,6 +161,6 @@ if __name__ == '__main__':
     xsds = XmlSchemaParser(file_path)
 
     os.makedirs(output_dir,exist_ok=True)
-    xsds.link_base_refs.to_csv(f"{output_dir}/linkBaseRef.csv",encoding='utf-8-sig')
-    xsds.import_schemas.to_csv(f"{output_dir}/importSchema.csv",encoding='utf-8-sig')
-    xsds.elements.to_csv(f"{output_dir}/element.csv",encoding='utf-8-sig')
+    xsds.get_link_base_refs.to_csv(f"{output_dir}/linkBaseRef.csv",encoding='utf-8-sig')
+    xsds.get_import_schemas.to_csv(f"{output_dir}/importSchema.csv",encoding='utf-8-sig')
+    xsds.get_elements.to_csv(f"{output_dir}/element.csv",encoding='utf-8-sig')
