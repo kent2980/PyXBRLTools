@@ -77,6 +77,11 @@ class BaseXmlLabelParser(ABC):
         """link:labelArc要素を取得する抽象メソッド。"""
         pass
 
+    @abstractmethod
+    def get_role_refs(self) -> DataFrame:
+        """roleRef要素を取得する抽象メソッド。"""
+        pass
+
 class XmlLabelParser(BaseXmlLabelParser):
     """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。"""
 
@@ -91,44 +96,37 @@ class XmlLabelParser(BaseXmlLabelParser):
         >>> df = get_link_labels()
             print(df)
         output:
-        |    | xlink_type | xlink_role | xlink_label | text |
-        |----|------------|------------|-------------|------|
-        | 0  | label      | http://www.xbrl.org/2003/role/label | jppfs_lab_EquityClassOfShares | 株式の種類 |
-        | 1  | label      | http://www.xbrl.org/2003/role/label | jppfs_lab_EquityClassOfShares | 株式の種類 |
-        | 2  | label      | http://www.xbrl.org/2003/role/label | jppfs_lab_EquityClassOfShares | 株式の種類 |
+        |    | xlink_type | xlink_label | xlink_role | xml_lang | id | text |
+        |----|------------|-------------|------------|----------|----|------|
+        | 0  | label      | jppfs_lab_EquityClassOfShares | label | ja | EquityClassOfShares |  |
+        | 1  | label      | jppfs_lab_EquityClassOfShares | label | en | EquityClassOfShares |  |
+        | 2  | label      | jppfs_lab_EquityClassOfShares | label | en | EquityClassOfShares |  |
         """
-        return self._get_tags_to_dataframe(['link:label', 'label'])
+        lists = []
 
-    # def get_link_locs(self) -> DataFrame:
-    #     """link:loc要素を取得するメソッド。
-
-    #     returns:
-    #         DataFrame: link:loc要素を含むDataFrame。
-
-    #     example:
-    #     get_link_locs()の出力例
-    #     >>> df = get_link_locs()
-    #         print(df)
-    #     output:
-    #     |    | xlink_type | xlink_schema | xlink_href | xlink_label | text |
-    #     |----|------------|------------|-------------|------|
-    #     | 0  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
-    #     | 1  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
-    #     | 2  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
-    #     """
-    #     lists = []
-
-    #     tags = self.soup.find_all(name=['link:loc', 'loc'])
-    #     for tag in tags:
-    #         dict = {
-    #             'xlink_type': tag.get('xlink:type'),
-    #             'xlink_schema': tag.get('xlink:href').split('#')[0],
-    #             'xlink_href': tag.get('xlink:href').split('#')[-1:][0],
-    #             'xlink_label': tag.get('xlink:label'),
-    #             'text': tag.text
-    #         }
-    #         lists.append(dict)
-    #     return DataFrame(lists)
+        tags = self.soup.find_all(name=['link:label', 'label'])
+        for tag in tags:
+            # id属性が存在で分岐
+            if tag.get('id') == None:
+                dict = {
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_label': tag.get('xlink:label'),
+                    'xlink_role': tag.get('xlink:role'),
+                    'xml_lang': tag.get('xml:lang'),
+                    'id': tag.get('xlink:label'),
+                    'text': tag.text
+                }
+            else:
+                dict = {
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_label': tag.get('xlink:label'),
+                    'xlink_role': tag.get('xlink:role'),
+                    'xml_lang': tag.get('xml:lang'),
+                    'id': tag.get('id'),
+                    'text': tag.text
+                }
+            lists.append(dict)
+        return DataFrame(lists)
 
     def get_link_locs(self, element_name:str = None) -> DataFrame:
         """link:loc要素を取得するメソッド。
@@ -184,6 +182,36 @@ class XmlLabelParser(BaseXmlLabelParser):
         | 2  | arc        | http://www.xbrl.org/2003/arcrole/concept-label | jppfs_cor_EquityClassOfShares | jppfs_lab_EquityClassOfShares | |
         """
         return self._get_tags_to_dataframe(['link:labelArc', 'labelArc'])
+
+    def get_role_refs(self) -> DataFrame:
+        """ roleRef要素を取得するメソッド。
+
+        returns:
+            DataFrame: roleRef要素を含むDataFrame。
+
+        example:
+            get_role_refs()の出力例
+            >>> df = get_role_refs()
+                print(df)
+            output:
+            |    | xlink_type | xlink_role | text |
+            |----|------------|------------|------|
+            | 0  | roleRef    | jppfs_cor_2023-12-01.xsd | |
+            | 1  | roleRef    | jppfs_cor_2023-12-01.xsd | |
+            | 2  | roleRef    | jppfs_cor_2023-12-01.xsd | |
+        """
+        lists = []
+        tags = self.soup.find_all(name=['link:roleRef', 'roleRef'])
+        for tag in tags:
+            dict = {
+                'Role_URI': tag.get('roleURI'),
+                'xlink_type': tag.get('xlink:type'),
+                'xlink_schema': tag.get('xlink:href').split('#')[0].split('/')[-1:][0],
+                'xlink_href': tag.get('xlink:href').split('#')[-1:][0],
+            }
+            lists.append(dict)
+        return DataFrame(lists)
+
 
 if __name__ == '__main__':
     # ファイルパスの設定

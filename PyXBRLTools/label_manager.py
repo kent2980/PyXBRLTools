@@ -219,21 +219,7 @@ class LabelManager(BaseLabelManager):
 
         return result_df
 
-    def link_label_itertor(self, element_names:list, label_index:int = 0):
-        """_summary_
-
-        Args:
-            element_names (list): Elementのリスト
-            label_index (int): ラベルのインデックス
-
-        yields:
-            tuple: element_name, label_ja_text
-
-        example:
-            >>> link_label_itertor(["jppfs_cor_EquityClassOfShares", "jppfs_cor_EquityClassOfShares"], 1)
-            ("jppfs_cor_EquityClassOfShares", "株式の種類")
-            ("jppfs_cor_EquityClassOfShares", "株式の種類")
-        """
+    def __get_lab_paths(self, element_names:list) -> list:
         lab_paths = []
 
         for element_name in element_names:
@@ -254,17 +240,8 @@ class LabelManager(BaseLabelManager):
         # lab_pathsの重複を削除
         lab_paths = list(set(lab_paths))
 
-        result_df = self.__get_label_dfs(lab_paths)
+        return lab_paths
 
-        for element_name in element_names:
-            # loc_dfの'xlink_href'カラムとelement_nameが一致する行を取得
-            loc_df2 = result_df[result_df['xlink_href'] == element_name]
-            # loc_df2の指定したインデックスの行を取得
-            loc_df2 = loc_df2.iloc[label_index]
-            # ラベル名を取得
-            label_ja_text = loc_df2['text']
-
-            yield element_name, label_ja_text
 
     def link_label(self, element_name:str, label_index:int = 0) -> str:
         """ラベルを取得します。
@@ -303,26 +280,39 @@ class LabelManager(BaseLabelManager):
 
         return label_ja_text
 
-    def locs_table_df(self, element_names:list) -> pd.DataFrame:
-        lab_paths = []
+    def link_label_itertor(self, element_names:list, label_index:int = 0):
+        """_summary_
 
-        for element_name in element_names:
+        Args:
+            element_names (list): Elementのリスト
+            label_index (int): ラベルのインデックス
 
-            # 名前空間と要素ラベルを取得
-            name_space = element_name.split('_')[0]
-            # ラベルファイルのパスを取得
-            lab_path = self.__get_lab_path(name_space)
+        yields:
+            tuple: element_name, label_ja_text
 
-            # lab.xmlのローカルパスを取得
-            if "http" in lab_path:
-                lab_path = self.__get_global_file_path(lab_path)
-            else:
-                lab_path = self.__get_local_file_path(lab_path)
-
-            lab_paths.append(lab_path)
+        example:
+            >>> link_label_itertor(["jppfs_cor_EquityClassOfShares", "jppfs_cor_EquityClassOfShares"], 1)
+            ("jppfs_cor_EquityClassOfShares", "株式の種類")
+            ("jppfs_cor_EquityClassOfShares", "株式の種類")
+        """
 
         # lab_pathsの重複を削除
-        lab_paths = list(set(lab_paths))
+        lab_paths = self.__get_lab_paths(element_names)
+
+        result_df = self.__get_label_dfs(lab_paths)
+        result_df.to_csv("result_df.csv")
+        for element_name in element_names:
+            # loc_dfの'xlink_href'カラムとelement_nameが一致する行を取得
+            loc_df2 = result_df[result_df['xlink_href'] == element_name]
+            # loc_df2の指定したインデックスの行を取得
+            loc_df2 = loc_df2.iloc[label_index]
+            # ラベル名を取得
+            label_ja_text = loc_df2['text']
+
+            yield element_name, label_ja_text
+
+    def locs_table_df(self, element_names:list) -> pd.DataFrame:
+        lab_paths = self.__get_lab_paths(element_names)
 
         loc_df = pd.DataFrame()
         for lab_path in lab_paths:
@@ -337,25 +327,7 @@ class LabelManager(BaseLabelManager):
         return loc_df
 
     def arcs_table_df(self, element_names:list) -> pd.DataFrame:
-        lab_paths = []
-
-        for element_name in element_names:
-
-            # 名前空間と要素ラベルを取得
-            name_space = element_name.split('_')[0]
-            # ラベルファイルのパスを取得
-            lab_path = self.__get_lab_path(name_space)
-
-            # lab.xmlのローカルパスを取得
-            if "http" in lab_path:
-                lab_path = self.__get_global_file_path(lab_path)
-            else:
-                lab_path = self.__get_local_file_path(lab_path)
-
-            lab_paths.append(lab_path)
-
-        # lab_pathsの重複を削除
-        lab_paths = list(set(lab_paths))
+        lab_paths = self.__get_lab_paths(element_names)
 
         arc_df = pd.DataFrame()
         for lab_path in lab_paths:
@@ -369,25 +341,7 @@ class LabelManager(BaseLabelManager):
         return arc_df
 
     def labels_table_df(self, element_names:list) -> pd.DataFrame:
-        lab_paths = []
-
-        for element_name in element_names:
-
-            # 名前空間と要素ラベルを取得
-            name_space = element_name.split('_')[0]
-            # ラベルファイルのパスを取得
-            lab_path = self.__get_lab_path(name_space)
-
-            # lab.xmlのローカルパスを取得
-            if "http" in lab_path:
-                lab_path = self.__get_global_file_path(lab_path)
-            else:
-                lab_path = self.__get_local_file_path(lab_path)
-
-            lab_paths.append(lab_path)
-
-        # lab_pathsの重複を削除
-        lab_paths = list(set(lab_paths))
+        lab_paths = self.__get_lab_paths(element_names)
 
         label_df = pd.DataFrame()
         for lab_path in lab_paths:
@@ -399,6 +353,20 @@ class LabelManager(BaseLabelManager):
             label_df = pd.concat([label_df, label_df2], ignore_index=True)
 
         return label_df
+
+    def role_refs_table_df(self, element_names:list) -> pd.DataFrame:
+        lab_paths = self.__get_lab_paths(element_names)
+
+        role_ref_df = pd.DataFrame()
+        for lab_path in lab_paths:
+            # ラベルファイルをパース
+            self.label_parser.file_path = lab_path
+
+            # roleRefラベルを取得
+            role_ref_df2 = self.label_parser.get_role_refs()
+            role_ref_df = pd.concat([role_ref_df, role_ref_df2], ignore_index=True)
+
+        return role_ref_df
 
 if __name__ == '__main__':
     extra_dir:str = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir"
@@ -413,8 +381,9 @@ if __name__ == '__main__':
     for element_name, label_ja_text in lm.link_label_itertor(name_list):
         print(element_name, label_ja_text)
 
-    print(lm.link_label("tse-ed-t_TotalAssets", 0))
+    print(lm.link_label("jppfs_cor_NetCashProvidedByUsedInInvestmentActivities"))
 
     lm.locs_table_df(name_list).to_csv("locs_table.csv")
     lm.arcs_table_df(name_list).to_csv("arcs_table.csv")
     lm.labels_table_df(name_list).to_csv("labels_table.csv")
+    lm.role_refs_table_df(name_list).to_csv("role_refs_table.csv")
