@@ -4,6 +4,8 @@ from utils import Utils
 import pandas as pd
 from abc import ABC, abstractmethod
 import time
+import logging
+from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class BaseLabelManager(ABC):
     """XBRLラベルの基底クラスです。
@@ -16,6 +18,17 @@ class BaseLabelManager(ABC):
         """
         self.__dir_path = dir_path
         self.label_parser = XbrlParserController.xml_label_parser()
+        self._element_names = []
+
+        # ログ設定
+        class_name = self.__class__.__name__
+        print(class_name)
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
+
+        # ログを出力
+        self.logger.logger.info(f"{class_name}を初期化しました。")
+        self.logger.logger.info(f"dir_path(入力フォルダ)を設定: {dir_path}")
 
     @property
     def dir_path(self):
@@ -32,6 +45,10 @@ class BaseLabelManager(ABC):
             dir_path (str): ディレクトリのパス。
         """
         self.__dir_path = dir_path
+        self._element_names = []
+
+        # ログを出力
+        self.logger.logger.info(f"dir_path(入力フォルダ)を変更: {dir_path}")
 
     @abstractmethod
     def link_label(self,element_name:str, index:int = 0) -> str:
@@ -300,7 +317,7 @@ class LabelManager(BaseLabelManager):
         lab_paths = self.__get_lab_paths(element_names)
 
         result_df = self.__get_label_dfs(lab_paths)
-        result_df.to_csv("result_df.csv")
+
         for element_name in element_names:
             # loc_dfの'xlink_href'カラムとelement_nameが一致する行を取得
             loc_df2 = result_df[result_df['xlink_href'] == element_name]
@@ -370,6 +387,7 @@ class LabelManager(BaseLabelManager):
 
 if __name__ == '__main__':
     extra_dir:str = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir"
+    output_dir:str = "extract_csv/managers"
 
     # CSVから指定カラムをリストで取得
     name_list = pd.read_csv("/Users/user/Vscode/python/PyXBRLTools/extract_csv/ixbrl_parser/fr/non_fractions.csv")
@@ -379,11 +397,16 @@ if __name__ == '__main__':
 
     lm = LabelManager(extra_dir)
     for element_name, label_ja_text in lm.link_label_itertor(name_list):
-        print(element_name, label_ja_text)
+        # print(element_name, label_ja_text)
+        pass
 
     print(lm.link_label("jppfs_cor_NetCashProvidedByUsedInInvestmentActivities"))
 
-    lm.locs_table_df(name_list).to_csv("locs_table.csv")
-    lm.arcs_table_df(name_list).to_csv("arcs_table.csv")
-    lm.labels_table_df(name_list).to_csv("labels_table.csv")
-    lm.role_refs_table_df(name_list).to_csv("role_refs_table.csv")
+    print("locs_table_df を出力します。")
+    lm.locs_table_df(name_list).to_csv(f"{output_dir}/locs_table.csv")
+    print("arcs_table_df を出力します。")
+    lm.arcs_table_df(name_list).to_csv(f"{output_dir}/arcs_table.csv")
+    print("labels_table_df を出力します。")
+    lm.labels_table_df(name_list).to_csv(f"{output_dir}/labels_table.csv")
+    print("role_refs_table_df を出力します。")
+    lm.role_refs_table_df(name_list).to_csv(f"{output_dir}/role_refs_table.csv")

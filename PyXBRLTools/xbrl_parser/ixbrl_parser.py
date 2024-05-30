@@ -5,9 +5,10 @@ import re
 import unicodedata
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils import Utils
+import logging
+from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class BaseIxbrlParser(ABC):
     """
@@ -26,6 +27,11 @@ class BaseIxbrlParser(ABC):
             self.soup = bs(file, features='xml')
 
         self.__set_df()
+
+        # ログ設定
+        class_name = self.__class__.__name__
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
 
     def __set_df(self):
         """データフレームを設定する内部メソッドです。"""

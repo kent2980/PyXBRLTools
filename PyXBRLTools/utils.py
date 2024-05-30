@@ -177,3 +177,4 @@ class Utils:
         テキストを正規化します。
         """
         return re.sub(" ", "", unicodedata.normalize('NFKC', text))
+

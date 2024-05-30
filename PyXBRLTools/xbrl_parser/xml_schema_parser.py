@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 from abc import ABC, abstractmethod
 import os
+import logging
+from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class BaseXmlSchemaParser(ABC):
     """ XMLスキーマパーサの基底クラスです。
@@ -17,6 +19,11 @@ class BaseXmlSchemaParser(ABC):
         self.__file_path = file_path
         with open(file_path, 'r', encoding='utf-8') as file:
             self.soup = bs(file, features='lxml-xml')
+
+        # ログ設定
+        class_name = self.__class__.__name__
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
 
     @property
     def file_path(self) -> str:

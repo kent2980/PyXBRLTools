@@ -3,9 +3,10 @@ from pandas import DataFrame
 import re
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils import Utils
+import logging
+from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class QualitativeParser:
     """
@@ -19,6 +20,11 @@ class QualitativeParser:
         self.file_path = file_path
         with open(file_path, 'r', encoding='utf-8') as file:
             self.soup = bs(file, features='html.parser')
+
+        # ログ設定
+        class_name = self.__class__.__name__
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
 
     def get_smt_head(self) -> DataFrame:
         """
