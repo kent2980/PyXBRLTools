@@ -1,0 +1,793 @@
+[
+    {
+        "label": "psycopg2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "is_string_dtype",
+        "importPath": "pandas.api.types",
+        "description": "pandas.api.types",
+        "isExtraImport": true,
+        "detail": "pandas.api.types",
+        "documentation": {}
+    },
+    {
+        "label": "is_numeric_dtype",
+        "importPath": "pandas.api.types",
+        "description": "pandas.api.types",
+        "isExtraImport": true,
+        "detail": "pandas.api.types",
+        "documentation": {}
+    },
+    {
+        "label": "is_bool_dtype",
+        "importPath": "pandas.api.types",
+        "description": "pandas.api.types",
+        "isExtraImport": true,
+        "detail": "pandas.api.types",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "zipfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "zipfile",
+        "description": "zipfile",
+        "detail": "zipfile",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "JDate",
+        "importPath": "datetimejp",
+        "description": "datetimejp",
+        "isExtraImport": true,
+        "detail": "datetimejp",
+        "documentation": {}
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "urlparse",
+        "importPath": "urllib.parse",
+        "description": "urllib.parse",
+        "isExtraImport": true,
+        "detail": "urllib.parse",
+        "documentation": {}
+    },
+    {
+        "label": "unicodedata",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "unicodedata",
+        "description": "unicodedata",
+        "detail": "unicodedata",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlRole",
+        "importPath": "xbrl_parser.xbrl_roles_definitions",
+        "description": "xbrl_parser.xbrl_roles_definitions",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xbrl_roles_definitions",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlParserController",
+        "importPath": "xbrl_parser.xbrl_parser_controller",
+        "description": "xbrl_parser.xbrl_parser_controller",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xbrl_parser_controller",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils.utils",
+        "description": "utils.utils",
+        "isExtraImport": true,
+        "detail": "utils.utils",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils.utils",
+        "description": "utils.utils",
+        "isExtraImport": true,
+        "detail": "utils.utils",
+        "documentation": {}
+    },
+    {
+        "label": "Type",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "unittest",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "unittest",
+        "description": "unittest",
+        "detail": "unittest",
+        "documentation": {}
+    },
+    {
+        "label": "patch",
+        "importPath": "unittest.mock",
+        "description": "unittest.mock",
+        "isExtraImport": true,
+        "detail": "unittest.mock",
+        "documentation": {}
+    },
+    {
+        "label": "patch",
+        "importPath": "unittest.mock",
+        "description": "unittest.mock",
+        "isExtraImport": true,
+        "detail": "unittest.mock",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "importPath": "label_manager",
+        "description": "label_manager",
+        "isExtraImport": true,
+        "detail": "label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "importPath": "label_manager",
+        "description": "label_manager",
+        "isExtraImport": true,
+        "detail": "label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "exceptions",
+        "description": "exceptions",
+        "isExtraImport": true,
+        "detail": "exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "CalculationLinkManager",
+        "importPath": "link_managers",
+        "description": "link_managers",
+        "isExtraImport": true,
+        "detail": "link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "DefinitionLinkManager",
+        "importPath": "link_managers",
+        "description": "link_managers",
+        "isExtraImport": true,
+        "detail": "link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "PresentationLinkManager",
+        "importPath": "link_managers",
+        "description": "link_managers",
+        "isExtraImport": true,
+        "detail": "link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlIxbrlParser",
+        "importPath": "xbrl_parser.xbrl_ixbrl_parser",
+        "description": "xbrl_parser.xbrl_ixbrl_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xbrl_ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlLabelParser",
+        "importPath": "xbrl_parser.xml_label_parser",
+        "description": "xbrl_parser.xml_label_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_label_parser",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "importPath": "xbrl_manager.label_manager",
+        "description": "xbrl_manager.label_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlParser",
+        "importPath": "xbrl_parser.ixbrl_parser",
+        "description": "xbrl_parser.ixbrl_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "PostgreSqlConnector",
+        "importPath": "db_connector.postgre_sql_connector",
+        "description": "db_connector.postgre_sql_connector",
+        "isExtraImport": true,
+        "detail": "db_connector.postgre_sql_connector",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "importPath": "PyXBRLTools.label_manager",
+        "description": "PyXBRLTools.label_manager",
+        "isExtraImport": true,
+        "detail": "PyXBRLTools.label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "PostgreSqlConnector",
+        "kind": 6,
+        "importPath": "PyXBRLTools.db_connector.postgre_sql_connector",
+        "description": "PyXBRLTools.db_connector.postgre_sql_connector",
+        "peekOfCode": "class PostgreSqlConnector:\n    \"\"\" PostgreSQL database コネクター\n    Attributes:\n    host (str): ホスト名\n    port (int): ポート番号\n    database (str): データベース名\n    user (str): ユーザー名\n    password (str): パスワード\n    connection (psycopg2.extensions.connection): データベース接続オブジェクト\n    \"\"\"",
+        "detail": "PyXBRLTools.db_connector.postgre_sql_connector",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "kind": 6,
+        "importPath": "PyXBRLTools.log.py_xbrl_tools_loging",
+        "description": "PyXBRLTools.log.py_xbrl_tools_loging",
+        "peekOfCode": "class PyXBRLToolsLogging(object):\n    def __init__(self, log_level=logging.INFO):\n        self.logger = logging.getLogger('PyXBRLTools')\n        self.logger.setLevel(log_level)\n        self.log_level = log_level\n        self.log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')\n        self.log_console_handler = logging.StreamHandler()\n        self.log_console_handler.setFormatter(self.log_format)\n        self.logger.addHandler(self.log_console_handler)\n        self.log_file_handler = None",
+        "detail": "PyXBRLTools.log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "MyException",
+        "kind": 6,
+        "importPath": "PyXBRLTools.utils.exceptions",
+        "description": "PyXBRLTools.utils.exceptions",
+        "peekOfCode": "class MyException(Exception):\n    \"\"\"自作例外クラスの基底クラス\n    Args:\n        Exception (_type_): エラーメッセージ\n    \"\"\"\n    def __init__(self, arg: str = \"\") -> None:\n        self.arg = arg\nclass XbrlValueNoneException(MyException):\n    \"\"\"参照したXBRLタグが存在しない場合に発生する例外\n    Args:",
+        "detail": "PyXBRLTools.utils.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlValueNoneException",
+        "kind": 6,
+        "importPath": "PyXBRLTools.utils.exceptions",
+        "description": "PyXBRLTools.utils.exceptions",
+        "peekOfCode": "class XbrlValueNoneException(MyException):\n    \"\"\"参照したXBRLタグが存在しない場合に発生する例外\n    Args:\n        MyException (_type_): 自作例外クラス\n    \"\"\"\n    def __init__(self, arg: str = \"\") -> None:\n        super().__init__(arg)\n    def __str__(self) -> str:\n        return f\"XBRLタグ [{self.arg}] の値が存在しません。\"\nclass NoneXbrlZipPathSetting(Exception):",
+        "detail": "PyXBRLTools.utils.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "NoneXbrlZipPathSetting",
+        "kind": 6,
+        "importPath": "PyXBRLTools.utils.exceptions",
+        "description": "PyXBRLTools.utils.exceptions",
+        "peekOfCode": "class NoneXbrlZipPathSetting(Exception):\n    \"\"\"ZIPファイルのパスが未設定の場合に発生する例外\n    Args:\n        Exception (_type_): 例外基底クラス\n    \"\"\"\n    def __str__(self) -> str:\n        return \"ZIPファイルのパスを指定してください。\"\nclass LinkListEmptyException(MyException):\n    def __init__(self, arg: str = \"\") -> None:\n        super().__init__(arg)",
+        "detail": "PyXBRLTools.utils.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "LinkListEmptyException",
+        "kind": 6,
+        "importPath": "PyXBRLTools.utils.exceptions",
+        "description": "PyXBRLTools.utils.exceptions",
+        "peekOfCode": "class LinkListEmptyException(MyException):\n    def __init__(self, arg: str = \"\") -> None:\n        super().__init__(arg)\n    def __str__(self) -> str:\n        return f\"リンクファイルが読み込めませんでした。\\n[{self.arg}]\"",
+        "detail": "PyXBRLTools.utils.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "kind": 6,
+        "importPath": "PyXBRLTools.utils.utils",
+        "description": "PyXBRLTools.utils.utils",
+        "peekOfCode": "class Utils:\n    def extract_zip(zip_path, extract_to=None):\n        \"\"\"\n        ZIPファイルを指定されたディレクトリに展開します。\n        Args:\n            zip_path (str): ZIPファイルのパス。\n            extract_to (str, optional): ファイルを展開するディレクトリ。デフォルトはZIPファイルと同じディレクトリ。\n        Raises:\n            FileNotFoundError: ZIPファイルが存在しない場合に発生。\n            Exception: 展開に失敗した場合に発生。",
+        "detail": "PyXBRLTools.utils.utils",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLabelManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.label_manager",
+        "description": "PyXBRLTools.xbrl_manager.label_manager",
+        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\"XBRLラベルの基底クラスです。\n    XBRLのelementからラベルを取得するクラスです。\n    \"\"\"\n    def __init__(self, dir_path:str):\n        \"\"\"BaseLabelManagerのコンストラクタです。\n        Args:\n            dir_path (str): ディレクトリのパス。\n        \"\"\"\n        self.__dir_path = dir_path",
+        "detail": "PyXBRLTools.xbrl_manager.label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.label_manager",
+        "description": "PyXBRLTools.xbrl_manager.label_manager",
+        "peekOfCode": "class LabelManager(BaseLabelManager):\n    \"\"\"XBRLラベルのクラスです。\n    \"\"\"\n    def __get_lab_path(self, name_space:str) -> str:\n        \"\"\" ラベルファイルのパスを取得します。\n        args:\n            name_space (str): 名前空間。\n        returns:\n            str: ラベルファイルのパス。\n        example:",
+        "detail": "PyXBRLTools.xbrl_manager.label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "CalculationLinkManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
+        "description": "PyXBRLTools.xbrl_manager.link_managers",
+        "peekOfCode": "class CalculationLinkManager:\n    def __init__(self, xbrl_zip_path):\n        ...\n    def to_cal_link_df(self):\n        ...\nclass DefinitionLinkManager:\n    def __init__(self, xbrl_zip_path):\n        ...\n    def to_def_link_df(self):\n        ...",
+        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "DefinitionLinkManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
+        "description": "PyXBRLTools.xbrl_manager.link_managers",
+        "peekOfCode": "class DefinitionLinkManager:\n    def __init__(self, xbrl_zip_path):\n        ...\n    def to_def_link_df(self):\n        ...\nclass PresentationLinkManager:\n    def __init__(self, xbrl_zip_path):\n        ...\n    def to_pre_link_df(self):\n        ...",
+        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "PresentationLinkManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
+        "description": "PyXBRLTools.xbrl_manager.link_managers",
+        "peekOfCode": "class PresentationLinkManager:\n    def __init__(self, xbrl_zip_path):\n        ...\n    def to_pre_link_df(self):\n        ...",
+        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "TestLabelManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.test_label_manager",
+        "description": "PyXBRLTools.xbrl_manager.test_label_manager",
+        "peekOfCode": "class TestLabelManager(unittest.TestCase):\n    def setUp(self):\n        # テストのセットアップ時に実行されるメソッド\n        self.extra_dir = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir\"\n        self.lm = LabelManager(self.extra_dir)\n    def test_link_label(self):\n        \"\"\" link_labelメソッドのテスト \"\"\"\n        # link_labelメソッドをテストします\n        index = 0\n        expected_label = \"Test Label\"",
+        "detail": "PyXBRLTools.xbrl_manager.test_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlRead",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_reader",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_reader",
+        "peekOfCode": "class XbrlRead:\n    def __init__(self, xbrl_zip_path: str = None):\n        ...\n    def get_company_code(self):\n        ...\n    def company_explain_df(self):\n        ...\n    def to_dataframe(self):\n        ...\n    # add_label_df() の中身は LabelManager を使用するように変更",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_reader",
+        "documentation": {}
+    },
+    {
+        "label": "BaseXbrlIxbrlParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "peekOfCode": "class BaseXbrlIxbrlParser(ABC):\n    \"\"\"\n    iXBRLファイルを解析するための抽象ベースクラスです。\n    \"\"\"\n    def __init__(self, file_path) -> None:\n        \"\"\"\n        コンストラクタ。iXBRLファイルを読み込んでBeautifulSoupオブジェクトを初期化します。\n        Args:\n            file_path (str): 解析するiXBRLファイルのパス。\n        \"\"\"",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlIxbrlParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "peekOfCode": "class XbrlIxbrlParser(BaseIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    \"\"\"\n    def get_ix_non_fractions(self):\n        \"\"\"非分数データを取得します。\"\"\"\n        lists = []\n        tags = self.soup.find_all(name='ix:nonFraction')\n        for tag in tags:\n            lists.append({",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlParserController",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
+        "peekOfCode": "class XbrlParserController:\n    def ixbrl_parser(file_path:str) -> XbrlIxbrlParser:\n        \"\"\" iXBRLパーサを取得します。\"\"\"\n        return XbrlIxbrlParser(file_path)\n    def xml_schema_parser(file_path:str) -> XmlSchemaParser:\n        \"\"\" XMLスキーマパーサを取得します。\"\"\"\n        return XmlSchemaParser(file_path)\n    def xml_label_parser(file_path:str = None) -> XmlLabelParser:\n        \"\"\" XMLラベルパーサを取得します。\"\"\"\n        return XmlLabelParser(file_path)",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlQualitativeParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
+        "peekOfCode": "class XbrlQualitativeParser:\n    \"\"\"\n    \"qualitative.htm\"から情報を解析して抽出するためのクラスです。\n    \"\"\"\n    def __init__(self, file_path: str) -> None:\n        \"\"\"\n        QualitativeParserクラスのコンストラクタです。\n        \"\"\"\n        self.file_path = file_path\n        with open(file_path, 'r', encoding='utf-8') as file:",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlRole",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "peekOfCode": "class XbrlRole:\n    \"\"\"\n    EDINET タクソノミの各科目に対する表示名を設定する定数クラス。\n    \"\"\"\n    # http://www.xbrl.org/2003/role/\n    LABEL = \"http://www.xbrl.org/2003/role/label\"\n    \"\"\"標準ラベル: 標準に設定するラベル\"\"\"\n    VERBOSE_LABEL = \"http://www.xbrl.org/2003/role/verboseLabel\"\n    \"\"\"冗長ラベル: 全ての要素で一意のラベル\"\"\"\n    TOTAL_LABEL = \"http://www.xbrl.org/2003/role/totalLabel\"",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "documentation": {}
+    },
+    {
+        "label": "ManufacturingXbrlRole",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "description": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "peekOfCode": "class ManufacturingXbrlRole(XbrlRole):\n    INDUSTRY_LABEL = \"http://info.edinet-fsa.go.jp/jp/fr/gaap/manufacturing/role/label\"\n    INDUSTRY_VERBOSE_LABEL = \"http://info.edinet-fsa.go.jp/jp/fr/gaap/manufacturing/role/verboseLabel\"\n    INDUSTRY_TOTAL_LABEL = \"http://info.edinet-fsa.go.jp/jp/fr/gaap/manufacturing/role/totalLabel\"\n    INDUSTRY_NEGATIVE_LABEL = \"http://info.edinet-fsa.go.jp/jp/fr/gaap/manufacturing/role/negativeLabel\"\n    INDUSTRY_DOCUMENTATION = \"http://info.edinet-fsa.go.jp/jp/fr/gaap/manufacturing/role/documentation\"",
+        "detail": "PyXBRLTools.xbrl_parser.xbrl_roles_definitions",
+        "documentation": {}
+    },
+    {
+        "label": "BaseXmlLabelParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "peekOfCode": "class BaseXmlLabelParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        __link_labels (DataFrame): link:label要素を含むDataFrame。\n        __link_locs (DataFrame): link:loc要素を含むDataFrame。\n        __link_label_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n    \"\"\"",
+        "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlLabelParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\"\"\"\n    def get_link_labels(self) -> DataFrame:\n        \"\"\"link:label要素を取得するメソッド。\n        returns:\n        example:\n        get_link_labels()の出力例\n        >>> df = get_link_labels()\n            print(df)\n        output:",
+        "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
+        "documentation": {}
+    },
+    {
+        "label": "BaseXmlLinkParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "peekOfCode": "class BaseXmlLinkParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        __link_labels (DataFrame): link:label要素を含むDataFrame。\n        __link_locs (DataFrame): link:loc要素を含むDataFrame。\n        __link_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n    \"\"\"",
+        "detail": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlLinkParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "peekOfCode": "class XmlLinkParser(BaseXmlLinkParser):\n    \"\"\"BaseXmlLabelParserを継承して具体的な実装を行うクラス。\"\"\"\n    def get_link_locs(self) -> DataFrame:\n        \"\"\"link:loc要素を取得するメソッド。\"\"\"\n        return self._get_tags_to_dataframe(['link:loc', 'loc'])\n    def get_link_arcs(self) -> DataFrame:\n        \"\"\"link:labelArc要素を取得するメソッド。\"\"\"\n        tag_list = ['link:calculationArc','link:definitionArc','link:presentationArc']\n        return self._get_tags_to_dataframe(tag_list)",
+        "detail": "PyXBRLTools.xbrl_parser.xml_link_parser",
+        "documentation": {}
+    },
+    {
+        "label": "BaseXmlSchemaParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        self.__file_path = file_path",
+        "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlSchemaParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "peekOfCode": "class XmlSchemaParser(BaseXmlSchemaParser):\n    \"\"\"\n    XMLスキーマパーサの具象クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def get_import_schemas(self) -> DataFrame:\n        \"\"\" importスキーマを取得します。\n        returns:\n            DataFrame: importスキーマテーブルのDataFrame。\n        example:",
+        "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
+        "label": "TestLabelManager",
+        "kind": 6,
+        "importPath": "tests.test_label_manager",
+        "description": "tests.test_label_manager",
+        "peekOfCode": "class TestLabelManager(unittest.TestCase):\n    def setUp(self):\n        self.extra_dir = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir\"\n        self.lm = LabelManager(self.extra_dir)\n    def test_link_label(self):\n        # Test the link_label method\n        index = 0\n        expected_label = \"Test Label\"\n        with patch.object(LabelManager, 'link_label', return_value=expected_label):\n            result = self.lm.link_label(index)",
+        "detail": "tests.test_label_manager",
+        "documentation": {}
+    }
+]

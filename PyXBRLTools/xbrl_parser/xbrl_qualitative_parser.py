@@ -8,7 +8,7 @@ from utils import Utils
 import logging
 from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
-class QualitativeParser:
+class XbrlQualitativeParser:
     """
     "qualitative.htm"から情報を解析して抽出するためのクラスです。
     """
@@ -50,14 +50,3 @@ class QualitativeParser:
 
         lists = [row for row in lists if re.search(r'\d', row['title'])]
         return DataFrame(lists)
-
-if __name__ == '__main__':
-    file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/qualitative.htm"
-    try:
-        qp = QualitativeParser(file_path)
-        df = qp.get_smt_head()
-
-        os.makedirs("extract_csv/qualitative", exist_ok=True)
-        df.to_csv('extract_csv/qualitative/qualitative.csv', index=False, encoding='utf-8-sig')
-    except Exception as e:
-        print(f"An error occurred: {e}")

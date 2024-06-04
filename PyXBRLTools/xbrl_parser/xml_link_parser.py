@@ -87,27 +87,3 @@ class XmlLinkParser(BaseXmlLinkParser):
         """link:labelArc要素を取得するメソッド。"""
         tag_list = ['link:calculationArc','link:definitionArc','link:presentationArc']
         return self._get_tags_to_dataframe(tag_list)
-
-if __name__ == '__main__':
-    # ファイルパスの設定
-    pre_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-pre.xml"
-    cal_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-cal.xml"
-    def_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-def.xml"
-    # XmlLabelクラスのインスタンス化
-    pre_label = XmlLinkParser(pre_file_path)
-    cal_label = XmlLinkParser(cal_file_path)
-    def_label = XmlLinkParser(def_file_path)
-
-    # 出力ディレクトリの作成
-    output_dir = "extract_csv/link"
-    os.makedirs(output_dir, exist_ok=True)
-
-    # CSVファイルへの出力
-    pre_label.link_locs.to_csv(f'{output_dir}/pre_link_locs.csv', encoding='utf-8-sig')
-    pre_label.link_arcs.to_csv(f'{output_dir}/pre_arcs.csv', encoding='utf-8-sig')
-
-    cal_label.link_locs.to_csv(f'{output_dir}/cal_link_locs.csv', encoding='utf-8-sig')
-    cal_label.link_arcs.to_csv(f'{output_dir}/cal_arcs.csv', encoding='utf-8-sig')
-
-    def_label.link_locs.to_csv(f'{output_dir}/def_link_locs.csv', encoding='utf-8-sig')
-    def_label.link_arcs.to_csv(f'{output_dir}/def_arcs.csv', encoding='utf-8-sig')

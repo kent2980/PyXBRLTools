@@ -161,13 +161,3 @@ class XmlSchemaParser(BaseXmlSchemaParser):
             lists.append(dict)
 
         return DataFrame(lists)
-
-if __name__ == '__main__':
-    file_path = "doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13.xsd"
-    output_dir = "extract_csv/schema"
-    xsds = XmlSchemaParser(file_path)
-
-    os.makedirs(output_dir,exist_ok=True)
-    xsds.get_link_base_refs.to_csv(f"{output_dir}/linkBaseRef.csv",encoding='utf-8-sig')
-    xsds.get_import_schemas.to_csv(f"{output_dir}/importSchema.csv",encoding='utf-8-sig')
-    xsds.get_elements.to_csv(f"{output_dir}/element.csv",encoding='utf-8-sig')

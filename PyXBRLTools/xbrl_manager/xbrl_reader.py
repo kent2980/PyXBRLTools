@@ -1,5 +1,5 @@
 from exceptions import *
-from utils import format_date
+from utils import Utils
 from label_manager import LabelManager
 from link_managers import CalculationLinkManager, DefinitionLinkManager, PresentationLinkManager
 

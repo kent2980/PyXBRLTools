@@ -1,11 +1,13 @@
-from xbrl_parser.xbrl_parser_controller import XbrlParserController
 import os
-from utils import Utils
 import pandas as pd
 from abc import ABC, abstractmethod
 import time
 import logging
 from log.py_xbrl_tools_loging import PyXBRLToolsLogging
+from xbrl_parser.xbrl_roles_definitions import XbrlRole
+from xbrl_parser.xbrl_parser_controller import XbrlParserController
+from utils.utils import Utils
+from typing import Type
 
 class BaseLabelManager(ABC):
     """XBRLラベルの基底クラスです。
@@ -62,7 +64,7 @@ class BaseLabelManager(ABC):
         pass
 
     @abstractmethod
-    def link_label_itertor(self, element_names:list, label_index:int = 0):
+    def link_label_itertor(self, element_names:list, xbrl_role: Type[XbrlRole] = 0):
         """ラベルをイテレータで取得します。
         """
         pass
@@ -260,12 +262,12 @@ class LabelManager(BaseLabelManager):
         return lab_paths
 
 
-    def link_label(self, element_name:str, label_index:int = 0) -> str:
+    def link_label(self, element_name:str, xbrl_role: str | None = None) -> str:
         """ラベルを取得します。
 
         Args:
             element_name (str): 要素名。
-            index (int): ラベルのインデックス。
+            xbrl_role (Type[XbrlRole]): ラベルのインデックス。(default: 'http://www.xbrl.org/2003/role/label')
 
         Returns:
             str: ラベル。
@@ -290,22 +292,32 @@ class LabelManager(BaseLabelManager):
 
         # loc_dfの'xlink_href'カラムとelement_nameが一致する行を取得
         loc_df2 = result_df[result_df['xlink_href'] == element_name]
-        # loc_df2の指定したインデックスの行を取得
-        loc_df2 = loc_df2.iloc[label_index]
+        # loc_df2の指定したxbrl_roleの行を取得, xbrl_roleが指定されていない場合は全ての行を取得
+        if xbrl_role is not None:
+            loc_df2 = loc_df2.query(f'xlink_role == "{xbrl_role}"')
+
+        # 例外処理
+        try:
+            # loc_df2の指定したインデックスの行を取得,要素がない場合はエラーを発生して例外処理
+            loc_df2 = loc_df2.iloc[0]
+        except IndexError:
+            # ログファイルにエラーメッセージを出力
+            self.logger.logger.error(f"要素名'{element_name}'が見つかりませんでした。")
+
         # ラベル名を取得
-        label_ja_text = loc_df2['text']
+        label_ja_label = loc_df2['label']
 
-        return label_ja_text
+        return label_ja_label
 
-    def link_label_itertor(self, element_names:list, label_index:int = 0):
+    def link_label_itertor(self, element_names:list, xbrl_role: str | None = None):
         """_summary_
 
         Args:
             element_names (list): Elementのリスト
-            label_index (int): ラベルのインデックス
+            xbrl_role (Type[XbrlRole]): ラベルのインデックス。(default: 'http://www.xbrl.org/2003/role/label')
 
         yields:
-            tuple: element_name, label_ja_text
+            tuple: element_name, label_ja_label
 
         example:
             >>> link_label_itertor(["jppfs_cor_EquityClassOfShares", "jppfs_cor_EquityClassOfShares"], 1)
@@ -321,12 +333,24 @@ class LabelManager(BaseLabelManager):
         for element_name in element_names:
             # loc_dfの'xlink_href'カラムとelement_nameが一致する行を取得
             loc_df2 = result_df[result_df['xlink_href'] == element_name]
-            # loc_df2の指定したインデックスの行を取得
-            loc_df2 = loc_df2.iloc[label_index]
-            # ラベル名を取得
-            label_ja_text = loc_df2['text']
+            # loc_df2の指定したxbrl_roleの行を取得, xbrl_roleが指定されていない場合は全ての行を取得
+            if xbrl_role is not None:
+                loc_df2 = loc_df2.query(f'xlink_role == "{xbrl_role}"')
 
-            yield element_name, label_ja_text
+            # 例外処理
+            try:
+                # loc_df2の指定したインデックスの行を取得,要素がない場合はエラーを発生して例外処理
+                loc_df2 = loc_df2.iloc[0]
+            except IndexError:
+                # ログファイルにエラーメッセージを出力
+                self.logger.logger.error(f"要素名'{element_name}'が見つかりませんでした。")
+                # エラーが発生したら次の要素に移動
+                continue
+
+            # ラベル名を取得
+            label_ja_label = loc_df2['label']
+
+            yield element_name, label_ja_label
 
     def locs_table_df(self, element_names:list) -> pd.DataFrame:
         lab_paths = self.__get_lab_paths(element_names)
@@ -346,18 +370,22 @@ class LabelManager(BaseLabelManager):
     def arcs_table_df(self, element_names:list) -> pd.DataFrame:
         lab_paths = self.__get_lab_paths(element_names)
 
-        arc_df = pd.DataFrame()
+        arc_df = None
         for lab_path in lab_paths:
             # ラベルファイルをパース
             self.label_parser.file_path = lab_path
 
             # arcラベルを取得
             arc_df2 = self.label_parser.get_link_label_arcs()
-            arc_df = pd.concat([arc_df, arc_df2], ignore_index=True)
+            # arc_dfにarc_labelを追加しインデックスを振り直す,arc_df2が空の場合は次の要素に移動
+            if not arc_df is None:
+                arc_df = pd.concat([arc_df, arc_df2], ignore_index=True)
+            else:
+                arc_df = arc_df2
 
         return arc_df
 
-    def labels_table_df(self, element_names:list) -> pd.DataFrame:
+    def labels_table_df(self, element_names:list, xbrl_role: str | None = None) -> pd.DataFrame:
         lab_paths = self.__get_lab_paths(element_names)
 
         label_df = pd.DataFrame()
@@ -368,6 +396,9 @@ class LabelManager(BaseLabelManager):
             # labelラベルを取得
             label_df2 = self.label_parser.get_link_labels()
             label_df = pd.concat([label_df, label_df2], ignore_index=True)
+
+        if xbrl_role is not None:
+            label_df = label_df.query(f'xlink_role == "{xbrl_role}"')
 
         return label_df
 
@@ -384,29 +415,3 @@ class LabelManager(BaseLabelManager):
             role_ref_df = pd.concat([role_ref_df, role_ref_df2], ignore_index=True)
 
         return role_ref_df
-
-if __name__ == '__main__':
-    extra_dir:str = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir"
-    output_dir:str = "extract_csv/managers"
-
-    # CSVから指定カラムをリストで取得
-    name_list = pd.read_csv("/Users/user/Vscode/python/PyXBRLTools/extract_csv/ixbrl_parser/fr/non_fractions.csv")
-    name_list = name_list['name'].tolist()
-    # name_list内から重複を削除
-    name_list = list(set(name_list))
-
-    lm = LabelManager(extra_dir)
-    for element_name, label_ja_text in lm.link_label_itertor(name_list):
-        # print(element_name, label_ja_text)
-        pass
-
-    print(lm.link_label("jppfs_cor_NetCashProvidedByUsedInInvestmentActivities"))
-
-    print("locs_table_df を出力します。")
-    lm.locs_table_df(name_list).to_csv(f"{output_dir}/locs_table.csv")
-    print("arcs_table_df を出力します。")
-    lm.arcs_table_df(name_list).to_csv(f"{output_dir}/arcs_table.csv")
-    print("labels_table_df を出力します。")
-    lm.labels_table_df(name_list).to_csv(f"{output_dir}/labels_table.csv")
-    print("role_refs_table_df を出力します。")
-    lm.role_refs_table_df(name_list).to_csv(f"{output_dir}/role_refs_table.csv")

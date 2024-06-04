@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from PyXBRLTools.label_manager import LabelManager
+from label_manager import LabelManager
 
 class TestLabelManager(unittest.TestCase):
 

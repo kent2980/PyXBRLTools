@@ -140,7 +140,7 @@ class XmlLabelParser(BaseXmlLabelParser):
                         'xlink_role': tag.get('xlink:role'),
                         'xml_lang': tag.get('xml:lang'),
                         'id': tag.get('xlink:label'),
-                        'text': tag.text
+                        'label': tag.text
                     }
                 else:
                     dict = {
@@ -149,7 +149,7 @@ class XmlLabelParser(BaseXmlLabelParser):
                         'xlink_role': tag.get('xlink:role'),
                         'xml_lang': tag.get('xml:lang'),
                         'id': tag.get('id'),
-                        'text': tag.text
+                        'label': tag.text
                     }
                 lists.append(dict)
 
@@ -180,11 +180,6 @@ class XmlLabelParser(BaseXmlLabelParser):
             lists = []
             tags = None
 
-            # if element_name == None:
-            #     tags = self.soup.find_all(name=['link:loc', 'loc'])
-            # else:
-            #     # self.soupからxlink_hrefプロパティがxlink_hrefの値と一致する要素を取得
-            #     tags = self.soup.find_all(name=['link:loc', 'loc'], attrs={'xlink:label': element_name})
             tags = self.soup.find_all(name=['link:loc', 'loc'])
             for tag in tags:
                 dict = {
@@ -192,7 +187,6 @@ class XmlLabelParser(BaseXmlLabelParser):
                     'xlink_schema': tag.get('xlink:href').split('#')[0],
                     'xlink_href': tag.get('xlink:href').split('#')[-1:][0],
                     'xlink_label': tag.get('xlink:label'),
-                    'text': tag.text
                 }
                 lists.append(dict)
 
@@ -220,7 +214,19 @@ class XmlLabelParser(BaseXmlLabelParser):
         if self._link_label_arcs is not None:
             return self._link_label_arcs
         else:
-            self._link_label_arcs = self._get_tags_to_dataframe(['link:labelArc', 'labelArc'])
+            lists = []
+            tags = self.soup.find_all(name=['link:labelArc', 'labelArc'])
+            for tag in tags:
+                dict = {
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_arcrole': tag.get('xlink:arcrole'),
+                    'xlink_from': tag.get('xlink:from'),
+                    'xlink_to': tag.get('xlink:to'),
+                    # 'order_id': float(tag.get('order')) if tag.get('order') else None,
+                }
+                lists.append(dict)
+
+            self._link_label_arcs = DataFrame(lists)
 
             return self._link_label_arcs
 
@@ -258,25 +264,3 @@ class XmlLabelParser(BaseXmlLabelParser):
             self._role_refs = DataFrame(lists)
 
             return self._role_refs
-
-if __name__ == '__main__':
-    # ファイルパスの設定
-    local_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-lab.xml"
-    global_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/taxonomy/jppfs/2023-12-01/label/jppfs_2023-12-01_lab.xml"
-
-    # XmlLabelクラスのインスタンス化
-    gl_label = XmlLabelParser(global_file_path)
-    lo_label = XmlLabelParser(local_file_path)
-
-    # 出力ディレクトリの作成
-    output_dir = "extract_csv/label"
-    os.makedirs(output_dir, exist_ok=True)
-
-    # CSVファイルへの出力
-    gl_label.get_link_locs().to_csv(f'{output_dir}/gl_link_locs.csv', encoding='utf-8-sig')
-    gl_label.get_link_label_arcs().to_csv(f'{output_dir}/gl_label_arcs.csv', encoding='utf-8-sig')
-    gl_label.get_link_labels().to_csv(f'{output_dir}/gl_label.csv', encoding='utf-8-sig')
-
-    lo_label.get_link_locs().to_csv(f'{output_dir}/lo_link_locs.csv', encoding='utf-8-sig')
-    lo_label.get_link_label_arcs().to_csv(f'{output_dir}/lo_label_arcs.csv', encoding='utf-8-sig')
-    lo_label.get_link_labels().to_csv(f'{output_dir}/lo_label.csv', encoding='utf-8-sig')

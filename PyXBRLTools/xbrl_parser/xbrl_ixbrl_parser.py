@@ -2,15 +2,12 @@ from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 from abc import ABC, abstractmethod
 import re
-import unicodedata
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import Utils
+from utils.utils import Utils
 import logging
 from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
-class BaseIxbrlParser(ABC):
+class BaseXbrlIxbrlParser(ABC):
     """
     iXBRLファイルを解析するための抽象ベースクラスです。
     """
@@ -69,7 +66,7 @@ class BaseIxbrlParser(ABC):
         """文脈情報を取得するための抽象メソッドです。"""
         pass
 
-class IxbrlParser(BaseIxbrlParser):
+class XbrlIxbrlParser(BaseIxbrlParser):
     """
     iXBRLファイルを解析するための具象クラスです。
     """
@@ -81,14 +78,14 @@ class IxbrlParser(BaseIxbrlParser):
         for tag in tags:
             lists.append({
                 'context_ref': tag.get('contextRef'),
-                'decimals': tag.get('decimals'),
+                'decimals': int(tag.get('decimals')) if tag.get('decimals') else None,
                 'format': tag.get('format'),
                 'name': tag.get('name').replace(":", "_"),
-                'scale': tag.get('scale'),
+                'scale': int(tag.get('scale')) if tag.get('scale') else None,
                 'sign': tag.get('sign'),
                 'unit_ref': tag.get('unitRef'),
-                'xsi_nil': tag.get('xsi:nil'),
-                'ix_numeric': re.sub(',','',tag.text)
+                'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
+                'numeric': float(re.sub(',','',tag.text)) if tag.text else None
             })
 
         return DataFrame(lists)
@@ -100,13 +97,15 @@ class IxbrlParser(BaseIxbrlParser):
         for tag in tags:
             lists.append({
                 'context_ref': tag.get('contextRef'),
-                'name': tag.get('name'),
-                'xsi_nil': tag.get('xsi:nil'),
-                'escape': tag.get('escape'),
-                'ix_text': re.sub(r"\n|\(\d+\)","",unicodedata.normalize('NFKC',tag.text)).split(" ")[0]
+                'name': tag.get('name').replace(":", "_"),
+                'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
+                'escape': True if tag.get('escape') == 'true' else False,
+                'text': re.sub(r'[　 ]', '', tag.text) if tag.text else ''
             })
 
-        return DataFrame(lists)
+        df = DataFrame(lists)
+
+        return df
 
     def get_xbrli_contexts(self):
         """文脈情報を取得します。"""
@@ -125,24 +124,6 @@ class IxbrlParser(BaseIxbrlParser):
             context_dict.update(explicit_members)
             lists.append(context_dict)
 
-        return DataFrame(lists)
+        df = DataFrame(lists)
 
-if __name__ == '__main__':
-    try:
-        fr_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/0304000-accf01-tse-acedjpfr-57210-2024-03-31-01-2024-05-13-ixbrl.htm"
-        sr_file_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Summary/tse-acedjpsm-57210-20240507583360-ixbrl.htm"
-
-        si = IxbrlParser(sr_file_path)
-        os.makedirs('extract_csv/ixbrl_parser/sr', exist_ok=True)
-        si.ix_non_fractions.to_csv('extract_csv/ixbrl_parser/sr/non_fractions.csv', index=False, encoding='utf-8-sig')
-        si.ix_non_numerics.to_csv('extract_csv/ixbrl_parser/sr/non_numerics.csv', index=False, encoding='utf-8-sig')
-        si.xbrli_contexts.to_csv('extract_csv/ixbrl_parser/sr/contexts.csv', index=False, encoding='utf-8-sig')
-
-        fr = IxbrlParser(fr_file_path)
-        os.makedirs('extract_csv/ixbrl_parser/fr', exist_ok=True)
-        fr.ix_non_fractions.to_csv('extract_csv/ixbrl_parser/fr/non_fractions.csv', index=False, encoding='utf-8-sig')
-        fr.ix_non_numerics.to_csv('extract_csv/ixbrl_parser/fr/non_numerics.csv', index=False, encoding='utf-8-sig')
-        fr.xbrli_contexts.to_csv('extract_csv/ixbrl_parser/fr/contexts.csv', index=False, encoding='utf-8-sig')
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        return df
