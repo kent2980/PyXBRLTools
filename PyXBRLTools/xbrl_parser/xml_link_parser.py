@@ -71,24 +71,18 @@ class BaseXmlLinkParser(ABC):
             self.soup = bs(file, features='xml')
 
         # DataFrameの初期化
-        self.__link_locs = None
-        self.__link_arcs = None
+        self._role_refs = None
+        self._link_locs = None
+        self._link_arcs = None
 
-    def _get_tags_to_dataframe(self, tag_names: list) -> DataFrame:
-        """タグ名のリストからDataFrameを生成するヘルパーメソッド。
+        # 変数の初期化
+        self._roleURI = None
 
-        Args:
-            tag_names (list): タグ名のリスト。
-
-        Returns:
-            DataFrame: 生成されたDataFrame。
-        """
-        tags = self.soup.find_all(name=tag_names)
-        data_list = [
-            {key: tag.get(key) for key in tag.attrs.keys()} | {'text': tag.text}
-            for tag in tags
-        ]
-        return DataFrame(data_list)
+    @property
+    @abstractmethod
+    def link_roles(self):
+        """link:role要素を含むDataFrameを返すプロパティ。"""
+        pass
 
     @property
     @abstractmethod
@@ -102,16 +96,105 @@ class BaseXmlLinkParser(ABC):
         """link:labelArc要素を含むDataFrameを返すプロパティ。"""
         pass
 
+    @property
+    @abstractmethod
+    def roleURI(self):
+        """roleURI属性のゲッター。"""
+        pass
+
+    @roleURI.setter
+    @abstractmethod
+    def roleURI(self, roleURI: str):
+        """roleURI属性のセッター。"""
+        pass
+
 class XmlLinkParser(BaseXmlLinkParser):
     """BaseXmlLabelParserを継承して具体的な実装を行うクラス。"""
 
     @property
+    def link_roles(self) -> DataFrame:
+        """link:role要素を取得するメソッド。"""
+        if self._role_refs is None:
+            lists = []
+            tags = self.soup.find_all(['link:role', 'roleRef'])
+            for tag in tags:
+                lists.append({
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_href': tag.get('xlink:href'),
+                    'role_uri': tag.get('roleURI'),
+                })
+
+            self._role_refs = DataFrame(lists)
+
+        return self._role_refs
+
+    @property
     def link_locs(self) -> DataFrame:
         """link:loc要素を取得するメソッド。"""
-        return self._get_tags_to_dataframe(['link:loc', 'loc'])
+
+        # self.roleURIがNoneの場合はエラーを出力する
+        if self.roleURI is None:
+            raise ValueError('roleURIが設定されていません。')
+
+        if self._link_locs is None:
+            lists = []
+            # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
+            link_tags = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
+            tags = self.soup.find_all(link_tags, attrs={'xlink:role': self.roleURI})
+            tags = tags(['link:loc'])
+            for tag in tags:
+                lists.append({
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_href': tag.get('xlink:href').split('#')[0],
+                    'xlink_label': tag.get('xlink:label'),
+                })
+
+            self._link_locs = DataFrame(lists)
+
+        return self._link_locs
 
     @property
     def link_arcs(self) -> DataFrame:
         """link:labelArc要素を取得するメソッド。"""
-        tag_list = ['link:calculationArc','link:definitionArc','link:presentationArc']
-        return self._get_tags_to_dataframe(tag_list)
+
+        # self.roleURIがNoneの場合はエラーを出力する
+        if self.roleURI is None:
+            raise ValueError('roleURIが設定されていません。')
+
+        if self._link_arcs is None:
+            lists = []
+            # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
+            link_tags = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
+            tags = self.soup.find_all(link_tags, attrs={'xlink:role': self.roleURI})
+            ark_tags = ['link:calculationArc', 'link:definitionArc', 'link:presentationArc']
+            tags = tags.find_all(ark_tags)
+            for tag in tags:
+                lists.append({
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_from': tag.get('xlink:from'),
+                    'xlink_to': tag.get('xlink:to'),
+                    'xlink_arcrole': tag.get('xlink:arcrole'),
+                    'xlink_order': tag.get('order'),
+                    'xlink_weight': tag.get('weight'),
+                })
+
+            self._link_arcs = DataFrame(lists)
+
+        return self._link_arcs
+
+    @property
+    def roleURI(self) -> str:
+        """roleURI属性のゲッター。"""
+        return self._roleURI
+
+    @roleURI.setter
+    def roleURI(self, roleURI: str) -> None:
+        """roleURI属性のセッター。"""
+        link_roles_df = self.link_roles
+
+        # roleURIがlink_roles_dfのrole_uriに存在しない場合はエラーを出力する
+        if roleURI not in link_roles_df['role_uri'].values:
+            raise ValueError('roleURIが存在しません。')
+        # roleURIがlink_roles_dfのrole_uriに存在する場合はroleURIを設定する
+        else:
+            self._roleURI = roleURI
