@@ -491,6 +491,14 @@
         "documentation": {}
     },
     {
+        "label": "XbrlIxbrlParser",
+        "importPath": "xbrl_parser.xbrl_ixbrl_parser",
+        "description": "xbrl_parser.xbrl_ixbrl_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xbrl_ixbrl_parser",
+        "documentation": {}
+    },
+    {
         "label": "XmlSchemaParser",
         "importPath": "xbrl_parser.xml_schema_parser",
         "description": "xbrl_parser.xml_schema_parser",
@@ -521,14 +529,6 @@
         "description": "xbrl_manager.label_manager",
         "isExtraImport": true,
         "detail": "xbrl_manager.label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "IxbrlParser",
-        "importPath": "xbrl_parser.ixbrl_parser",
-        "description": "xbrl_parser.ixbrl_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.ixbrl_parser",
         "documentation": {}
     },
     {
@@ -687,7 +687,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
         "description": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
-        "peekOfCode": "class XbrlIxbrlParser(BaseIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    \"\"\"\n    def get_ix_non_fractions(self):\n        \"\"\"非分数データを取得します。\"\"\"\n        lists = []\n        tags = self.soup.find_all(name='ix:nonFraction')\n        for tag in tags:\n            lists.append({",
+        "peekOfCode": "class XbrlIxbrlParser(BaseXbrlIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    \"\"\"\n    @property\n    def ix_non_fractions(self):\n        \"\"\"非分数データを取得します。\"\"\"\n        # DataFrameがNoneの場合は取得する\n        if self._ix_non_fractions is None:\n            lists = []",
         "detail": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
         "documentation": {}
     },
@@ -705,7 +705,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
         "description": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
-        "peekOfCode": "class XbrlQualitativeParser:\n    \"\"\"\n    \"qualitative.htm\"から情報を解析して抽出するためのクラスです。\n    \"\"\"\n    def __init__(self, file_path: str) -> None:\n        \"\"\"\n        QualitativeParserクラスのコンストラクタです。\n        \"\"\"\n        self.file_path = file_path\n        with open(file_path, 'r', encoding='utf-8') as file:",
+        "peekOfCode": "class XbrlQualitativeParser:\n    \"\"\"\n    \"qualitative.htm\"から情報を解析して抽出するためのクラスです。\n    \"\"\"\n    def __init__(self, file_path: str) -> None:\n        \"\"\"\n        QualitativeParserクラスのコンストラクタです。\n        \"\"\"\n        # ファイル名がqualitative.htmでない場合はエラーを出力する\n        if not re.search(r'.*qualitative\\.htm$', file_path):",
         "detail": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
         "documentation": {}
     },
@@ -741,7 +741,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
-        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\"\"\"\n    def get_link_labels(self) -> DataFrame:\n        \"\"\"link:label要素を取得するメソッド。\n        returns:\n        example:\n        get_link_labels()の出力例\n        >>> df = get_link_labels()\n            print(df)\n        output:",
+        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\"\"\"\n    @property\n    def link_labels(self) -> DataFrame:\n        \"\"\"link:label要素を取得するメソッド。\n        returns:\n        example:\n        get_link_labels()の出力例\n        >>> df = get_link_labels()\n            print(df)",
         "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "documentation": {}
     },
@@ -759,7 +759,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_link_parser",
-        "peekOfCode": "class XmlLinkParser(BaseXmlLinkParser):\n    \"\"\"BaseXmlLabelParserを継承して具体的な実装を行うクラス。\"\"\"\n    def get_link_locs(self) -> DataFrame:\n        \"\"\"link:loc要素を取得するメソッド。\"\"\"\n        return self._get_tags_to_dataframe(['link:loc', 'loc'])\n    def get_link_arcs(self) -> DataFrame:\n        \"\"\"link:labelArc要素を取得するメソッド。\"\"\"\n        tag_list = ['link:calculationArc','link:definitionArc','link:presentationArc']\n        return self._get_tags_to_dataframe(tag_list)",
+        "peekOfCode": "class XmlLinkParser(BaseXmlLinkParser):\n    \"\"\"BaseXmlLabelParserを継承して具体的な実装を行うクラス。\"\"\"\n    @property\n    def link_locs(self) -> DataFrame:\n        \"\"\"link:loc要素を取得するメソッド。\"\"\"\n        return self._get_tags_to_dataframe(['link:loc', 'loc'])\n    @property\n    def link_arcs(self) -> DataFrame:\n        \"\"\"link:labelArc要素を取得するメソッド。\"\"\"\n        tag_list = ['link:calculationArc','link:definitionArc','link:presentationArc']",
         "detail": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "documentation": {}
     },
@@ -768,7 +768,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
-        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        self.__file_path = file_path",
+        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        # ファイルパスを設定",
         "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "documentation": {}
     },
@@ -777,7 +777,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
-        "peekOfCode": "class XmlSchemaParser(BaseXmlSchemaParser):\n    \"\"\"\n    XMLスキーマパーサの具象クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def get_import_schemas(self) -> DataFrame:\n        \"\"\" importスキーマを取得します。\n        returns:\n            DataFrame: importスキーマテーブルのDataFrame。\n        example:",
+        "peekOfCode": "class XmlSchemaParser(BaseXmlSchemaParser):\n    \"\"\"\n    XMLスキーマパーサの具象クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    @property\n    def import_schemas(self) -> DataFrame:\n        \"\"\" importスキーマを取得します。\n        returns:\n            DataFrame: importスキーマテーブルのDataFrame。",
         "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "documentation": {}
     },

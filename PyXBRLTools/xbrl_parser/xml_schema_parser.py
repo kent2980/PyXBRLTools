@@ -16,9 +16,12 @@ class BaseXmlSchemaParser(ABC):
         Args:
             file_path (str): XMLファイルのパス。
         """
+
+        # ファイルパスを設定
         self.__file_path = file_path
-        with open(file_path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='lxml-xml')
+
+        # クラス変数の初期化
+        self.__inictialize_class(file_path)
 
         # ログ設定
         class_name = self.__class__.__name__
@@ -41,22 +44,46 @@ class BaseXmlSchemaParser(ABC):
         Args:
             file_path (str): ファイルパス。
         """
-        self.__file_path = file_path
-        with open(file_path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='lxml-xml')
 
+        # ファイルパスを設定
+        self.__file_path = file_path
+
+        # クラス変数の初期化
+        self.__inictialize_class(file_path)
+
+    # クラス変数を初期化するメソッド
+    def __inictialize_class(self, file_path:str):
+        """ クラス変数の初期化を行います。
+
+        Args:
+            file_path (str): ファイルパス。
+        """
+
+        # BeautifulSoupの初期化
+        with open(file_path, 'r', encoding='utf-8') as file:
+            self.soup = bs(file, features='xml')
+
+        # DataFrameの初期化
+        self._import_schemas = None
+        self._link_base_refs = None
+        self._elements = None
+
+
+    @property
     @abstractmethod
-    def get_import_schemas(self) -> DataFrame:
+    def import_schemas(self) -> DataFrame:
         """ importスキーマを取得します。"""
         pass
 
+    @property
     @abstractmethod
-    def get_link_base_refs(self) -> DataFrame:
+    def link_base_refs(self) -> DataFrame:
         """ link_base_refsを取得します。"""
         pass
 
+    @property
     @abstractmethod
-    def get_elements(self) -> DataFrame:
+    def elements(self) -> DataFrame:
         """ elementsを取得します。"""
         pass
 
@@ -66,7 +93,8 @@ class XmlSchemaParser(BaseXmlSchemaParser):
     XMLスキーマの情報を取得するクラスです。
     """
 
-    def get_import_schemas(self) -> DataFrame:
+    @property
+    def import_schemas(self) -> DataFrame:
         """ importスキーマを取得します。
 
         returns:
@@ -83,20 +111,25 @@ class XmlSchemaParser(BaseXmlSchemaParser):
         | 1  | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/instance |
         | 2  | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/instance |
         """
-        lists = []
+        if self._import_schemas is None:
 
-        tags = self.soup.find_all(name='import')
-        for tag in tags:
-            dict = {
-                'schema_location': tag.get('schemaLocation'),
-                'name_space': tag.get('namespace')
-            }
+            lists = []
 
-            lists.append(dict)
+            tags = self.soup.find_all(name='import')
+            for tag in tags:
+                dict = {
+                    'schema_location': tag.get('schemaLocation'),
+                    'name_space': tag.get('namespace')
+                }
 
-        return DataFrame(lists)
+                lists.append(dict)
 
-    def get_link_base_refs(self) -> DataFrame:
+            self._import_schemas = DataFrame(lists)
+
+        return self._import_schemas
+
+    @property
+    def link_base_refs(self) -> DataFrame:
         """ link_base_refsを取得します。
 
         returns:
@@ -113,22 +146,27 @@ class XmlSchemaParser(BaseXmlSchemaParser):
         | 1  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
         | 2  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
         """
-        lists = []
+        if self._link_base_refs is None:
 
-        tags = self.soup.find_all(name='link:linkbaseRef')
-        for tag in tags:
-            dict = {
-                'xlink_type': tag.get('xlink:type'),
-                'xlink_href': tag.get('xlink:href'),
-                'xlink_role': tag.get('xlink:role'),
-                'xlink_arcrole': tag.get('xlink:arcrole')
-            }
+            lists = []
 
-            lists.append(dict)
+            tags = self.soup.find_all(name='link:linkbaseRef')
+            for tag in tags:
+                dict = {
+                    'xlink_type': tag.get('xlink:type'),
+                    'xlink_href': tag.get('xlink:href'),
+                    'xlink_role': tag.get('xlink:role'),
+                    'xlink_arcrole': tag.get('xlink:arcrole')
+                }
 
-        return DataFrame(lists)
+                lists.append(dict)
 
-    def get_elements(self) -> DataFrame:
+            self._link_base_refs = DataFrame(lists)
+
+        return self._link_base_refs
+
+    @property
+    def elements(self) -> DataFrame:
         """ elementsを取得します。
 
         returns:
@@ -145,19 +183,23 @@ class XmlSchemaParser(BaseXmlSchemaParser):
         | 1  | jpcrp_cor:DocumentType | debit | duration | ドキュメントタイプ | false | xbrli:item | xbrli:stringItemType |
         | 2  | jpcrp_cor:DocumentType | credit | duration | ドキュメントタイプ | false | xbrli:item | xbrli:stringItemType |
         """
-        lists = []
+        if self._elements is None:
 
-        tags = self.soup.find_all(name='element')
-        for tag in tags:
-            dict = {
-                'id': tag.get('id'),
-                'xbrli_balance': tag.get('xbrli:balance'),
-                'xbrli_period_type': tag.get('xbrli:periodType'),
-                'name': tag.get('name'),
-                'nillable': tag.get('nillable'),
-                'substitution_group': tag.get('substitutionGroup'),
-                'type': tag.get('type')
-            }
-            lists.append(dict)
+            lists = []
 
-        return DataFrame(lists)
+            tags = self.soup.find_all(name='element')
+            for tag in tags:
+                dict = {
+                    'id': tag.get('id'),
+                    'xbrli_balance': tag.get('xbrli:balance'),
+                    'xbrli_period_type': tag.get('xbrli:periodType'),
+                    'name': tag.get('name'),
+                    'nillable': tag.get('nillable'),
+                    'substitution_group': tag.get('substitutionGroup'),
+                    'type': tag.get('type')
+                }
+                lists.append(dict)
+
+            self._elements = DataFrame(lists)
+
+        return self._elements

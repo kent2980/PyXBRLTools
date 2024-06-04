@@ -1,5 +1,5 @@
 from xbrl_manager.label_manager import LabelManager
-from xbrl_parser.ixbrl_parser import IxbrlParser
+from xbrl_parser.xbrl_ixbrl_parser import XbrlIxbrlParser
 import pandas as pd
 from db_connector.postgre_sql_connector import PostgreSqlConnector
 
@@ -7,8 +7,8 @@ if __name__ == "__main__":
     print("LabelManager test")
 
     xbrl_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Summary/tse-acedjpsm-57210-20240507583360-ixbrl.htm"
-    xbrl_parser = IxbrlParser(xbrl_path)
-    non_fractions = xbrl_parser.get_ix_non_numerics()
+    xbrl_parser = XbrlIxbrlParser(xbrl_path)
+    non_fractions = xbrl_parser.ix_non_numerics
     name_list = non_fractions['name'].tolist()
 
     extra_dir = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir"

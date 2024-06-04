@@ -131,7 +131,7 @@ class LabelManager(BaseLabelManager):
                 if file.endswith('.xsd'):
                     schema_file_path = os.path.join(root, file)
                     schema = XbrlParserController.xml_schema_parser(schema_file_path)
-                    link_base_refs = schema.get_link_base_refs()
+                    link_base_refs = schema.link_base_refs
                     # name_spaceに一致するリンクベース参照を取得
                     link_base_ref = link_base_refs[link_base_refs['xlink_href'].str.contains(name_space)
                                 & (link_base_refs['xlink_role'] == "http://www.xbrl.org/2003/role/labelLinkbaseRef")
@@ -219,16 +219,16 @@ class LabelManager(BaseLabelManager):
             self.label_parser.file_path = lab_path
 
             # locラベルを取得
-            loc_df2 = self.label_parser.get_link_locs()
+            loc_df2 = self.label_parser.link_locs
             # loclabelsにloc_labelを追加しインデックスを振り直す
             loc_df = pd.concat([loc_df, loc_df2], ignore_index=True)
 
             # arcラベルを取得
-            arc_df2 = self.label_parser.get_link_label_arcs()
+            arc_df2 = self.label_parser.link_label_arcs
             arc_df = pd.concat([arc_df, arc_df2], ignore_index=True)
 
             # labelラベルを取得
-            label_df2 = self.label_parser.get_link_labels()
+            label_df2 = self.label_parser.link_labels
             label_df = pd.concat([label_df, label_df2], ignore_index=True)
 
         # loc_dfの'xlink_label'カラムとarc_dfの'xlink_from'カラムを結合
@@ -361,7 +361,7 @@ class LabelManager(BaseLabelManager):
             self.label_parser.file_path = lab_path
 
             # locラベルを取得
-            loc_df2 = self.label_parser.get_link_locs()
+            loc_df2 = self.label_parser.link_locs
             # loclabelsにloc_labelを追加しインデックスを振り直す
             loc_df = pd.concat([loc_df, loc_df2], ignore_index=True)
 
@@ -376,7 +376,7 @@ class LabelManager(BaseLabelManager):
             self.label_parser.file_path = lab_path
 
             # arcラベルを取得
-            arc_df2 = self.label_parser.get_link_label_arcs()
+            arc_df2 = self.label_parser.link_label_arcs
             # arc_dfにarc_labelを追加しインデックスを振り直す,arc_df2が空の場合は次の要素に移動
             if not arc_df is None:
                 arc_df = pd.concat([arc_df, arc_df2], ignore_index=True)
@@ -394,7 +394,7 @@ class LabelManager(BaseLabelManager):
             self.label_parser.file_path = lab_path
 
             # labelラベルを取得
-            label_df2 = self.label_parser.get_link_labels()
+            label_df2 = self.label_parser.link_labels
             label_df = pd.concat([label_df, label_df2], ignore_index=True)
 
         if xbrl_role is not None:
@@ -411,7 +411,7 @@ class LabelManager(BaseLabelManager):
             self.label_parser.file_path = lab_path
 
             # roleRefラベルを取得
-            role_ref_df2 = self.label_parser.get_role_refs()
+            role_ref_df2 = self.label_parser.role_refs
             role_ref_df = pd.concat([role_ref_df, role_ref_df2], ignore_index=True)
 
         return role_ref_df
