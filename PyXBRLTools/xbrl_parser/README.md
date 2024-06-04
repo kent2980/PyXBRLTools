@@ -4,13 +4,39 @@
 対応するXBRLファイルを下記に記します。
 マークダウンで表を作成するには、以下のような書式を使用します。
 
-| 対応する<br/>ファイル名 | モジュール名                 | 説明                                                         |
-|-------------------|--------------------------|------------------------------------------------------------|
-| **-ixbrl.htm      | xbrl_ixbrl_parser.py     | 短信サマリー、各財務諸表の数値、非数値情報を取得します。                   |
-| qualitative.htm   | xbrl_qualitative_parser.py | 決算短信の「経営状況の概要」など、定性的情報を取得します。                |
-| **.xsd            | xml_schema_parser.py     | XBRLのデータ構造を定義しており、関連ファイルを取得します。                   |
-| **-lab.xml        | xml_label_parser.py      | 各財務諸表の数値、非数値データと関連づけられた名称ラベルを取得します。           |
-| **-cal.xml<br/> **-def.xml<br/> *-pre.xml | xml_link_parser.py       | 計算リンク、表示リンク、定義リンクから順序関係に関するデータを取得します。 |
+<table>
+    <tr style="height: 50px">
+        <th>対応する<br/>ファイル名</th>
+        <th>モジュール名</th>
+        <th>説明</th>
+    </tr>
+    <tr style="height: 80px">
+        <td style="text-align: center">**-ixbrl.htm</td>
+        <td style="text-align: center">xbrl_ixbrl_parser.py</td>
+        <td>短信サマリー、各財務諸表の数値、非数値情報を取得します。</td>
+    </tr>
+    <tr style="height: 80px">
+        <td style="text-align: center">qualitative.htm</td>
+        <td style="text-align: center">xbrl_qualitative_parser.py</td>
+        <td>決算短信の「経営状況の概要」など、定性的情報を取得します。</td>
+    </tr>
+    <tr style="height: 80px">
+        <td style="text-align: center">**.xsd</td>
+        <td style="text-align: center">xml_schema_parser.py</td>
+        <td>XBRLのデータ構造を定義しており、関連ファイルを取得します。</td>
+    </tr>
+    <tr style="height: 80px">
+        <td style="text-align: center">**-lab.xml</td>
+        <td style="text-align: center">xml_label_parser.py</td>
+        <td>各財務諸表の数値、非数値データと関連づけられた名称ラベルを取得します。</td>
+    </tr>
+    <tr style="height: 80px">
+        <td style="text-align: center">**-cal.xml<br/>**-def.xml<br/>*-pre.xml</td>
+        <td style="text-align: center">xml_link_parser.py</td>
+        <td>計算リンク、表示リンク、定義リンクから順序関係に関するデータを取得します。</td>
+    </tr>
+</table>
+
 
 以下に、各モジュールの概要と使用方法について説明します。
 
