@@ -306,6 +306,14 @@
         "documentation": {}
     },
     {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
         "label": "XbrlRole",
         "importPath": "xbrl_parser.xbrl_roles_definitions",
         "description": "xbrl_parser.xbrl_roles_definitions",
@@ -742,7 +750,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_link_parser",
-        "peekOfCode": "class BaseXmlLinkParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        __link_labels (DataFrame): link:label要素を含むDataFrame。\n        __link_locs (DataFrame): link:loc要素を含むDataFrame。\n        __link_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n    \"\"\"",
+        "peekOfCode": "class BaseXmlLinkParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        _role_refs (DataFrame): link:role要素を含むDataFrame。\n        _link_locs (DataFrame): link:loc要素を含むDataFrame。\n        _link_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n        _link_base (DataFrame): link:base要素を含むDataFrame。",
         "detail": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "documentation": {}
     },

@@ -4,7 +4,7 @@ from pandas import DataFrame
 from abc import ABC, abstractmethod
 import re
 import logging
-# from log.py_xbrl_tools_loging import PyXBRLToolsLogging
+from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class BaseXmlLinkParser(ABC):
     """
@@ -13,9 +13,11 @@ class BaseXmlLinkParser(ABC):
     Attributes:
         file_path (str): パースするXMLファイルのパス。
         soup (BeautifulSoup): BeautifulSoupオブジェクト。
-        __link_labels (DataFrame): link:label要素を含むDataFrame。
-        __link_locs (DataFrame): link:loc要素を含むDataFrame。
-        __link_arcs (DataFrame): link:labelArc要素を含むDataFrame。
+        _role_refs (DataFrame): link:role要素を含むDataFrame。
+        _link_locs (DataFrame): link:loc要素を含むDataFrame。
+        _link_arcs (DataFrame): link:labelArc要素を含むDataFrame。
+        _link_base (DataFrame): link:base要素を含むDataFrame。
+        _link (DataFrame): link要素を含むDataFrame。
     """
 
     def __init__(self, file_path: str) -> None:
@@ -24,8 +26,16 @@ class BaseXmlLinkParser(ABC):
         Args:
             file_path (str): XMLファイルのパス。
         """
+        # ログ設定
+        class_name = self.__class__.__name__
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
+
+        self.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
+
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
+            self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
             raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
 
         # ファイル名を設定
@@ -33,11 +43,6 @@ class BaseXmlLinkParser(ABC):
 
         # クラス変数の初期化
         self.__inicialize_class(file_path)
-
-        # ログ設定
-        # class_name = self.__class__.__name__
-        # self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
-        # self.logger.set_log_file(f'Log/{class_name}.log')
 
     @property
     def file_path(self) -> str:
@@ -51,9 +56,11 @@ class BaseXmlLinkParser(ABC):
         Args:
             file_path (str): パースするXMLファイルのパス。
         """
+        self.logger.debug(f'file_pathを設定中: {file_path}')
 
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
+            self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
             raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
 
         # ファイルパスを設定
@@ -67,8 +74,12 @@ class BaseXmlLinkParser(ABC):
         """クラス変数の初期化を行います。"""
 
         # BeautifulSoupの初期化
-        with open(file_path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='xml')
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                self.soup = bs(file, features='xml')
+        except Exception as e:
+            self.logger.error(f'BeautifulSoupの初期化に失敗しました。: {e}')
+            raise e
 
         # DataFrameの初期化
         self._role_refs = None
@@ -126,6 +137,9 @@ class XmlLinkParser(BaseXmlLinkParser):
             role_uri: http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
         """
         if self._role_refs is None:
+
+            self.logger.debug('link:role要素を取得中。')
+
             lists = []
             tags = self.soup.find_all(['link:role', 'roleRef'])
             for tag in tags:
@@ -161,6 +175,9 @@ class XmlLinkParser(BaseXmlLinkParser):
 
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
+
+            self.logger.debug('link:loc要素を取得中。')
+
             dict = {}
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
@@ -210,6 +227,9 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         # link_arcsがNoneの場合は取得する
         if self._link_arcs is None:
+
+            self.logger.debug('link:labelArc要素を取得中。')
+
             dict = {}
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
@@ -239,6 +259,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             return self._link_arcs
 
+    @property
     def link_base(self) -> DataFrame:
         """ link:base要素を取得するメソッド。
 
@@ -255,6 +276,9 @@ class XmlLinkParser(BaseXmlLinkParser):
             xmlns_link: http://www.xbrl.org/2003/linkbase
         """
         if self._link_base is None:
+
+            self.logger.debug('link:base要素を取得中。')
+
             lists = []
             tags = self.soup.find_all(name='link:linkbase')
             for tag in tags:
@@ -268,6 +292,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
         return self._link_base
 
+    @property
     def link(self) -> DataFrame:
         """ link要素を取得するメソッド。
 
@@ -283,6 +308,9 @@ class XmlLinkParser(BaseXmlLinkParser):
             xlink_role: http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
         """
         if self._link is None:
+
+            self.logger.debug('link要素を取得中。')
+
             lists = []
             tag_names = ["link:calculationLink", "link:definitionLink", "link:presentationLink"]
             tags = self.soup.find_all(name=tag_names)
@@ -294,18 +322,4 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             self._link = DataFrame(lists)
 
-        return self._link
-
-# テストコード
-if __name__ == '__main__':
-    xml_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-cal.xml'
-    parser = XmlLinkParser(xml_path)
-    # print(parser.link_roles)
-    print(parser.link_locs)
-    # print(parser.link_arcs)
-    # print(parser.link_base)
-    # print(parser.link())
-    # print(parser.roleURI)
-    # parser.roleURI = 'http://www.xbrl.org/2003/role/link'
-    # print(parser.roleURI)
-    # print(parser.link_locs)
+        return DataFrame(lists)
