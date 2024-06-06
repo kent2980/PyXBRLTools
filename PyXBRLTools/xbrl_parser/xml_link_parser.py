@@ -236,22 +236,27 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            tags = self.soup.find(link_tag_names, attrs={'xlink:role': self.roleURI})
+            link_tags = self.soup.find_all(link_tag_names)
 
-            # link:calculationArc,link:definitionArc,link:presentationArcタグからxlink:roleが一致するタグの子要素を取得
-            ark_tag_names = ['link:calculationArc', 'link:definitionArc', 'link:presentationArc']
-            tags = tags.find_all(ark_tag_names)
+            for link_tag in link_tags:
+                attr_value = link_tag.get('xlink:role')
 
-            # link:Arc要素を取得
-            for tag in tags:
-                lists.append({
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_from': tag.get('xlink:from'),
-                    'xlink_to': tag.get('xlink:to'),
-                    'xlink_arcrole': tag.get('xlink:arcrole'),
-                    'xlink_order': int(tag.get('order')) if tag.get('order') is not None else None,
-                    'xlink_weight': int(tag.get('weight')) if tag.get('weight') is not None else None,
-                })
+                # link:calculationArc,link:definitionArc,link:presentationArcタグからxlink:roleが一致するタグの子要素を取得
+                ark_tag_names = ['link:calculationArc', 'link:definitionArc', 'link:presentationArc']
+                tags = link_tag.find_all(ark_tag_names)
+
+                # link:Arc要素を取得
+                for tag in tags:
+
+                    # arrt_valueでグループ化して、xlink:from,xlink:to,xlink:arcrole,xlink:order,xlink:weightを取得
+                    lists.append({
+                        'xlink_type': tag.get('xlink:type'),
+                        'xlink_from': tag.get('xlink:from'),
+                        'xlink_to': tag.get('xlink:to'),
+                        'xlink_arcrole': tag.get('xlink:arcrole'),
+                        'xlink_order': tag.get('xlink:order'),
+                        'xlink_weight': tag.get('xlink:weight'),
+                    })
 
             self._link_arcs = DataFrame(lists)
 
