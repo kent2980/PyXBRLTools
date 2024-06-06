@@ -491,14 +491,6 @@
         "documentation": {}
     },
     {
-        "label": "XbrlIxbrlParser",
-        "importPath": "xbrl_parser.xbrl_ixbrl_parser",
-        "description": "xbrl_parser.xbrl_ixbrl_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xbrl_ixbrl_parser",
-        "documentation": {}
-    },
-    {
         "label": "XmlSchemaParser",
         "importPath": "xbrl_parser.xml_schema_parser",
         "description": "xbrl_parser.xml_schema_parser",
@@ -524,19 +516,11 @@
         "documentation": {}
     },
     {
-        "label": "LabelManager",
-        "importPath": "xbrl_manager.label_manager",
-        "description": "xbrl_manager.label_manager",
+        "label": "XmlLinkParser",
+        "importPath": "xbrl_parser.xml_link_parser",
+        "description": "xbrl_parser.xml_link_parser",
         "isExtraImport": true,
-        "detail": "xbrl_manager.label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "PostgreSqlConnector",
-        "importPath": "db_connector.postgre_sql_connector",
-        "description": "db_connector.postgre_sql_connector",
-        "isExtraImport": true,
-        "detail": "db_connector.postgre_sql_connector",
+        "detail": "xbrl_parser.xml_link_parser",
         "documentation": {}
     },
     {
@@ -615,7 +599,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.label_manager",
         "description": "PyXBRLTools.xbrl_manager.label_manager",
-        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\"XBRLラベルの基底クラスです。\n    XBRLのelementからラベルを取得するクラスです。\n    \"\"\"\n    def __init__(self, dir_path:str):\n        \"\"\"BaseLabelManagerのコンストラクタです。\n        Args:\n            dir_path (str): ディレクトリのパス。\n        \"\"\"\n        self.__dir_path = dir_path",
+        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\"XBRLラベルの基底クラスです。\n    XBRLのelementからラベルを取得するクラスです。\n    \"\"\"\n    def __init__(self, dir_path:str):\n        \"\"\"BaseLabelManagerのコンストラクタです。\n        Args:\n            dir_path (str): ディレクトリのパス。\n        \"\"\"\n        # ログ設定",
         "detail": "PyXBRLTools.xbrl_manager.label_manager",
         "documentation": {}
     },
@@ -626,6 +610,15 @@
         "description": "PyXBRLTools.xbrl_manager.label_manager",
         "peekOfCode": "class LabelManager(BaseLabelManager):\n    \"\"\"XBRLラベルのクラスです。\n    \"\"\"\n    def __get_lab_path(self, name_space:str) -> str:\n        \"\"\" ラベルファイルのパスを取得します。\n        args:\n            name_space (str): 名前空間。\n        returns:\n            str: ラベルファイルのパス。\n        example:",
         "detail": "PyXBRLTools.xbrl_manager.label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLinkManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
+        "description": "PyXBRLTools.xbrl_manager.link_managers",
+        "peekOfCode": "class BaseLinkManager:\n    def __init__(self, dir_path: str):\n        # ディレクトリパスを設定\n        self._dir_path = dir_path\n    @property\n    def dir_path(self) -> str:\n        \"\"\"dir_path属性のゲッター。\"\"\"\n        return self._dir_path\n    @dir_path.setter\n    def dir_path(self, dir_path: str) -> None:",
+        "detail": "PyXBRLTools.xbrl_manager.link_managers",
         "documentation": {}
     },
     {
@@ -732,7 +725,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
-        "peekOfCode": "class BaseXmlLabelParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        __link_labels (DataFrame): link:label要素を含むDataFrame。\n        __link_locs (DataFrame): link:loc要素を含むDataFrame。\n        __link_label_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n    \"\"\"",
+        "peekOfCode": "class BaseXmlLabelParser(ABC):\n    \"\"\"\n    XMLラベルパーサの基底クラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupオブジェクト。\n        _link_labels (DataFrame): link:label要素を含むDataFrame。\n        _link_locs (DataFrame): link:loc要素を含むDataFrame。\n        _link_label_arcs (DataFrame): link:labelArc要素を含むDataFrame。\n        _role_refs (DataFrame): roleRef要素を含むDataFrame。",
         "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "documentation": {}
     },
@@ -741,7 +734,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
-        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\"\"\"\n    @property\n    def link_labels(self) -> DataFrame:\n        \"\"\"link:label要素を取得するメソッド。\n        returns:\n        example:\n        get_link_labels()の出力例\n        >>> df = get_link_labels()\n            print(df)",
+        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\"\"\"\n    @property\n    def link_labels(self) -> DataFrame:\n        \"\"\"link:label要素を取得するメソッド。\n        returns:\n        example:\n            >>> parser = XmlLabelParser(\"**-lab.xml\")\n            >>> df = parser.link_labels\n            [取得するDataFrameの例]\\n",
         "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "documentation": {}
     },

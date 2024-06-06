@@ -18,10 +18,6 @@ class BaseLabelManager(ABC):
         Args:
             dir_path (str): ディレクトリのパス。
         """
-        self.__dir_path = dir_path
-        self.label_parser = XbrlParserController.xml_label_parser()
-        self._element_names = []
-
         # ログ設定
         class_name = self.__class__.__name__
         print(class_name)
@@ -31,6 +27,15 @@ class BaseLabelManager(ABC):
         # ログを出力
         self.logger.logger.info(f"{class_name}を初期化しました。")
         self.logger.logger.info(f"dir_path(入力フォルダ)を設定: {dir_path}")
+
+        # ディレクトリのパスを設定
+        self.__dir_path = dir_path
+
+        # XMLラベルパーサを取得
+        self.label_parser = XbrlParserController.xml_label_parser()
+
+        # 変数の初期化
+        self._element_names = []
 
     @property
     def dir_path(self):
@@ -220,6 +225,7 @@ class LabelManager(BaseLabelManager):
 
             # locラベルを取得
             loc_df2 = self.label_parser.link_locs
+
             # loclabelsにloc_labelを追加しインデックスを振り直す
             loc_df = pd.concat([loc_df, loc_df2], ignore_index=True)
 
