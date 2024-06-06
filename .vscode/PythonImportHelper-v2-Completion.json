@@ -759,7 +759,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_link_parser",
-        "peekOfCode": "class XmlLinkParser(BaseXmlLinkParser):\n    \"\"\"BaseXmlLabelParserを継承して具体的な実装を行うクラス。\"\"\"\n    @property\n    def link_roles(self) -> DataFrame:\n        \"\"\"link:role要素を取得するメソッド。\"\"\"\n        if self._role_refs is None:\n            lists = []\n            tags = self.soup.find_all(['link:role', 'roleRef'])\n            for tag in tags:\n                lists.append({",
+        "peekOfCode": "class XmlLinkParser(BaseXmlLinkParser):\n    \"\"\"BaseXmlLabelParserを継承して具体的な実装を行うクラス。\"\"\"\n    @property\n    def roleURI(self) -> str:\n        \"\"\"roleURI属性のゲッター。\"\"\"\n        return self._roleURI\n    @roleURI.setter\n    def roleURI(self, roleURI: str) -> None:\n        \"\"\"roleURI属性のセッター。\"\"\"\n        self._roleURI = roleURI",
         "detail": "PyXBRLTools.xbrl_parser.xml_link_parser",
         "documentation": {}
     },

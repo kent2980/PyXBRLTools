@@ -196,7 +196,8 @@ class XmlSchemaParser(BaseXmlSchemaParser):
                     'name': tag.get('name'),
                     'nillable': tag.get('nillable'),
                     'substitution_group': tag.get('substitutionGroup'),
-                    'type': tag.get('type')
+                    'type': tag.get('type'),
+                    'abstract': tag.get('abstract'),
                 }
                 lists.append(dict)
 
