@@ -4,7 +4,7 @@ from pandas import DataFrame
 from abc import ABC, abstractmethod
 import re
 import logging
-from log.py_xbrl_tools_loging import PyXBRLToolsLogging
+# from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
 class BaseXmlLinkParser(ABC):
     """
@@ -35,9 +35,9 @@ class BaseXmlLinkParser(ABC):
         self.__inicialize_class(file_path)
 
         # ログ設定
-        class_name = self.__class__.__name__
-        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
-        self.logger.set_log_file(f'Log/{class_name}.log')
+        # class_name = self.__class__.__name__
+        # self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        # self.logger.set_log_file(f'Log/{class_name}.log')
 
     @property
     def file_path(self) -> str:
@@ -181,9 +181,9 @@ class XmlLinkParser(BaseXmlLinkParser):
             xlink_label: jppfs_cor_AccountsPayableOther
         """
 
-        # self.roleURIがNoneの場合はエラーを出力する
-        if self.roleURI is None:
-            raise ValueError('roleURIが設定されていません。')
+        # # self.roleURIがNoneの場合はエラーを出力する
+        # if self.roleURI is None:
+        #     raise ValueError('roleURIが設定されていません。')
 
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
@@ -226,9 +226,9 @@ class XmlLinkParser(BaseXmlLinkParser):
             xlink_order: 1
             xlink_weight: 1
         """
-        # self.roleURIがNoneの場合はエラーを出力する
-        if self.roleURI is None:
-            raise ValueError('roleURIが設定されていません。')
+        # # self.roleURIがNoneの場合はエラーを出力する
+        # if self.roleURI is None:
+        #     raise ValueError('roleURIが設定されていません。')
 
         # link_arcsがNoneの場合は取得する
         if self._link_arcs is None:
@@ -239,28 +239,27 @@ class XmlLinkParser(BaseXmlLinkParser):
             link_tags = self.soup.find_all(link_tag_names)
 
             for link_tag in link_tags:
+                tag_lists = []
+
                 attr_value = link_tag.get('xlink:role')
 
-                # link:calculationArc,link:definitionArc,link:presentationArcタグからxlink:roleが一致するタグの子要素を取得
-                ark_tag_names = ['link:calculationArc', 'link:definitionArc', 'link:presentationArc']
-                tags = link_tag.find_all(ark_tag_names)
-
-                # link:Arc要素を取得
+                arc_tag_names = ['link:caculationArc', 'link:definitionArc', 'link:presentationArc']
+                tags = link_tag.find_all(arc_tag_names, attrs={'xlink:arcrole': attr_value})
                 for tag in tags:
-
-                    # arrt_valueでグループ化して、xlink:from,xlink:to,xlink:arcrole,xlink:order,xlink:weightを取得
-                    lists.append({
+                    tag_lists.append({
                         'xlink_type': tag.get('xlink:type'),
                         'xlink_from': tag.get('xlink:from'),
                         'xlink_to': tag.get('xlink:to'),
                         'xlink_arcrole': tag.get('xlink:arcrole'),
-                        'xlink_order': tag.get('xlink:order'),
-                        'xlink_weight': tag.get('xlink:weight'),
+                        'xlink_order': tag.get('order'),
+                        'xlink_weight': tag.get('weight'),
                     })
+                lists.append({
+                    attr_value: tag_lists
+                })
+                print(tag_lists)
 
-            self._link_arcs = DataFrame(lists)
-
-        return self._link_arcs
+            print(lists)
 
     def link_base(self) -> DataFrame:
         """ link:base要素を取得するメソッド。
@@ -318,3 +317,17 @@ class XmlLinkParser(BaseXmlLinkParser):
             self._link = DataFrame(lists)
 
         return self._link
+
+# テストコード
+if __name__ == '__main__':
+    xml_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-cal.xml'
+    parser = XmlLinkParser(xml_path)
+    # print(parser.link_roles)
+    # print(parser.link_locs)
+    print(parser.link_arcs)
+    # print(parser.link_base)
+    # print(parser.link())
+    # print(parser.roleURI)
+    # parser.roleURI = 'http://www.xbrl.org/2003/role/link'
+    # print(parser.roleURI)
+    # print(parser.link_locs)

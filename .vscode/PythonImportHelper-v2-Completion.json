@@ -306,14 +306,6 @@
         "documentation": {}
     },
     {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
         "label": "XbrlRole",
         "importPath": "xbrl_parser.xbrl_roles_definitions",
         "description": "xbrl_parser.xbrl_roles_definitions",
