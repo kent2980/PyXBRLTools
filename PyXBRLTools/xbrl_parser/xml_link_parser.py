@@ -77,9 +77,6 @@ class BaseXmlLinkParser(ABC):
         self._link_base = None
         self._link = None
 
-        # 変数の初期化
-        self._roleURI = None
-
     @property
     @abstractmethod
     def link_roles(self):
@@ -110,30 +107,8 @@ class BaseXmlLinkParser(ABC):
         """link要素を含むDataFrameを返すプロパティ。"""
         pass
 
-    @property
-    @abstractmethod
-    def roleURI(self):
-        """roleURI属性のゲッター。"""
-        pass
-
-    @roleURI.setter
-    @abstractmethod
-    def roleURI(self, roleURI: str):
-        """roleURI属性のセッター。"""
-        pass
-
 class XmlLinkParser(BaseXmlLinkParser):
     """BaseXmlLabelParserを継承して具体的な実装を行うクラス。"""
-
-    @property
-    def roleURI(self) -> str:
-        """roleURI属性のゲッター。"""
-        return self._roleURI
-
-    @roleURI.setter
-    def roleURI(self, roleURI: str) -> None:
-        """roleURI属性のセッター。"""
-        self._roleURI = roleURI
 
     @property
     def link_roles(self) -> DataFrame:
@@ -165,74 +140,28 @@ class XmlLinkParser(BaseXmlLinkParser):
         return self._role_refs
 
     @property
-    def link_locs(self) -> DataFrame:
+    def link_locs(self) -> dict[str, DataFrame]:
         """ link:loc要素を取得するメソッド。
 
         Returns:
-            DataFrame: link:loc要素を含むDataFrame。
+            dict[str, DataFrame]: link:loc要素を含むDataFrame。
 
         Examples:
             >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
-            >>> parser.roleURI = 'http://www.xbrl.org/2003/role/link'
             >>> parser.link_locs
+
+            [取得する辞書データの例]
+            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame
+
             [取得するDataFrameの例]
             xlink_type: locator
-            xlink_href: http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2023-12-01/jppfs_cor_2023-12-01.xsd#jppfs_cor_AccountsPayableOther
-            xlink_label: jppfs_cor_AccountsPayableOther
+            xlink_href: jppfs_cor_2023-12-01.xsd
+            xlink_label: jppfs_cor_EquityClassOfShares
         """
-
-        # # self.roleURIがNoneの場合はエラーを出力する
-        # if self.roleURI is None:
-        #     raise ValueError('roleURIが設定されていません。')
 
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
-            lists = []
-            # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
-            link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            tags = self.soup.find(link_tag_names, attrs={'xlink:role': self.roleURI})
-
-            # link:locタグからxlink:roleが一致するタグの子要素を取得
-            tags = tags.find_all(['link:loc'])
-
-            # link:loc要素を取得
-            for tag in tags:
-                lists.append({
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_href': tag.get('xlink:href').split('#')[0],
-                    'xlink_label': tag.get('xlink:label'),
-                })
-
-            self._link_locs = DataFrame(lists)
-
-        return self._link_locs
-
-    @property
-    def link_arcs(self) -> DataFrame:
-        """ link:labelArc要素を取得するメソッド。
-
-        Returns:
-            DataFrame: link:labelArc要素を含むDataFrame。
-
-        Examples:
-            >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
-            >>> parser.roleURI = 'http://www.xbrl.org/2003/role/link'
-            >>> parser.link_arcs
-            [取得するDataFrameの例]
-            xlink_type: arc
-            xlink_from: jppfs_cor_AccountsPayableOther
-            xlink_to: jppfs_cor_AccountsPayableOther
-            xlink_arcrole: http://www.xbrl.org/2003/arcrole/concept-label
-            xlink_order: 1
-            xlink_weight: 1
-        """
-        # # self.roleURIがNoneの場合はエラーを出力する
-        # if self.roleURI is None:
-        #     raise ValueError('roleURIが設定されていません。')
-
-        # link_arcsがNoneの場合は取得する
-        if self._link_arcs is None:
-            lists = []
+            dict = {}
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
@@ -243,8 +172,57 @@ class XmlLinkParser(BaseXmlLinkParser):
 
                 attr_value = link_tag.get('xlink:role')
 
-                arc_tag_names = ['link:caculationArc', 'link:definitionArc', 'link:presentationArc']
-                tags = link_tag.find_all(arc_tag_names, attrs={'xlink:arcrole': attr_value})
+                tags = link_tag.find_all(['link:loc'])
+                for tag in tags:
+                    tag_lists.append({
+                        'xlink_type': tag.get('xlink:type'),
+                        'xlink_href': tag.get('xlink:href').split('#')[0],
+                        'xlink_label': tag.get('xlink:label'),
+                    })
+
+                dict[attr_value] = DataFrame(tag_lists)
+
+            self._link_locs = dict
+
+            return self._link_locs
+
+    @property
+    def link_arcs(self) -> dict[str, DataFrame]:
+        """ link:labelArc要素を取得するメソッド。
+
+        Returns:
+            dict[str, DataFrame]: link:labelArc要素を含むDataFrame。
+
+        Examples:
+            >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
+            >>> parser.link_arcs
+
+            [取得する辞書データの例]
+            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame
+
+            [取得するDataFrameの例]
+            xlink_type: arc
+            xlink_from: jppfs_cor_AccountsPayableOther
+            xlink_to: jppfs_lab_AccountsPayableOther
+            xlink_arcrole: http://www.xbrl.org/2003/arcrole/concept-label
+            xlink_order: 1
+            xlink_weight: 1
+        """
+        # link_arcsがNoneの場合は取得する
+        if self._link_arcs is None:
+            dict = {}
+
+            # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
+            link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
+            link_tags = self.soup.find_all(link_tag_names)
+
+            for link_tag in link_tags:
+                tag_lists = []
+
+                attr_value = link_tag.get('xlink:role')
+
+                arc_tag_names = ['link:calculationArc', 'link:definitionArc', 'link:presentationArc']
+                tags = link_tag.find_all(arc_tag_names)
                 for tag in tags:
                     tag_lists.append({
                         'xlink_type': tag.get('xlink:type'),
@@ -254,12 +232,12 @@ class XmlLinkParser(BaseXmlLinkParser):
                         'xlink_order': tag.get('order'),
                         'xlink_weight': tag.get('weight'),
                     })
-                lists.append({
-                    attr_value: tag_lists
-                })
-                print(tag_lists)
 
-            print(lists)
+                dict[attr_value] = DataFrame(tag_lists)
+
+            self._link_arcs = dict
+
+            return self._link_arcs
 
     def link_base(self) -> DataFrame:
         """ link:base要素を取得するメソッド。
@@ -323,8 +301,8 @@ if __name__ == '__main__':
     xml_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-cal.xml'
     parser = XmlLinkParser(xml_path)
     # print(parser.link_roles)
-    # print(parser.link_locs)
-    print(parser.link_arcs)
+    print(parser.link_locs)
+    # print(parser.link_arcs)
     # print(parser.link_base)
     # print(parser.link())
     # print(parser.roleURI)
