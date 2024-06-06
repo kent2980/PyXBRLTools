@@ -4,3 +4,4 @@ main
 extract_csv
 doc
 Log/*.log
+*.pyc
