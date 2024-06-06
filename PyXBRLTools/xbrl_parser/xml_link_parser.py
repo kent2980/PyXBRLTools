@@ -10,14 +10,19 @@ class BaseXmlLinkParser(ABC):
     """
     XMLラベルパーサの基底クラス。
 
-    Attributes:
-        file_path (str): パースするXMLファイルのパス。
-        soup (BeautifulSoup): BeautifulSoupオブジェクト。
-        _role_refs (DataFrame): link:role要素を含むDataFrame。
-        _link_locs (DataFrame): link:loc要素を含むDataFrame。
-        _link_arcs (DataFrame): link:labelArc要素を含むDataFrame。
-        _link_base (DataFrame): link:base要素を含むDataFrame。
-        _link (DataFrame): link要素を含むDataFrame。
+    Attributes:\n
+        file_path (str): パースするXMLファイルのパス。\n
+
+    Properties:\n
+        link_roles (DataFrame): link:role要素を取得するプロパティ。\n
+        link_locs (dict[str, DataFrame]): link:loc要素を取得するプロパティ。\n
+        link_arcs (dict[str, DataFrame]): link:labelArc要素を取得するプロパティ。\n
+        link_base (DataFrame): link:base要素を取得するプロパティ。\n
+        link (DataFrame): link要素を取得するプロパティ。\n
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inicialize_class: クラス変数の初期化を行うメソッド。
     """
 
     def __init__(self, file_path: str) -> None:
@@ -31,14 +36,14 @@ class BaseXmlLinkParser(ABC):
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
 
-        self.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
+        self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
 
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
             self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
             raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
 
-        # ファイル名を設定
+        # ファイルパスを設定
         self.__file_path = file_path
 
         # クラス変数の初期化
@@ -56,7 +61,7 @@ class BaseXmlLinkParser(ABC):
         Args:
             file_path (str): パースするXMLファイルのパス。
         """
-        self.logger.debug(f'file_pathを設定中: {file_path}')
+        self.logger.logger.debug(f'file_pathを設定中: {file_path}')
 
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
@@ -76,7 +81,7 @@ class BaseXmlLinkParser(ABC):
         # BeautifulSoupの初期化
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
-                self.soup = bs(file, features='xml')
+                self._soup = bs(file, features='xml')
         except Exception as e:
             self.logger.error(f'BeautifulSoupの初期化に失敗しました。: {e}')
             raise e
@@ -119,7 +124,23 @@ class BaseXmlLinkParser(ABC):
         pass
 
 class XmlLinkParser(BaseXmlLinkParser):
-    """BaseXmlLabelParserを継承して具体的な実装を行うクラス。"""
+    """ BaseXmlLabelParserを継承して具体的な実装を行うクラス。
+
+    Attributes:\n
+        file_path (str): パースするXMLファイルのパス。\n
+
+    Properties:\n
+        link_roles (DataFrame): link:role要素を取得するプロパティ。\n
+        link_locs (dict[str, DataFrame]): link:loc要素を取得するプロパティ。\n
+        link_arcs (dict[str, DataFrame]): link:labelArc要素を取得するプロパティ。\n
+        link_base (DataFrame): link:base要素を取得するプロパティ。\n
+        link (DataFrame): link要素を取得するプロパティ。\n
+
+    Methods:\n
+        get_selected_link_locs: 指定したroleに対応するlink:loc要素を取得するメソッド。\n
+        get_selected_link_arcs: 指定したroleに対応するlink:labelArc要素を取得するメソッド。\n
+        is_role_exist: linkのxlink_roleにroleが存在するか確認するメソッド。\nß
+    """
 
     @property
     def link_roles(self) -> DataFrame:
@@ -131,17 +152,18 @@ class XmlLinkParser(BaseXmlLinkParser):
         Examples:
             >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
             >>> parser.link_roles
-            [取得するDataFrameの例]
-            xlink_type: simple
-            xlink_href: http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2023-12-01/jppfs_cor_2023-12-01.xsd
-            role_uri: http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): simple\n
+            xlink_href (str): http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2023-12-01/jppfs_cor_2023-12-01.xsd\n
+            role_uri (str): http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
         """
         if self._role_refs is None:
 
-            self.logger.debug('link:role要素を取得中。')
+            self.logger.logger.debug('link:role要素を取得中。')
 
             lists = []
-            tags = self.soup.find_all(['link:role', 'roleRef'])
+            tags = self._soup.find_all(['link:role', 'roleRef'])
             for tag in tags:
                 lists.append({
                     'xlink_type': tag.get('xlink:type'),
@@ -164,25 +186,25 @@ class XmlLinkParser(BaseXmlLinkParser):
             >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
             >>> parser.link_locs
 
-            [取得する辞書データの例]
-            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame
+            [取得する辞書データの例]\n
+            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame\n
 
-            [取得するDataFrameの例]
-            xlink_type: locator
-            xlink_href: jppfs_cor_2023-12-01.xsd
-            xlink_label: jppfs_cor_EquityClassOfShares
+            [取得するDataFrameの例]\n
+            xlink_type (str): locator\n
+            xlink_href (str): jppfs_cor_2023-12-01.xsd\n
+            xlink_label (str): jppfs_cor_EquityClassOfShares
         """
 
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
 
-            self.logger.debug('link:loc要素を取得中。')
+            self.logger.logger.debug('link:loc要素を取得中。')
 
             dict = {}
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            link_tags = self.soup.find_all(link_tag_names)
+            link_tags = self._soup.find_all(link_tag_names)
 
             for link_tag in link_tags:
                 tag_lists = []
@@ -201,7 +223,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             self._link_locs = dict
 
-            return self._link_locs
+        return self._link_locs
 
     @property
     def link_arcs(self) -> dict[str, DataFrame]:
@@ -215,26 +237,26 @@ class XmlLinkParser(BaseXmlLinkParser):
             >>> parser.link_arcs
 
             [取得する辞書データの例]
-            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame
+            http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet: DataFrame\n
 
-            [取得するDataFrameの例]
-            xlink_type: arc
-            xlink_from: jppfs_cor_AccountsPayableOther
-            xlink_to: jppfs_lab_AccountsPayableOther
-            xlink_arcrole: http://www.xbrl.org/2003/arcrole/concept-label
-            xlink_order: 1
-            xlink_weight: 1
+            [取得するDataFrameの例]\n
+            xlink_type (str): arc\n
+            xlink_from (str): jppfs_cor_AccountsPayableOther\n
+            xlink_to (str): jppfs_lab_AccountsPayableOther\n
+            xlink_arcrole (str): http://www.xbrl.org/2003/arcrole/concept-label\n
+            xlink_order (int): 1\n
+            xlink_weight (int): 1
         """
         # link_arcsがNoneの場合は取得する
         if self._link_arcs is None:
 
-            self.logger.debug('link:labelArc要素を取得中。')
+            self.logger.logger.debug('link:labelArc要素を取得中。')
 
             dict = {}
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            link_tags = self.soup.find_all(link_tag_names)
+            link_tags = self._soup.find_all(link_tag_names)
 
             for link_tag in link_tags:
                 tag_lists = []
@@ -257,7 +279,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             self._link_arcs = dict
 
-            return self._link_arcs
+        return self._link_arcs
 
     @property
     def link_base(self) -> DataFrame:
@@ -270,17 +292,17 @@ class XmlLinkParser(BaseXmlLinkParser):
             >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
             >>> parser.link_base
 
-            [取得するDataFrameの例]
-            xmlns_xlink: http://www.w3.org/1999/xlink
-            xmlns_xsi: http://www.w3.org/2001/XMLSchema-instance
-            xmlns_link: http://www.xbrl.org/2003/linkbase
+            [取得するDataFrameの例]\n
+            xmlns_xlink (str): http://www.w3.org/1999/xlink\n
+            xmlns_xsi (str): http://www.w3.org/2001/XMLSchema-instance\n
+            xmlns_link (str): http://www.xbrl.org/2003/linkbase
         """
         if self._link_base is None:
 
-            self.logger.debug('link:base要素を取得中。')
+            self.logger.logger.debug('link:base要素を取得中。')
 
             lists = []
-            tags = self.soup.find_all(name='link:linkbase')
+            tags = self._soup.find_all(name='link:linkbase')
             for tag in tags:
                 lists.append({
                     'xmlns_xlink': tag.get('xmlns:xlink'),
@@ -294,26 +316,26 @@ class XmlLinkParser(BaseXmlLinkParser):
 
     @property
     def link(self) -> DataFrame:
-        """ link要素を取得するメソッド。
+        """ link要素を取得するメソッド
 
         Returns:
             DataFrame: link要素を含むDataFrame。
 
         Examples:
             >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
-            >>> parser.link
+            >>> df = parser.link
 
-            [取得するDataFrameの例]
-            xlink_type: extended
-            xlink_role: http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
+            [取得するDataFrameの例]\n
+            xlink_type (str) : extended\n
+            xlink_role (str) : http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet
         """
         if self._link is None:
 
-            self.logger.debug('link要素を取得中。')
+            self.logger.logger.debug('link要素を取得中。')
 
             lists = []
             tag_names = ["link:calculationLink", "link:definitionLink", "link:presentationLink"]
-            tags = self.soup.find_all(name=tag_names)
+            tags = self._soup.find_all(name=tag_names)
             for tag in tags:
                 lists.append({
                     'xlink_type': tag.get('xlink:type'),
@@ -322,4 +344,81 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             self._link = DataFrame(lists)
 
-        return DataFrame(lists)
+        return self._link
+
+    def get_selected_link_locs(self, role: str) -> DataFrame:
+        """指定したroleに対応するlink:loc要素を取得するメソッド。
+
+        Args:
+            role (str): 取得したいrole。
+
+        Returns:
+            DataFrame: 指定したroleに対応するlink:loc要素を含むDataFrame。
+
+        Examples:
+            >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
+            >>> parser.get_selected_link_locs('http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet')
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): locator\n
+            xlink_href (str): jppfs_cor_2023-12-01.xsd\n
+            xlink_label (str): jppfs_cor_EquityClassOfShares
+        """
+
+        loc = self.link_locs
+
+        # locにroleが存在しない場合はエラーを出力する
+        if role not in loc:
+            self.logger.logger.error(f'role: {role} は存在しません。')
+            raise ValueError(f'role: {role} は存在しません。')
+
+        return loc[role]
+
+    def get_selected_link_arcs(self, role: str) -> DataFrame:
+        """指定したroleに対応するlink:labelArc要素を取得するメソッド。
+
+        Args:
+            role (str): 取得したいrole。
+
+        Returns:
+            DataFrame: 指定したroleに対応するlink:labelArc要素を含むDataFrame。
+
+        Examples:
+            >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
+            >>> parser.get_selected_link_arcs('http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet')
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): arc\n
+            xlink_from (str): jppfs_cor_AccountsPayableOther\n
+            xlink_to (str): jppfs_lab_AccountsPayableOther\n
+            xlink_arcrole (str): http://www.xbrl.org/2003/arcrole/concept-label\n
+            xlink_order (int): 1\n
+            xlink_weight (int): 1
+        """
+
+        arcs = self.link_arcs
+
+        # arcsにroleが存在しない場合はエラーを出力する
+        if role not in arcs:
+            self.logger.logger.error(f'role: {role} は存在しません。')
+            raise ValueError(f'role: {role} は存在しません。')
+
+        return arcs[role]
+
+    # linkのxlink_roleにroleが存在するか確認するメソッド
+    def is_role_exist(self, role: str) -> bool:
+        """linkのxlink_roleにroleが存在するか確認するメソッド。
+
+        Args:
+            role (str): 確認したいrole。
+
+        Returns:
+            bool: roleが存在する場合はTrue、存在しない場合はFalse。
+
+        Examples:
+            >>> parser = XmlLinkParser('data/abc-20130331_cal.xml')
+            >>> parser.check_role_exist('http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedBalanceSheet')
+            True
+        """
+        roles = self.link['xlink_role'].values
+        return role in roles

@@ -12,10 +12,16 @@ class BaseXmlLabelParser(ABC):
 
     Attributes:
         file_path (str): パースするXMLファイルのパス。
-        soup (BeautifulSoup): BeautifulSoupオブジェクト。
-        __link_labels (DataFrame): link:label要素を含むDataFrame。
-        __link_locs (DataFrame): link:loc要素を含むDataFrame。
-        __link_label_arcs (DataFrame): link:labelArc要素を含むDataFrame。
+
+    Properties:
+        link_labels (DataFrame): link:label要素を取得するプロパティ。
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inictialize_class: クラス変数の初期化を行うメソッド。
     """
 
     def __init__(self, file_path: str = None) -> None:
@@ -24,6 +30,11 @@ class BaseXmlLabelParser(ABC):
         Args:
             file_path (str): XMLファイルのパス。
         """
+        # ログ設定
+        class_name = self.__class__.__name__
+        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
+        self.logger.set_log_file(f'Log/{class_name}.log')
+
         if file_path is not None:
             # ファイル名が**lab**.xmlでない場合はエラーを出力する
             if not re.search(r'.*lab.*\.xml$', file_path):
@@ -35,10 +46,6 @@ class BaseXmlLabelParser(ABC):
             # クラス変数の初期化
             self.__inictialize_class(file_path)
 
-            # ログ設定
-            class_name = self.__class__.__name__
-            self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
-            self.logger.set_log_file(f'Log/{class_name}.log')
 
     @property
     def file_path(self) -> str| None:
@@ -67,32 +74,13 @@ class BaseXmlLabelParser(ABC):
     def __inictialize_class(self, file_path: str):
         """クラス変数の初期化を行います。"""
         with open(file_path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='xml')
+            self._soup = bs(file, features='xml')
 
         # DataFrameの初期化
         self._link_labels = None
         self._link_locs = None
         self._link_label_arcs = None
         self._role_refs = None
-
-    def _get_tags_to_dataframe(self, tag_names: list) -> DataFrame:
-        """タグ名のリストからDataFrameを生成するヘルパーメソッド。
-
-        Args:
-            tag_names (list): タグ名のリスト。
-
-        Returns:
-            DataFrame: 生成されたDataFrame。
-
-        example:
-        tag_names = ['link:label', 'label']
-        """
-        tags = self.soup.find_all(name=tag_names)
-        data_list = [
-            {key.replace(':', '_'): tag.get(key) for key in tag.attrs.keys()} | {'text': tag.text}
-            for tag in tags
-        ]
-        return DataFrame(data_list)
 
     @property
     @abstractmethod
@@ -119,32 +107,47 @@ class BaseXmlLabelParser(ABC):
         pass
 
 class XmlLabelParser(BaseXmlLabelParser):
-    """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。"""
+    """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。
+
+    Attributes:
+        file_path (str): パースするXMLファイルのパス。
+
+    Properties:
+        link_labels (DataFrame): link:label要素を取得するプロパティ。
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inictialize_class: クラス変数の初期化を行うメソッド。
+    """
 
     @property
     def link_labels(self) -> DataFrame:
         """link:label要素を取得するメソッド。
 
         returns:
-
+            DataFrame: link:label要素を含むDataFrame。
 
         example:
-        get_link_labels()の出力例
-        >>> df = get_link_labels()
-            print(df)
-        output:
-        |    | xlink_type | xlink_label | xlink_role | xml_lang | id | text |
-        |----|------------|-------------|------------|----------|----|------|
-        | 0  | label      | jppfs_lab_EquityClassOfShares | label | ja | EquityClassOfShares |  |
-        | 1  | label      | jppfs_lab_EquityClassOfShares | label | en | EquityClassOfShares |  |
-        | 2  | label      | jppfs_lab_EquityClassOfShares | label | en | EquityClassOfShares |  |
+            >>> parser = XmlLabelParser("**-lab.xml")
+            >>> df = parser.link_labels
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): resource\n
+            xlink_label (str): label_EquityClassOfShares\n
+            xlink_role (str): http://www.xbrl.org/2003/role/label\n
+            xml_lang (str): ja\n
+            id (str): label_EquityClassOfShares\n
+            label (str): 株式の種類
         """
 
         if self._link_labels is None:
 
             lists = []
 
-            tags = self.soup.find_all(name=['link:label', 'label'])
+            tags = self._soup.find_all(name=['link:label', 'label'])
             for tag in tags:
                 # id属性が存在で分岐
                 if tag.get('id') == None:
@@ -178,23 +181,22 @@ class XmlLabelParser(BaseXmlLabelParser):
         returns:
             DataFrame: link:loc要素を含むDataFrame。
 
-        example:
-        get_link_locs()の出力例
-        >>> df = get_link_locs(element_name='jppfs_cor_EquityClassOfShares')
-            print(df)
-        output:
-        |    | xlink_type | xlink_schema | xlink_href | xlink_label | text |
-        |----|------------|------------|-------------|------|
-        | 0  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
-        | 1  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
-        | 2  | locator    | jppfs_cor_2023-12-01.xsd | jppfs_cor_EquityClassOfShares | EquityClassOfShares |  |
+        Example:
+            >>> parser = XmlLabelParser("**-lab.xml")
+            >>> df = parser.link_locs
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): locator\n
+            xlink_schema (str): http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2021-12-01/jppfs_cor_2023-12-01.xsd\n
+            xlink_href (str): jppfs_cor_EquityClassOfShares\n
+            xlink_label (str): label_EquityClassOfShares
         """
         if self._link_locs is None:
 
             lists = []
             tags = None
 
-            tags = self.soup.find_all(name=['link:loc', 'loc'])
+            tags = self._soup.find_all(name=['link:loc', 'loc'])
             for tag in tags:
                 dict = {
                     'xlink_type': tag.get('xlink:type'),
@@ -215,28 +217,26 @@ class XmlLabelParser(BaseXmlLabelParser):
         returns:
             DataFrame: link:labelArc要素を含むDataFrame。
 
-        example:
-        get_link_label_arcs()の出力例
-        >>> df = get_link_label_arcs()
-            print(df)
-        output:
-        |    | xlink_type | xlink_arcrole | xlink_from | xlink_to | text |
-        |----|------------|---------------|------------|----------|------|
-        | 0  | arc        | http://www.xbrl.org/2003/arcrole/concept-label | jppfs_cor_EquityClassOfShares | jppfs_lab_EquityClassOfShares | |
-        | 1  | arc        | http://www.xbrl.org/2003/arcrole/concept-label | jppfs_cor_EquityClassOfShares | jppfs_lab_EquityClassOfShares | |
-        | 2  | arc        | http://www.xbrl.org/2003/arcrole/concept-label | jppfs_cor_EquityClassOfShares | jppfs_lab_EquityClassOfShares | |
+        Example:
+            >>> parser = XmlLabelParser("**-lab.xml")
+            >>> df = parser.link_label_arcs
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): arc\n
+            xlink_arcrole (str): http://www.xbrl.org/2003/arcrole/concept-label\n
+            xlink_from (str): EquityClassOfShares\n
+            xlink_to (str): label_EquityClassOfShares
         """
         if self._link_label_arcs is None:
 
             lists = []
-            tags = self.soup.find_all(name=['link:labelArc', 'labelArc'])
+            tags = self._soup.find_all(name=['link:labelArc', 'labelArc'])
             for tag in tags:
                 dict = {
                     'xlink_type': tag.get('xlink:type'),
                     'xlink_arcrole': tag.get('xlink:arcrole'),
                     'xlink_from': tag.get('xlink:from'),
                     'xlink_to': tag.get('xlink:to'),
-                    # 'order_id': float(tag.get('order')) if tag.get('order') else None,
                 }
                 lists.append(dict)
 
@@ -251,21 +251,20 @@ class XmlLabelParser(BaseXmlLabelParser):
         returns:
             DataFrame: roleRef要素を含むDataFrame。
 
-        example:
-            get_role_refs()の出力例
-            >>> df = get_role_refs()
-                print(df)
-            output:
-            |    | xlink_type | xlink_role | text |
-            |----|------------|------------|------|
-            | 0  | roleRef    | jppfs_cor_2023-12-01.xsd | |
-            | 1  | roleRef    | jppfs_cor_2023-12-01.xsd | |
-            | 2  | roleRef    | jppfs_cor_2023-12-01.xsd | |
+        Example:
+            >>> parser = XmlLabelParser("**-lab.xml")
+            >>> df = parser.role_refs
+
+            [取得するDataFrameの例]\n
+            Role_URI (str): http://disclosure.edinet-fsa.go.jp/jpcrp/std/alt/role/label\n
+            xlink_type (str): simple\n
+            xlink_schema (str): jpcrp_rt_2023-12-01.xsd\n
+            xlink_href (str): rol_std_altLabel
         """
         if self._role_refs is None:
 
             lists = []
-            tags = self.soup.find_all(name=['link:roleRef', 'roleRef'])
+            tags = self._soup.find_all(name=['link:roleRef', 'roleRef'])
             for tag in tags:
                 dict = {
                     'Role_URI': tag.get('roleURI'),

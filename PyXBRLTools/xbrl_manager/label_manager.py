@@ -10,18 +10,30 @@ from utils.utils import Utils
 from typing import Type
 
 class BaseLabelManager(ABC):
-    """XBRLラベルの基底クラスです。
-    XBRLのelementからラベルを取得するクラスです。
+    """ XBRLラベルの基底クラスです。
+        XBRLのelementからラベルを取得するクラスです。
+
+    Attributes:
+        dir_path (str): ディレクトリのパス。
+        label_parser (XbrlParserController): XMLラベルパーサ。
+        _element_names (list): 要素名のリスト。
+
+    Properties:
+        dir_path: ディレクトリのパスを取得します。
+
+    Methods:
+        link_label: ラベルを取得します。
+        link_label_itertor: ラベルをイテレータで取得します。
+        locs_table_df: locsテーブルを取得します。
+        arcs_table_df: arcsテーブルを取得します。
+        labels_table_df: labelsテーブルを取得します。
     """
+
     def __init__(self, dir_path:str):
         """BaseLabelManagerのコンストラクタです。
         Args:
             dir_path (str): ディレクトリのパス。
         """
-        self.__dir_path = dir_path
-        self.label_parser = XbrlParserController.xml_label_parser()
-        self._element_names = []
-
         # ログ設定
         class_name = self.__class__.__name__
         print(class_name)
@@ -31,6 +43,15 @@ class BaseLabelManager(ABC):
         # ログを出力
         self.logger.logger.info(f"{class_name}を初期化しました。")
         self.logger.logger.info(f"dir_path(入力フォルダ)を設定: {dir_path}")
+
+        # ディレクトリのパスを設定
+        self.__dir_path = dir_path
+
+        # XMLラベルパーサを取得
+        self.label_parser = XbrlParserController.xml_label_parser()
+
+        # 変数の初期化
+        self._element_names = []
 
     @property
     def dir_path(self):
@@ -106,7 +127,23 @@ class BaseLabelManager(ABC):
         pass
 
 class LabelManager(BaseLabelManager):
-    """XBRLラベルのクラスです。
+    """ XBRLラベルのクラスです。
+        XBRLのelementからラベルを取得するクラスです。
+
+    Attributes:
+        dir_path (str): ディレクトリのパス。
+        label_parser (XbrlParserController): XMLラベルパーサ。
+        _element_names (list): 要素名のリスト。
+
+    Properties:
+        dir_path: ディレクトリのパスを取得します。
+
+    Methods:
+        link_label: ラベルを取得します。
+        link_label_itertor: ラベルをイテレータで取得します。
+        locs_table_df: locsテーブルを取得します。
+        arcs_table_df: arcsテーブルを取得します。
+        labels_table_df: labelsテーブルを取得します。
     """
 
     def __get_lab_path(self, name_space:str) -> str:
@@ -220,6 +257,7 @@ class LabelManager(BaseLabelManager):
 
             # locラベルを取得
             loc_df2 = self.label_parser.link_locs
+
             # loclabelsにloc_labelを追加しインデックスを振り直す
             loc_df = pd.concat([loc_df, loc_df2], ignore_index=True)
 
