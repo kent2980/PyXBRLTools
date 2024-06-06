@@ -10,9 +10,25 @@ from utils.utils import Utils
 from typing import Type
 
 class BaseLabelManager(ABC):
-    """XBRLラベルの基底クラスです。
-    XBRLのelementからラベルを取得するクラスです。
+    """ XBRLラベルの基底クラスです。
+        XBRLのelementからラベルを取得するクラスです。
+
+    Attributes:
+        dir_path (str): ディレクトリのパス。
+        label_parser (XbrlParserController): XMLラベルパーサ。
+        _element_names (list): 要素名のリスト。
+
+    Properties:
+        dir_path: ディレクトリのパスを取得します。
+
+    Methods:
+        link_label: ラベルを取得します。
+        link_label_itertor: ラベルをイテレータで取得します。
+        locs_table_df: locsテーブルを取得します。
+        arcs_table_df: arcsテーブルを取得します。
+        labels_table_df: labelsテーブルを取得します。
     """
+
     def __init__(self, dir_path:str):
         """BaseLabelManagerのコンストラクタです。
         Args:
@@ -111,7 +127,23 @@ class BaseLabelManager(ABC):
         pass
 
 class LabelManager(BaseLabelManager):
-    """XBRLラベルのクラスです。
+    """ XBRLラベルのクラスです。
+        XBRLのelementからラベルを取得するクラスです。
+
+    Attributes:
+        dir_path (str): ディレクトリのパス。
+        label_parser (XbrlParserController): XMLラベルパーサ。
+        _element_names (list): 要素名のリスト。
+
+    Properties:
+        dir_path: ディレクトリのパスを取得します。
+
+    Methods:
+        link_label: ラベルを取得します。
+        link_label_itertor: ラベルをイテレータで取得します。
+        locs_table_df: locsテーブルを取得します。
+        arcs_table_df: arcsテーブルを取得します。
+        labels_table_df: labelsテーブルを取得します。
     """
 
     def __get_lab_path(self, name_space:str) -> str:

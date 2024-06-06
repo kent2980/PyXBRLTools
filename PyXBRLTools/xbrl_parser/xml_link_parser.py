@@ -10,14 +10,19 @@ class BaseXmlLinkParser(ABC):
     """
     XMLラベルパーサの基底クラス。
 
-    Attributes:
-        file_path (str): パースするXMLファイルのパス。
-        soup (BeautifulSoup): BeautifulSoupオブジェクト。
-        _role_refs (DataFrame): link:role要素を含むDataFrame。
-        _link_locs (DataFrame): link:loc要素を含むDataFrame。
-        _link_arcs (DataFrame): link:labelArc要素を含むDataFrame。
-        _link_base (DataFrame): link:base要素を含むDataFrame。
-        _link (DataFrame): link要素を含むDataFrame。
+    Attributes:\n
+        file_path (str): パースするXMLファイルのパス。\n
+
+    Properties:\n
+        link_roles (DataFrame): link:role要素を取得するプロパティ。\n
+        link_locs (dict[str, DataFrame]): link:loc要素を取得するプロパティ。\n
+        link_arcs (dict[str, DataFrame]): link:labelArc要素を取得するプロパティ。\n
+        link_base (DataFrame): link:base要素を取得するプロパティ。\n
+        link (DataFrame): link要素を取得するプロパティ。\n
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inicialize_class: クラス変数の初期化を行うメソッド。
     """
 
     def __init__(self, file_path: str) -> None:
@@ -76,7 +81,7 @@ class BaseXmlLinkParser(ABC):
         # BeautifulSoupの初期化
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
-                self.soup = bs(file, features='xml')
+                self._soup = bs(file, features='xml')
         except Exception as e:
             self.logger.error(f'BeautifulSoupの初期化に失敗しました。: {e}')
             raise e
@@ -119,7 +124,23 @@ class BaseXmlLinkParser(ABC):
         pass
 
 class XmlLinkParser(BaseXmlLinkParser):
-    """BaseXmlLabelParserを継承して具体的な実装を行うクラス。"""
+    """ BaseXmlLabelParserを継承して具体的な実装を行うクラス。
+
+    Attributes:\n
+        file_path (str): パースするXMLファイルのパス。\n
+
+    Properties:\n
+        link_roles (DataFrame): link:role要素を取得するプロパティ。\n
+        link_locs (dict[str, DataFrame]): link:loc要素を取得するプロパティ。\n
+        link_arcs (dict[str, DataFrame]): link:labelArc要素を取得するプロパティ。\n
+        link_base (DataFrame): link:base要素を取得するプロパティ。\n
+        link (DataFrame): link要素を取得するプロパティ。\n
+
+    Methods:\n
+        get_selected_link_locs: 指定したroleに対応するlink:loc要素を取得するメソッド。\n
+        get_selected_link_arcs: 指定したroleに対応するlink:labelArc要素を取得するメソッド。\n
+        is_role_exist: linkのxlink_roleにroleが存在するか確認するメソッド。\nß
+    """
 
     @property
     def link_roles(self) -> DataFrame:
@@ -142,7 +163,7 @@ class XmlLinkParser(BaseXmlLinkParser):
             self.logger.logger.debug('link:role要素を取得中。')
 
             lists = []
-            tags = self.soup.find_all(['link:role', 'roleRef'])
+            tags = self._soup.find_all(['link:role', 'roleRef'])
             for tag in tags:
                 lists.append({
                     'xlink_type': tag.get('xlink:type'),
@@ -183,7 +204,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            link_tags = self.soup.find_all(link_tag_names)
+            link_tags = self._soup.find_all(link_tag_names)
 
             for link_tag in link_tags:
                 tag_lists = []
@@ -235,7 +256,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             # link:calculationLink,link:definitionLink,link:presentationLinkタグからxlink:roleが一致するタグの子要素を取得
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
-            link_tags = self.soup.find_all(link_tag_names)
+            link_tags = self._soup.find_all(link_tag_names)
 
             for link_tag in link_tags:
                 tag_lists = []
@@ -281,7 +302,7 @@ class XmlLinkParser(BaseXmlLinkParser):
             self.logger.logger.debug('link:base要素を取得中。')
 
             lists = []
-            tags = self.soup.find_all(name='link:linkbase')
+            tags = self._soup.find_all(name='link:linkbase')
             for tag in tags:
                 lists.append({
                     'xmlns_xlink': tag.get('xmlns:xlink'),
@@ -314,7 +335,7 @@ class XmlLinkParser(BaseXmlLinkParser):
 
             lists = []
             tag_names = ["link:calculationLink", "link:definitionLink", "link:presentationLink"]
-            tags = self.soup.find_all(name=tag_names)
+            tags = self._soup.find_all(name=tag_names)
             for tag in tags:
                 lists.append({
                     'xlink_type': tag.get('xlink:type'),

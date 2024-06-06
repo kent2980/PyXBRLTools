@@ -12,11 +12,16 @@ class BaseXmlLabelParser(ABC):
 
     Attributes:
         file_path (str): パースするXMLファイルのパス。
-        soup (BeautifulSoup): BeautifulSoupオブジェクト。
-        _link_labels (DataFrame): link:label要素を含むDataFrame。
-        _link_locs (DataFrame): link:loc要素を含むDataFrame。
-        _link_label_arcs (DataFrame): link:labelArc要素を含むDataFrame。
-        _role_refs (DataFrame): roleRef要素を含むDataFrame。
+
+    Properties:
+        link_labels (DataFrame): link:label要素を取得するプロパティ。
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inictialize_class: クラス変数の初期化を行うメソッド。
     """
 
     def __init__(self, file_path: str = None) -> None:
@@ -69,7 +74,7 @@ class BaseXmlLabelParser(ABC):
     def __inictialize_class(self, file_path: str):
         """クラス変数の初期化を行います。"""
         with open(file_path, 'r', encoding='utf-8') as file:
-            self.soup = bs(file, features='xml')
+            self._soup = bs(file, features='xml')
 
         # DataFrameの初期化
         self._link_labels = None
@@ -102,14 +107,28 @@ class BaseXmlLabelParser(ABC):
         pass
 
 class XmlLabelParser(BaseXmlLabelParser):
-    """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。"""
+    """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。
+
+    Attributes:
+        file_path (str): パースするXMLファイルのパス。
+
+    Properties:
+        link_labels (DataFrame): link:label要素を取得するプロパティ。
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inictialize_class: クラス変数の初期化を行うメソッド。
+    """
 
     @property
     def link_labels(self) -> DataFrame:
         """link:label要素を取得するメソッド。
 
         returns:
-
+            DataFrame: link:label要素を含むDataFrame。
 
         example:
             >>> parser = XmlLabelParser("**-lab.xml")
@@ -128,7 +147,7 @@ class XmlLabelParser(BaseXmlLabelParser):
 
             lists = []
 
-            tags = self.soup.find_all(name=['link:label', 'label'])
+            tags = self._soup.find_all(name=['link:label', 'label'])
             for tag in tags:
                 # id属性が存在で分岐
                 if tag.get('id') == None:
@@ -177,7 +196,7 @@ class XmlLabelParser(BaseXmlLabelParser):
             lists = []
             tags = None
 
-            tags = self.soup.find_all(name=['link:loc', 'loc'])
+            tags = self._soup.find_all(name=['link:loc', 'loc'])
             for tag in tags:
                 dict = {
                     'xlink_type': tag.get('xlink:type'),
@@ -211,7 +230,7 @@ class XmlLabelParser(BaseXmlLabelParser):
         if self._link_label_arcs is None:
 
             lists = []
-            tags = self.soup.find_all(name=['link:labelArc', 'labelArc'])
+            tags = self._soup.find_all(name=['link:labelArc', 'labelArc'])
             for tag in tags:
                 dict = {
                     'xlink_type': tag.get('xlink:type'),
@@ -245,7 +264,7 @@ class XmlLabelParser(BaseXmlLabelParser):
         if self._role_refs is None:
 
             lists = []
-            tags = self.soup.find_all(name=['link:roleRef', 'roleRef'])
+            tags = self._soup.find_all(name=['link:roleRef', 'roleRef'])
             for tag in tags:
                 dict = {
                     'Role_URI': tag.get('roleURI'),
