@@ -152,6 +152,14 @@
         "documentation": {}
     },
     {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
         "label": "abstractmethod",
         "importPath": "abc",
         "description": "abc",
@@ -378,6 +386,22 @@
         "documentation": {}
     },
     {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
         "label": "XmlLinkParser",
         "importPath": "xbrl_parser.xml_link_parser",
         "description": "xbrl_parser.xml_link_parser",
@@ -531,14 +555,6 @@
         "documentation": {}
     },
     {
-        "label": "XmlSchemaParser",
-        "importPath": "xbrl_parser.xml_schema_parser",
-        "description": "xbrl_parser.xml_schema_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_schema_parser",
-        "documentation": {}
-    },
-    {
         "label": "XmlLabelParser",
         "importPath": "xbrl_parser.xml_label_parser",
         "description": "xbrl_parser.xml_label_parser",
@@ -577,6 +593,14 @@
         "description": "xbrl_manager.link_managers",
         "isExtraImport": true,
         "detail": "xbrl_manager.link_managers",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLabelManager",
+        "importPath": "xbrl_manager.label_manager",
+        "description": "xbrl_manager.label_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.label_manager",
         "documentation": {}
     },
     {
@@ -655,8 +679,26 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
         "description": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
-        "peekOfCode": "class BaseXbrlManager(ABC):\n    \"\"\" XBRLファイルのパスを取得するための基底クラス。\n    Attributes:\\n\n        dir_path (str): パースするディレクトリのパス。\\n\n        _ixbrl_files (list[dict[str: str]]): ixbrlファイルのパスと文書の種類を格納したリスト。\\n\n        SUMMARY (str): 決算短信サマリー\\n\n        CASH_FLOW (str): キャッシュフロー計算書\\n\n        BARANCE_SHEET (str): 貸借対照表\\n\n        PROFIT_AND_LOSS (str): 損益計算書\\n\n        STATEMENT_OF_SHAREHOLDERS (str): 株主資本等変動計算書\\n",
+        "peekOfCode": "class BaseXbrlManager(ABC):\n    \"\"\" XBRLファイルのパスを取得するための基底クラス。\n    Attributes:\\n\n        dir_path (str): パースするディレクトリのパス。\\n\n        _ixbrl_files (list[dict[str: str]]): ixbrlファイルのパスと文書の種類を格納したリスト。\\n\n        _schema_files (list[dict[str: str]]): スキーマファイルのパスと文書の種類を格納したリスト。\\n\n        SUMMARY (str): 決算短信サマリー\\n\n        CASH_FLOW (str): キャッシュフロー計算書\\n\n        BARANCE_SHEET (str): 貸借対照表\\n\n        PROFIT_AND_LOSS (str): 損益計算書\\n",
         "detail": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLabelManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "description": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\" XBRLラベルの基底クラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
+        "detail": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "documentation": {}
+    },
+    {
+        "label": "LabelManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "description": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "peekOfCode": "class LabelManager(BaseLabelManager):\n    \"\"\" XBRLラベルのクラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
+        "detail": "PyXBRLTools.xbrl_manager.label_manager copy",
         "documentation": {}
     },
     {
@@ -664,7 +706,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.label_manager",
         "description": "PyXBRLTools.xbrl_manager.label_manager",
-        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\" XBRLラベルの基底クラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
+        "peekOfCode": "class BaseLabelManager(BaseXbrlManager):\n    \"\"\" labelファイルの情報を取得するクラス。\"\"\"\n    def __init__(self, dir_path: str):\n        \"\"\" コンストラクタ \"\"\"\n        super().__init__(dir_path)\n        self.__get_label_path()\n    def __get_label_path(self) -> str:\n        \"\"\" labelファイルのパスを取得するメソッド。\"\"\"\n        for schema_file in self.schema_files:\n            print(schema_file['path'])",
         "detail": "PyXBRLTools.xbrl_manager.label_manager",
         "documentation": {}
     },
@@ -673,7 +715,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.label_manager",
         "description": "PyXBRLTools.xbrl_manager.label_manager",
-        "peekOfCode": "class LabelManager(BaseLabelManager):\n    \"\"\" XBRLラベルのクラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
+        "peekOfCode": "class LabelManager(BaseLabelManager):\n    pass\n# テストコード\nif __name__ == \"__main__\":\n    print(\"Test sample\")\n    dir_path = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData\"\n    label_manager = BaseLabelManager(dir_path)\n    print(label_manager.schema_files)",
         "detail": "PyXBRLTools.xbrl_manager.label_manager",
         "documentation": {}
     },
@@ -682,7 +724,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.link_managers",
         "description": "PyXBRLTools.xbrl_manager.link_managers",
-        "peekOfCode": "class BaseLinkManager(BaseXbrlManager):\n    \"\"\" linkファイルの情報を取得するクラス。\n    Args:\n        BaseXbrlManager (class): XBRLデータの基底クラス。\n    Attributes:\n        link_path (str): linkファイルのパス。\n        link_parser (XmlLinkParser): linkファイルのパーサ。\n    Properties:\n        link_path (str): linkファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): linkファイルのパーサを取得するプロパティ。",
+        "peekOfCode": "class BaseLinkManager(ABC):\n    \"\"\" linkファイルの情報を取得するクラス。\n    Args:\n        BaseXbrlManager (class): XBRLデータの基底クラス。\n    Attributes:\n        link_path (str): linkファイルのパス。\n        link_parser (XmlLinkParser): linkファイルのパーサ。\n    Properties:\n        link_path (str): linkファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): linkファイルのパーサを取得するプロパティ。",
         "detail": "PyXBRLTools.xbrl_manager.link_managers",
         "documentation": {}
     },
@@ -835,7 +877,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
-        "peekOfCode": "class XmlSchemaParser(BaseXmlSchemaParser):\n    \"\"\"\n    XMLスキーマパーサの具象クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    @property\n    def import_schemas(self) -> DataFrame:\n        \"\"\" importスキーマを取得します。\n        returns:\n            DataFrame: importスキーマテーブルのDataFrame。",
+        "peekOfCode": "class XmlSchemaParser(BaseXmlSchemaParser):\n    \"\"\"\n    XMLスキーマパーサの具象クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    Attributes:\n        file_path (str): XMLファイルのパス。\n        soup (BeautifulSoup): BeautifulSoupのインスタンス。\n        _import_schemas (DataFrame): importスキーマテーブルのDataFrame。\n        _link_base_refs (DataFrame): link_base_refsテーブルのDataFrame。\n        _elements (DataFrame): elementsテーブルのDataFrame。",
         "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "documentation": {}
     },

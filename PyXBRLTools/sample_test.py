@@ -1,5 +1,6 @@
 from xbrl_parser.xml_link_parser import XmlLinkParser
 from xbrl_manager.link_managers import CalLinkManager, DefLinkManager, PreLinkManager
+from xbrl_manager.label_manager import BaseLabelManager
 
 # if __name__ == "__main__":
 #     print("Test sample")
@@ -24,9 +25,12 @@ if __name__ == "__main__":
     print("Test sample")
 
     dir_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData"
-    link_manager = DefLinkManager(dir_path)
-    link_parser = link_manager.link_parser
-    print(link_parser.link_arcs)
-    print(link_parser.link_roles)
-    print(link_parser.link_base)
-    print(link_parser.link_locs)
+    # link_manager = DefLinkManager(dir_path)
+    # link_parser = link_manager.link_parser
+    # print(link_parser.link_arcs)
+    # print(link_parser.link_roles)
+    # print(link_parser.link_base)
+    # print(link_parser.link_locs)
+
+    label_manager = BaseLabelManager(dir_path)
+    # print(label_manager.schema_files)
