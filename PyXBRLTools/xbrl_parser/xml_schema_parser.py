@@ -91,6 +91,25 @@ class XmlSchemaParser(BaseXmlSchemaParser):
     """
     XMLスキーマパーサの具象クラスです。
     XMLスキーマの情報を取得するクラスです。
+
+    Attributes:
+        file_path (str): XMLファイルのパス。
+        soup (BeautifulSoup): BeautifulSoupのインスタンス。
+        _import_schemas (DataFrame): importスキーマテーブルのDataFrame。
+        _link_base_refs (DataFrame): link_base_refsテーブルのDataFrame。
+        _elements (DataFrame): elementsテーブルのDataFrame。
+
+    Properties:
+        import_schemas (DataFrame): importスキーマを取得するプロパティ。
+        link_base_refs (DataFrame): link_base_refsを取得するプロパティ。
+        elements (DataFrame): elementsを取得するプロパティ。
+
+    Methods:
+        __init__: 初期化メソッド。
+        __inictialize_class: クラス変数の初期化を行うメソッド。
+        import_schemas: importスキーマを取得するメソッド。
+        link_base_refs: link_base_refsを取得するメソッド。
+        elements: elementsを取得するメソッド。
     """
 
     @property

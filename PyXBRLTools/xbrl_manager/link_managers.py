@@ -1,9 +1,8 @@
-from xbrl_manager.base_xbrl_manager import BaseXbrlManager
 from xbrl_parser.xml_link_parser import XmlLinkParser
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import os
 
-class BaseLinkManager(BaseXbrlManager):
+class BaseLinkManager(ABC):
     """ linkファイルの情報を取得するクラス。
 
     Args:
@@ -24,7 +23,19 @@ class BaseLinkManager(BaseXbrlManager):
 
     def __init__(self, dir_path: str):
         """ コンストラクタ """
-        super().__init__(dir_path)
+        self.__dir_path = dir_path
+        self.__link_path = self._get_link_path()
+        self.__link_parser = XmlLinkParser(self.link_path)
+
+    @property
+    def dir_path(self):
+        """ ディレクトリパスを取得するプロパティ。"""
+        return self.__dir_path
+
+    @dir_path.setter
+    def dir_path(self, dir_path: str):
+        """ ディレクトリパスを設定するプロパティ。"""
+        self.__dir_path = dir_path
         self.__link_path = self._get_link_path()
         self.__link_parser = XmlLinkParser(self.link_path)
 
