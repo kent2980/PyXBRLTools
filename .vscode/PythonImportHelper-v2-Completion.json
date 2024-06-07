@@ -232,6 +232,22 @@
         "documentation": {}
     },
     {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
         "label": "pandas",
         "kind": 6,
         "isExtraImport": true,
@@ -762,6 +778,15 @@
         "description": "PyXBRLTools.xbrl_manager.test_label_manager",
         "peekOfCode": "class TestLabelManager(unittest.TestCase):\n    def setUp(self):\n        # テストのセットアップ時に実行されるメソッド\n        self.extra_dir = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir\"\n        self.lm = LabelManager(self.extra_dir)\n    def test_link_label(self):\n        \"\"\" link_labelメソッドのテスト \"\"\"\n        # link_labelメソッドをテストします\n        index = 0\n        expected_label = \"Test Label\"",
         "detail": "PyXBRLTools.xbrl_manager.test_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "BaseXbrlPathManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "peekOfCode": "class BaseXbrlPathManager(ABC):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するための基底クラス。\n    \"\"\"\n    def __init__(self, xbrl_directory_path):\n        \"\"\"\n        BaseXbrlPathManagerをディレクトリパスで初期化します。\n        :param xbrl_directory_path: XBRLディレクトリへのパス\n        :type xbrl_directory_path: str\n        \"\"\"",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "documentation": {}
     },
     {
