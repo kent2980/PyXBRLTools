@@ -1,6 +1,7 @@
 from xbrl_parser.xml_link_parser import XmlLinkParser
 from xbrl_manager.link_managers import CalLinkManager, DefLinkManager, PreLinkManager
 from xbrl_manager.label_manager import BaseLabelManager
+from xbrl_manager.xbrl_path_manager import XbrlPathManager
 
 # if __name__ == "__main__":
 #     print("Test sample")
@@ -32,5 +33,17 @@ if __name__ == "__main__":
     # print(link_parser.link_base)
     # print(link_parser.link_locs)
 
-    label_manager = BaseLabelManager(dir_path)
+    # label_manager = BaseLabelManager(dir_path)
     # print(label_manager.schema_files)
+
+    xbrl_path_manager = XbrlPathManager(dir_path)
+    print("xsd_pathを取得します。")
+    print(xbrl_path_manager.ixbrl_path)
+    print("def_pathを取得します。")
+    print(xbrl_path_manager.def_path)
+    print("cal_pathを取得します。")
+    print(xbrl_path_manager.cal_path)
+    print("pre_pathを取得します。")
+    print(xbrl_path_manager.pre_path)
+    print("lab_pathを取得します。")
+    print(xbrl_path_manager.lab_path)

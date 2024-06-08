@@ -418,6 +418,14 @@
         "documentation": {}
     },
     {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
         "label": "XmlLinkParser",
         "importPath": "xbrl_parser.xml_link_parser",
         "description": "xbrl_parser.xml_link_parser",
@@ -620,6 +628,14 @@
         "documentation": {}
     },
     {
+        "label": "XbrlPathManager",
+        "importPath": "xbrl_manager.xbrl_path_manager",
+        "description": "xbrl_manager.xbrl_path_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
         "label": "LabelManager",
         "importPath": "PyXBRLTools.label_manager",
         "description": "PyXBRLTools.label_manager",
@@ -785,7 +801,16 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
-        "peekOfCode": "class BaseXbrlPathManager(ABC):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するための基底クラス。\n    \"\"\"\n    def __init__(self, xbrl_directory_path):\n        \"\"\"\n        BaseXbrlPathManagerをディレクトリパスで初期化します。\n        :param xbrl_directory_path: XBRLディレクトリへのパス\n        :type xbrl_directory_path: str\n        \"\"\"",
+        "peekOfCode": "class BaseXbrlPathManager(ABC):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するための基底クラス。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリへのパス\n        _ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス\n        _xsd_path (list[dict[str, str]]): XSDファイルへのパス\n        _lab_path (list[dict[str, str]]): LABファイルへのパス\n        _cal_path (list[dict[str, str]]): CALファイルへのパス\n        _def_path (list[dict[str, str]]): DEFファイルへのパス",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlPathManager",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "peekOfCode": "class XbrlPathManager(BaseXbrlPathManager):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するためのクラス。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリへのパス\n    Properties:\n        ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス\n        xsd_path (list[dict[str, str]]): XSDファイルへのパス\n        lab_path (list[dict[str, str]]): LABファイルへのパス\n        cal_path (list[dict[str, str]]): CALファイルへのパス",
         "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "documentation": {}
     },
@@ -893,7 +918,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
-        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        # ファイルパスを設定",
+        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str = None) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        # ログ設定",
         "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "documentation": {}
     },
