@@ -223,8 +223,6 @@ class XmlLinkParser(BaseXmlLinkParser):
                         'xlink_label': tag.get('xlink:label'),
                     })
 
-                # dict[attr_value] = DataFrame(tag_lists)
-
             self._link_locs = DataFrame(tag_lists)
 
         return self._link_locs
