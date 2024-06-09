@@ -65,12 +65,36 @@ class XbrlLinkManager(BaseXbrlLinkManager):
             self.logger.logger.error('link_typeの値が不正です。')
             raise ValueError('link_typeの値が不正です。')
 
+        self.__link_type = link_type
+
         # リンクタイプによってリンクパスを設定
         if link_type == XbrlLinkType.CAL:
             self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.cal_path[0]['file_path']
         elif link_type == XbrlLinkType.DEF:
             self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.def_path[0]['file_path']
         elif link_type == XbrlLinkType.PRE:
+            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.pre_path[0]['file_path']
+        else:
+            self.logger.logger.error('link_typeの値が不正です。')
+            raise ValueError('link_typeの値が不正です。')
+
+        # リンクパーサーを設定
+        self.__link_parser = XmlLinkParser(self.link_path)
+
+    @property
+    def link_type(self):
+        return self.__link_type
+
+    @link_type.setter
+    def link_type(self, value):
+        self.__link_type = value
+
+        # リンクタイプによってリンクパスを設定
+        if value == XbrlLinkType.CAL:
+            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.cal_path[0]['file_path']
+        elif value == XbrlLinkType.DEF:
+            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.def_path[0]['file_path']
+        elif value == XbrlLinkType.PRE:
             self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.pre_path[0]['file_path']
         else:
             self.logger.logger.error('link_typeの値が不正です。')

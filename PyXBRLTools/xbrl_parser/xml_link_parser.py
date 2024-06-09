@@ -208,22 +208,24 @@ class XmlLinkParser(BaseXmlLinkParser):
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
             link_tags = self._soup.find_all(link_tag_names)
 
+            tag_lists = []
             for link_tag in link_tags:
-                tag_lists = []
 
                 attr_value = link_tag.get('xlink:role')
 
                 tags = link_tag.find_all(['link:loc'])
                 for tag in tags:
                     tag_lists.append({
+                        'attr_value': attr_value,
                         'xlink_type': tag.get('xlink:type'),
-                        'xlink_href': tag.get('xlink:href').split('#')[0],
+                        'xlink_schema': tag.get('xlink:href').split('#')[0],
+                        'xlink_href': tag.get('xlink:href').split('#')[1],
                         'xlink_label': tag.get('xlink:label'),
                     })
 
-                dict[attr_value] = DataFrame(tag_lists)
+                # dict[attr_value] = DataFrame(tag_lists)
 
-            self._link_locs = dict
+            self._link_locs = DataFrame(tag_lists)
 
         return self._link_locs
 
@@ -260,8 +262,8 @@ class XmlLinkParser(BaseXmlLinkParser):
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
             link_tags = self._soup.find_all(link_tag_names)
 
+            tag_lists = []
             for link_tag in link_tags:
-                tag_lists = []
 
                 attr_value = link_tag.get('xlink:role')
 
@@ -269,6 +271,7 @@ class XmlLinkParser(BaseXmlLinkParser):
                 tags = link_tag.find_all(arc_tag_names)
                 for tag in tags:
                     tag_lists.append({
+                        'attr_value': attr_value,
                         'xlink_type': tag.get('xlink:type'),
                         'xlink_from': tag.get('xlink:from'),
                         'xlink_to': tag.get('xlink:to'),
@@ -277,9 +280,7 @@ class XmlLinkParser(BaseXmlLinkParser):
                         'xlink_weight': tag.get('weight'),
                     })
 
-                dict[attr_value] = DataFrame(tag_lists)
-
-            self._link_arcs = dict
+            self._link_arcs = DataFrame(tag_lists)
 
         return self._link_arcs
 

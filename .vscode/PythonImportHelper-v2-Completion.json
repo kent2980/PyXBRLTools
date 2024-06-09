@@ -850,11 +850,11 @@
         "documentation": {}
     },
     {
-        "label": "XbrlRead",
+        "label": "XbrlReader",
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_reader",
         "description": "PyXBRLTools.xbrl_reader",
-        "peekOfCode": "class XbrlRead:\n    def __init__(self, xbrl_zip_path, xbrl_directory_path, load_label_directory):\n        # ZIPファイルのパスを設定\n        self.__xbrl_zip_path = xbrl_zip_path\n        # zipファイルの名前を取得\n        self.__xbrl_zip_filename = xbrl_zip_path.split('/')[-1].split('.')[0]\n        # ZIPファイルを解凍するディレクトリのパスを設定\n        self.__xbrl_directory_path = f\"{xbrl_directory_path}/{self.__xbrl_zip_filename}\"\n        # グローバルラベルファイルをロードするディレクトリのパスを設定\n        self.__load_label_directory = load_label_directory",
+        "peekOfCode": "class XbrlReader:\n    \"\"\" XBRLファイルを読み込むクラスです。\n    Args:\n        xbrl_zip_path (str): XBRLファイルのZIPファイルのパス\n        xbrl_directory_path (str): XBRLファイルを解凍するディレクトリのパス\n        load_label_directory (str): グローバルラベルファイルをロードするディレクトリのパス\n    Properties:\n        xbrl_zip_path (str): XBRLファイルのZIPファイルのパス\n        xbrl_directory_path (str): XBRLファイルを解凍するディレクトリのパス\n        load_label_directory (str): グローバルラベルファイルをロードするディレクトリのパス",
         "detail": "PyXBRLTools.xbrl_reader",
         "documentation": {}
     }
