@@ -13,24 +13,25 @@ class XbrlQualitativeParser:
     "qualitative.htm"から情報を解析して抽出するためのクラスです。
     """
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str = None) -> None:
         """
         QualitativeParserクラスのコンストラクタです。
         """
-        # ファイル名がqualitative.htmでない場合はエラーを出力する
-        if not re.search(r'.*qualitative\.htm$', file_path):
-            raise ValueError('ファイル名がqualitative.htmではありません。')
-
-        # ファイルパスを設定
-        self.__file_path = file_path
-
-        # クラス変数の初期化
-        self.__inictialize_class(file_path)
-
         # ログ設定
         class_name = self.__class__.__name__
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
+
+        if file_path is not None:
+            # ファイル名がqualitative.htmでない場合はエラーを出力する
+            if not re.search(r'.*qualitative\.htm$', file_path):
+                raise ValueError('ファイル名がqualitative.htmではありません。')
+
+            # ファイルパスを設定
+            self.__file_path = file_path
+
+            # クラス変数の初期化
+            self.__inictialize_class(file_path)
 
     # クラス変数を初期化するメソッド
     def __inictialize_class(self, file_path: str):

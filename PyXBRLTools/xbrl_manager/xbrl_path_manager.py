@@ -6,6 +6,10 @@ class BaseXbrlPathManager(ABC):
     """
     XBRLディレクトリ内のパスを管理するための基底クラス。
 
+    Raises:
+        ValueError: ディレクトリパスが有効でない場合に発生
+        ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生
+
     Attributes:
         xbrl_directory_path (str): XBRLディレクトリへのパス
         _ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス
@@ -17,6 +21,7 @@ class BaseXbrlPathManager(ABC):
         _schema_parser (XmlSchemaParser): XMLスキーマパーサ
 
     Properties:
+        xbrl_directory_path (str): XBRLディレクトリへのパス
         ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス
         xsd_path (list[dict[str, str]]): XSDファイルへのパス
         lab_path (list[dict[str, str]]): LABファイルへのパス
@@ -31,12 +36,20 @@ class BaseXbrlPathManager(ABC):
         """
         BaseXbrlPathManagerをディレクトリパスで初期化します。
 
-        :param xbrl_directory_path: XBRLディレクトリへのパス
-        :type xbrl_directory_path: str
+        Args:
+            xbrl_directory_path (str): XBRLディレクトリへのパス
+
+        Raises:
+            ValueError: ディレクトリパスが有効でない場合に発生
+            ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生
         """
         # ディレクトリパスが有効かどうかを確認
         if not os.path.isdir(xbrl_directory_path):
             raise ValueError(f"{xbrl_directory_path}は有効なディレクトリパスではありません")
+
+        # ディレクトリ内にixbrl.htmファイルが再帰的に存在するか確認
+        if not any([file.endswith("ixbrl.htm") for _, _, files in os.walk(xbrl_directory_path) for file in files]):
+            raise ValueError(f"{xbrl_directory_path}内にixbrl.htmファイルが存在しません")
 
         # ディレクトリパスをインスタンス変数に格納
         self.xbrl_directory_path = xbrl_directory_path
@@ -51,6 +64,32 @@ class BaseXbrlPathManager(ABC):
 
         # パーサーを初期化
         self._schema_parser = XmlSchemaParser()
+
+    @property
+    def xbrl_directory_path(self):
+        """
+        XBRLディレクトリへのパスを取得します。
+
+        Returns:
+            str: XBRLディレクトリへのパス
+        """
+        return self._xbrl_directory_path
+
+    @xbrl_directory_path.setter
+    def xbrl_directory_path(self, xbrl_directory_path):
+        """
+        XBRLディレクトリへのパスを設定します。
+
+        Args:
+            xbrl_directory_path (str): XBRLディレクトリへのパス
+
+        Raises:
+            ValueError: ディレクトリパスが有効でない場合に発生
+
+        example:
+            xbrl_directory_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData"
+        """
+        self._xbrl_directory_path = xbrl_directory_path
 
     @property
     @abstractmethod
@@ -107,7 +146,12 @@ class XbrlPathManager(BaseXbrlPathManager):
     Attributes:
         xbrl_directory_path (str): XBRLディレクトリへのパス
 
+    Raises:
+        ValueError: ディレクトリパスが有効でない場合に発生
+        ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生
+
     Properties:
+        xbrl_directory_path (str): XBRLディレクトリへのパス
         ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス
         xsd_path (list[dict[str, str]]): XSDファイルへのパス
         lab_path (list[dict[str, str]]): LABファイルへのパス
@@ -116,6 +160,7 @@ class XbrlPathManager(BaseXbrlPathManager):
         pre_path (list[dict[str, str]]): PREファイルへのパス
 
     Methods:
+        xbrl_directory_path: XBRLディレクトリへのパスを取得, 設定するメソッド
         __search_file: XBRLディレクトリ内で指定された拡張子のファイルを検索するメソッド
         __select_search_file: XBRLディレクトリ内で指定されたファイル名を検索するメソッド
     """
@@ -165,8 +210,20 @@ class XbrlPathManager(BaseXbrlPathManager):
         """
         XSDファイルへのパスを取得します。
 
-        :return: XSDファイルへのパス
-        :rtype: str
+        Reaturns:
+            list[dict[str, str]]: XSDファイルへのパス
+
+        Example:
+            [
+                {
+                    'document': 'sm',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/def-sm-2024-03-31.xsd'
+                },
+                {
+                    'document': 'fr',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/def-fr-2024-03-31.xsd'
+                }
+            ]
         """
         if self._xsd_path is not None:
             return self._xsd_path
@@ -189,12 +246,26 @@ class XbrlPathManager(BaseXbrlPathManager):
             return self._xsd_path
 
     @property
-    def lab_path(self):
+    def lab_path(self) -> list[dict[str, str]]:
         """
         LABファイルへのパスを取得します。
 
-        :return: LABファイルへのパス
-        :rtype: str
+        Reaturns:
+            list[dict[str, str]]: LABファイルへのパス
+
+        Example:
+            [
+                {
+                    'document': 'sm',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/label_en.xml'
+                },
+                {
+                    'document': 'fr',
+                    'path_type': 'global',
+                    'file_path': 'http://disclosure.edinet-fsa.go.jp/2013/label/jppfs_cor/2013-03-31/label/jppfs_cor_lab_2013-03-31-en.xml'
+                }
+            ]
         """
         if self._lab_path is not None:
             return self._lab_path
@@ -229,12 +300,26 @@ class XbrlPathManager(BaseXbrlPathManager):
             return self._lab_path
 
     @property
-    def cal_path(self):
+    def cal_path(self) -> list[dict[str, str]]:
         """
         CALファイルへのパスを取得します。
 
-        :return: CALファイルへのパス
-        :rtype: str
+        Reaturns:
+            list[dict[str, str]]: CALファイルへのパス
+
+        Example:
+            [
+                {
+                    'document': 'sm',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/cal-sm-2024-03-31.xml'
+                },
+                {
+                    'document': 'fr',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/cal-fr-2024-03-31.xml'
+                }
+            ]
         """
         if self._cal_path is not None:
             return self._cal_path
@@ -269,12 +354,26 @@ class XbrlPathManager(BaseXbrlPathManager):
             return self._cal_path
 
     @property
-    def def_path(self):
+    def def_path(self) -> list[dict[str, str]]:
         """
         DEFファイルへのパスを取得します。
 
-        :return: DEFファイルへのパス
-        :rtype: str
+        Reaturns:
+            list[dict[str, str]]: DEFファイルへのパス
+
+        Example:
+            [
+                {
+                    'document': 'sm',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/def-sm-2024-03-31.xml'
+                },
+                {
+                    'document': 'fr',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/def-fr-2024-03-31.xml'
+                }
+            ]
         """
         if self._def_path is not None:
             return self._def_path
@@ -309,12 +408,26 @@ class XbrlPathManager(BaseXbrlPathManager):
             return self._def_path
 
     @property
-    def pre_path(self):
+    def pre_path(self) -> list[dict[str, str]]:
         """
         PREファイルへのパスを取得します。
 
-        :return: PREファイルへのパス
-        :rtype: str
+        Reaturns:
+            list[dict[str, str]]: PREファイルへのパス
+
+        Example:
+            [
+                {
+                    'document': 'sm',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/pre-sm-2024-03-31.xml'
+                },
+                {
+                    'document': 'fr',
+                    'path_type': 'local',
+                    'file_path': '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/pre-fr-2024-03-31.xml'
+                }
+            ]
         """
         if self._pre_path is not None:
             return self._pre_path
@@ -352,10 +465,14 @@ class XbrlPathManager(BaseXbrlPathManager):
         """
         XBRLディレクトリ内で指定された拡張子のファイルを検索します。
 
-        :param file_extension: 検索するファイルの拡張子
-        :type file_extension: str
-        :return: 検索されたファイルのパス
-        :rtype: str
+        Args:
+            file_extension (str): 検索するファイルの拡張子
+
+        Returns:
+            tuple[str, str]: 検索されたファイルのパスとファイル名
+
+        Example:
+            ('/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/ixbrl.htm', 'ixbrl.htm')
         """
         # XBRLディレクトリ内のファイルを検索
         for root, _, files in os.walk(self.xbrl_directory_path):
@@ -368,10 +485,14 @@ class XbrlPathManager(BaseXbrlPathManager):
         """
         XBRLディレクトリ内で指定されたファイル名を検索します。
 
-        :param file_name: 検索するファイル名
-        :type file_name: str
-        :return: 検索されたファイルのパス
-        :rtype: str
+        Args:
+            file_name (str): 検索するファイル名
+
+        Returns:
+            str: 検索されたファイルのパス
+
+        Example:
+            '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/def-sm-2024-03-31.xml'
         """
         # XBRLディレクトリ内のファイルを検索
         for root, _, files in os.walk(self.xbrl_directory_path):

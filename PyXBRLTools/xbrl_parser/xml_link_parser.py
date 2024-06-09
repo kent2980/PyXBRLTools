@@ -25,7 +25,7 @@ class BaseXmlLinkParser(ABC):
         __inicialize_class: クラス変数の初期化を行うメソッド。
     """
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str = None) -> None:
         """初期化メソッド。
 
         Args:
@@ -38,16 +38,18 @@ class BaseXmlLinkParser(ABC):
 
         self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
 
-        # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
-        if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
-            self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
-            raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
+        if file_path is not None:
 
-        # ファイルパスを設定
-        self.__file_path = file_path
+            # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
+            if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
+                self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
+                raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
 
-        # クラス変数の初期化
-        self.__inicialize_class(file_path)
+            # ファイルパスを設定
+            self.__file_path = file_path
+
+            # クラス変数の初期化
+            self.__inicialize_class(file_path)
 
     @property
     def file_path(self) -> str:

@@ -1,49 +1,15 @@
-from xbrl_parser.xml_link_parser import XmlLinkParser
-from xbrl_manager.link_managers import CalLinkManager, DefLinkManager, PreLinkManager
-from xbrl_manager.label_manager import BaseLabelManager
+from xbrl_manager.xbrl_download_manager import XBRLDownloadManager
 from xbrl_manager.xbrl_path_manager import XbrlPathManager
 
-# if __name__ == "__main__":
-#     print("Test sample")
+if __name__ == '__main__':
+    xbrl_dir_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData'
+    xbrl_save_dir = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir'
+    xbrl_path_manager = XbrlPathManager(xbrl_dir_path)
 
-#     file_path = "doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-def.xml"
-#     xbrl_parser = XmlLinkParser(file_path)
-#     print(xbrl_parser.link)
-#     print(xbrl_parser.link_arcs)
-#     print(xbrl_parser.link_roles)
-#     print(xbrl_parser.link_base)
-#     print(xbrl_parser.link_locs)
-#     role_uri = "http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedStatementOfChangesInEquity"
-
-#     print(f'selected_link_arcs 読み込み中・・・:[{role_uri}]')
-#     print(xbrl_parser.get_selected_link_arcs(role_uri))
-#     print(f'selected_link_locs 読み込み中・・・:[{role_uri}]')
-#     print(xbrl_parser.get_selected_link_locs(role_uri))
-#     print(f'role_uriが存在するか確認中・・・:[{role_uri}]')
-#     print(xbrl_parser.is_role_exist(role_uri))
-
-if __name__ == "__main__":
-    print("Test sample")
-
-    dir_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData"
-    # link_manager = DefLinkManager(dir_path)
-    # link_parser = link_manager.link_parser
-    # print(link_parser.link_arcs)
-    # print(link_parser.link_roles)
-    # print(link_parser.link_base)
-    # print(link_parser.link_locs)
-
-    # label_manager = BaseLabelManager(dir_path)
-    # print(label_manager.schema_files)
-
-    xbrl_path_manager = XbrlPathManager(dir_path)
-    print("xsd_pathを取得します。")
-    print(xbrl_path_manager.ixbrl_path)
-    print("def_pathを取得します。")
-    print(xbrl_path_manager.def_path)
-    print("cal_pathを取得します。")
-    print(xbrl_path_manager.cal_path)
-    print("pre_pathを取得します。")
-    print(xbrl_path_manager.pre_path)
-    print("lab_pathを取得します。")
-    print(xbrl_path_manager.lab_path)
+    xbrl_schema_paths = xbrl_path_manager.xsd_path
+    for xbrl_schema_path in xbrl_schema_paths:
+        xbrl_download_manager = XBRLDownloadManager(xbrl_schema_path['file_path'], xbrl_save_dir)
+        local_path = xbrl_download_manager.get_xbrl_files()
+        for path in local_path:
+            print(path)
+        print("****************************")

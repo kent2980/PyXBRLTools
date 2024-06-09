@@ -11,27 +11,28 @@ class BaseXbrlIxbrlParser(ABC):
     iXBRLファイルを解析するための抽象ベースクラスです。
     """
 
-    def __init__(self, file_path) -> None:
+    def __init__(self, file_path:str = None) -> None:
         """
         コンストラクタ。iXBRLファイルを読み込んでBeautifulSoupオブジェクトを初期化します。
 
         Args:
             file_path (str): 解析するiXBRLファイルのパス。
         """
-        # ファイル名が**ixbrl.htm出ない場合はエラーを出力する
-        if not re.search(r'.*ixbrl\.htm$', file_path):
-            raise ValueError('ファイル名がixbrl.htmではありません。')
-
-        # ファイルパスを設定
-        self.__file_path = file_path
-
-        # クラス変数の初期化
-        self.__inictialize_class(file_path)
-
         # ログ設定
         class_name = self.__class__.__name__
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
+
+        if file_path is not None:
+            # ファイル名が**ixbrl.htm出ない場合はエラーを出力する
+            if not re.search(r'.*ixbrl\.htm$', file_path):
+                raise ValueError('ファイル名がixbrl.htmではありません。')
+
+            # ファイルパスを設定
+            self.__file_path = file_path
+
+            # クラス変数の初期化
+            self.__inictialize_class(file_path)
 
     @property
     def file_path(self):
