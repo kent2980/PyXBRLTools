@@ -110,17 +110,17 @@ class XmlLabelParser(BaseXmlLabelParser):
     """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。
 
     Attributes:
-        file_path (str): パースするXMLファイルのパス。
+        file_path (str): パースするXMLファイルのパス。\n
 
     Properties:
-        link_labels (DataFrame): link:label要素を取得するプロパティ。
-        link_locs (DataFrame): link:loc要素を取得するプロパティ。
-        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
-        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+        link_labels (DataFrame): link:label要素を取得するプロパティ。\n
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。\n
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。\n
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。\n
 
     Methods:
-        __init__: 初期化メソッド。
-        __inictialize_class: クラス変数の初期化を行うメソッド。
+        __init__: 初期化メソッド。\n
+        __inictialize_class: クラス変数の初期化を行うメソッド。\n
     """
 
     @property

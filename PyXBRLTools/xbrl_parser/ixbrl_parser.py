@@ -6,9 +6,29 @@ from utils.utils import Utils
 import logging
 from log.py_xbrl_tools_loging import PyXBRLToolsLogging
 
-class BaseXbrlIxbrlParser(ABC):
+class BaseIxbrlParser(ABC):
     """
     iXBRLファイルを解析するための抽象ベースクラスです。
+
+    Attributes:
+        __file_path (str): 解析するiXBRLファイルのパス
+        soup (bs): BeautifulSoupオブジェクト
+
+    Properties:
+        file_path (str): ファイルパスを取得または設定します。
+        ix_non_fractions (DataFrame): 非分数データを含むDataFrameを取得します。
+        ix_non_numerics (DataFrame): 非数値データを含むDataFrameを取得します。
+        xbrli_contexts (DataFrame): 文脈情報を含むDataFrameを取得します。
+
+    Methods:
+        __init__: コンストラクタ
+        __inictialize_class: クラス変数の初期化を行います。
+
+    Examples:
+        >>> parser = BaseIxbrlParser('sample_ixbrl.htm')
+        >>> parser.ix_non_fractions
+        >>> parser.ix_non_numerics
+        >>> parser.xbrli_contexts
     """
 
     def __init__(self, file_path:str = None) -> None:
@@ -82,14 +102,47 @@ class BaseXbrlIxbrlParser(ABC):
         """文脈情報を含むDataFrameを返します。"""
         pass
 
-class XbrlIxbrlParser(BaseXbrlIxbrlParser):
+class IxbrlParser(BaseIxbrlParser):
     """
     iXBRLファイルを解析するための具象クラスです。
+
+    Properties:
+        ix_non_fractions (DataFrame): 非分数データを取得します。
+        ix_non_numerics (DataFrame): 非数値データを取得します。
+        xbrli_contexts (DataFrame): 文脈情報を取得します。
+
+    Methods:
+        __init__: コンストラクタ
+        __inictialize_class: クラス変数の初期化を行います。
+
+    Examples:
+        >>> parser = IxbrlParser('sample_ixbrl.htm')
+        >>> parser.ix_non_fractions
+        >>> parser.ix_non_numerics
+        >>> parser.xbrli_contexts
     """
 
     @property
     def ix_non_fractions(self):
-        """非分数データを取得します。"""
+        """非分数データを取得します。
+
+        Returns:
+            DataFrame: 非分数データを含むDataFrameを返します。
+
+        Examples:
+            >>> parser = IxbrlParser('sample_ixbrl.htm')
+            >>> parser.ix_non_fractions
+            [output]:
+            context_ref (str): Prior1YearDuration
+            decimals (int): 0
+            format (str): ixt:nonNegativeInteger
+            name (str): jpcrp_cor:Prior1YearDuration
+            scale (int): 0
+            sign (str): None
+            unit_ref (str): jpy
+            xsi_nil (bool): False
+            numeric (float): 1.0
+        """
 
         # DataFrameがNoneの場合は取得する
         if self._ix_non_fractions is None:
@@ -115,7 +168,21 @@ class XbrlIxbrlParser(BaseXbrlIxbrlParser):
 
     @property
     def ix_non_numerics(self):
-        """非数値データを取得します。"""
+        """非数値データを取得します。
+
+        Returns:
+            DataFrame: 非数値データを含むDataFrameを返します。
+
+        Examples:
+            >>> parser = IxbrlParser('sample_ixbrl.htm')
+            >>> parser.ix_non_numerics
+            [output]:
+            context_ref (str): Prior1YearDuration
+            name (str): jpcrp_cor:Prior1YearDuration
+            xsi_nil (bool): False
+            escape (bool): False
+            text (str): 1.0
+        """
 
         if self._ix_non_numerics is None:
 
@@ -127,7 +194,7 @@ class XbrlIxbrlParser(BaseXbrlIxbrlParser):
                     'name': tag.get('name').replace(":", "_"),
                     'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
                     'escape': True if tag.get('escape') == 'true' else False,
-                    'text': re.sub(r'[　 ]', '', tag.text) if tag.text else ''
+                    'text': tag.text.splitlines()[0] if tag.text else ''
                 })
 
             self._ix_non_numerics = DataFrame(lists)
@@ -136,7 +203,22 @@ class XbrlIxbrlParser(BaseXbrlIxbrlParser):
 
     @property
     def xbrli_contexts(self):
-        """文脈情報を取得します。"""
+        """文脈情報を取得します。
+
+        Returns:
+            DataFrame: 文脈情報を含むDataFrameを返します。
+
+        Examples:
+            >>> parser = IxbrlParser('sample_ixbrl.htm')
+            >>> parser.xbrli_contexts
+            [output]:
+            context_id (str): Prior1YearDuration
+            xbrli_entity (str): jpcrp_cor:Prior1YearDuration
+            xbrli_period_start_date (str): 2021-04-01
+            xbrli_period_end_date (str): 2022-03-31
+            xbrli_instant (str): 2022-03-31
+            explicit_member_1 (str): jpcrp_cor:Prior1YearDuration
+        """
 
         if self._xbrli_contexts is None:
 
