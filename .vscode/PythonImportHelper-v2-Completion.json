@@ -572,10 +572,18 @@
     },
     {
         "label": "PostgreSqlConnector",
+        "importPath": "db_connector.postgre_sql_connector",
+        "description": "db_connector.postgre_sql_connector",
+        "isExtraImport": true,
+        "detail": "db_connector.postgre_sql_connector",
+        "documentation": {}
+    },
+    {
+        "label": "PostgreSqlConnector",
         "kind": 6,
         "importPath": "PyXBRLTools.db_connector.postgre_sql_connector",
         "description": "PyXBRLTools.db_connector.postgre_sql_connector",
-        "peekOfCode": "class PostgreSqlConnector:\n    \"\"\" PostgreSQL database コネクター\n    Attributes:\n    host (str): ホスト名\n    port (int): ポート番号\n    database (str): データベース名\n    user (str): ユーザー名\n    password (str): パスワード\n    connection (psycopg2.extensions.connection): データベース接続オブジェクト\n    \"\"\"",
+        "peekOfCode": "class PostgreSqlConnector:\n    \"\"\" PostgreSQL database コネクター\n    Attributes:\n        host (str): ホスト名\n        port (int): ポート番号\n        database (str): データベース名\n        user (str): ユーザー名\n        password (str): パスワード\n        connection (psycopg2.extensions.connection): データベース接続オブジェクト\n    Methods:",
         "detail": "PyXBRLTools.db_connector.postgre_sql_connector",
         "documentation": {}
     },

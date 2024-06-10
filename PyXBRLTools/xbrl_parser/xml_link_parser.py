@@ -274,8 +274,8 @@ class XmlLinkParser(BaseXmlLinkParser):
                         'xlink_from': tag.get('xlink:from'),
                         'xlink_to': tag.get('xlink:to'),
                         'xlink_arcrole': tag.get('xlink:arcrole'),
-                        'xlink_order': tag.get('order'),
-                        'xlink_weight': tag.get('weight'),
+                        'xlink_order': float(tag.get('order')) if tag.get('order') is not None else None,
+                        'xlink_weight': float(tag.get('weight')) if tag.get('weight') is not None else None,
                     })
 
             self._link_arcs = DataFrame(tag_lists)

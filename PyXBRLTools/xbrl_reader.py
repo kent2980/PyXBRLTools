@@ -5,6 +5,7 @@ import zipfile
 import shutil
 import os
 import time
+from db_connector.postgre_sql_connector import PostgreSqlConnector
 
 class XbrlReader:
     """ XBRLファイルを読み込むクラスです。
@@ -239,15 +240,22 @@ if __name__ == '__main__':
     xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
     load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
 
-    xbrl_read = XbrlRead(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path)
+    xbrl_read = XbrlReader(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path)
+
+    connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
+    connector.connect()
 
     ix_non_fractions = xbrl_read.get_ix_non_fractions()
     for key, value in ix_non_fractions.items():
         print(f'{key}: {value}')
+        connector.create_table_from_df(key, value)
 
     ix_non_numerics = xbrl_read.get_ix_non_numerics()
     for key, value in ix_non_numerics.items():
         print(f'{key}: {value}')
+        connector.create_table_from_df(key, value)
+
+    connector.disconnect()
 
     # 処理時間を表示
     elapsed_time = time.time() - start

@@ -189,12 +189,19 @@ class IxbrlParser(BaseIxbrlParser):
             lists = []
             tags = self.soup.find_all(name='ix:nonNumeric')
             for tag in tags:
+                # xsi:nil属性が存在する場合はTrueに設定
+                xsi_nil = True if tag.get('xsi:nil') == 'true' else False
+                # escape属性が存在する場合はTrueに設定
+                escape = True if tag.get('escape') == 'true' else False
+                # text属性が存在する場合は取得
+                text = tag.text.splitlines()[0].replace("　", "").replace(" ", "") if tag.text else None
+                # 辞書に追加
                 lists.append({
                     'context_ref': tag.get('contextRef'),
                     'name': tag.get('name').replace(":", "_"),
-                    'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
-                    'escape': True if tag.get('escape') == 'true' else False,
-                    'text': tag.text.splitlines()[0] if tag.text else ''
+                    'xsi_nil': xsi_nil,
+                    'escape': escape,
+                    'text': text if escape == False else None
                 })
 
             self._ix_non_numerics = DataFrame(lists)

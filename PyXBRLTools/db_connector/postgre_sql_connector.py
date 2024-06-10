@@ -5,12 +5,33 @@ class PostgreSqlConnector:
     """ PostgreSQL database コネクター
 
     Attributes:
-    host (str): ホスト名
-    port (int): ポート番号
-    database (str): データベース名
-    user (str): ユーザー名
-    password (str): パスワード
-    connection (psycopg2.extensions.connection): データベース接続オブジェクト
+        host (str): ホスト名
+        port (int): ポート番号
+        database (str): データベース名
+        user (str): ユーザー名
+        password (str): パスワード
+        connection (psycopg2.extensions.connection): データベース接続オブジェクト
+
+    Methods:
+        connect(): データベースに接続
+        disconnect(): データベースから切断
+        edit_table(table_name, column_name, new_value, condition): テーブルのデータを更新
+        create_table(table_name, columns): テーブルを作成
+        add_data(table_name, columns, values): テーブルにデータを追加
+        add_data_from_df(table_name, df): データフレームからデータを追加
+        create_table_from_df(table_name, df): データフレームと同じデータ構造と型のテーブルを作成してデータを追加
+        add_foreign_key(table_name, column_name, ref_table, ref_column): テーブルに外部キー制約を追加
+
+    Examples:
+        >>> connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
+        >>> connector.connect()
+        >>> connector.edit_table("your_table", "your_column", "new_value", "id = 1")
+        >>> connector.create_table("your_table", "id SERIAL PRIMARY KEY, name VARCHAR(255)")
+        >>> connector.add_data("your_table", "id, name", "1, 'John'")
+        >>> connector.add_data_from_df("your_table", df)
+        >>> connector.create_table_from_df("your_table", df)
+        >>> connector.add_foreign_key("your_table", "your_column", "ref_table", "ref_column")
+        >>> connector.disconnect()
     """
     def __init__(self, host, port, database, user, password):
         """ コンストラクタ
@@ -168,7 +189,7 @@ class PostgreSqlConnector:
 
     # データフレームと同じデータ構造と型のテーブルを作成する関数を追加
     def create_table_from_df(self, table_name, df):
-        """ データフレームと同じデータ構造と型のテーブルを作成
+        """ データフレームと同じデータ構造と型のテーブルを作成してデータを追加
 
         Args:
             table_name (str): テーブル名
@@ -232,6 +253,30 @@ class PostgreSqlConnector:
             print("Foreign key added successfully!")
         except (Exception, psycopg2.Error) as error:
             print("Error while adding foreign key:", error)
+            self.connection.rollback()
+        finally:
+            if cursor:
+                cursor.close()
+
+    def set_unique_key(self, table_name, column_names: list[str]):
+        """ テーブルに一意制約を追加
+
+        Args:
+        table_name (str): テーブル名
+        column_names (list[str]): カラム名のリスト
+
+        Examples:
+        >>> connector.set_unique_key("your_table", ["your_column1", "your_column2"])
+        output: Unique key added successfully!
+        """
+        try:
+            cursor = self.connection.cursor()
+            query = f"ALTER TABLE {table_name} ADD UNIQUE ({', '.join(column_names)})"
+            cursor.execute(query)
+            self.connection.commit()
+            print("Unique key added successfully!")
+        except (Exception, psycopg2.Error) as error:
+            print("Error while adding unique key:", error)
             self.connection.rollback()
         finally:
             if cursor:
