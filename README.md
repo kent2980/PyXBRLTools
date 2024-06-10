@@ -6,7 +6,7 @@
 
 ### 初期化
 
-`XbrlReader` クラスを使用する前に、XBRLファイルの<ins>ZIPファイルパス</ins>、<ins>解凍ディレクトリパス</ins>、<ins>グローバルラベルファイル</ins>をロードするディレクトリパスを指定して初期化します。
+`XbrlReader` クラスを使用する前に、XBRLファイルの<ins>ZIPファイルパス</ins>、<ins>解凍ディレクトリパス</ins>、<ins>グローバルラベルファイルをロードするディレクトリパス</ins>を指定して初期化します。
 
 ```python
 from xbrl_manager.xbrl_label_manager import XbrlLabelManager
