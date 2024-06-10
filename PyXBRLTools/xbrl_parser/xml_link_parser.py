@@ -178,7 +178,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         return self._role_refs
 
     @property
-    def link_locs(self) -> dict[str, DataFrame]:
+    def link_locs(self) -> DataFrame:
         """ link:loc要素を取得するメソッド。
 
         Returns:
@@ -228,7 +228,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         return self._link_locs
 
     @property
-    def link_arcs(self) -> dict[str, DataFrame]:
+    def link_arcs(self) -> DataFrame:
         """ link:labelArc要素を取得するメソッド。
 
         Returns:

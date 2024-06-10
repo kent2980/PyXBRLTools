@@ -280,6 +280,22 @@
         "documentation": {}
     },
     {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
         "label": "pandas",
         "kind": 6,
         "isExtraImport": true,
@@ -455,6 +471,38 @@
         "description": "log.py_xbrl_tools_loging",
         "isExtraImport": true,
         "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "description": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLabelManager",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "isExtraImport": true,
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkManager",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkType",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
@@ -642,15 +690,6 @@
         "documentation": {}
     },
     {
-        "label": "IxNonFraction",
-        "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_loder.ix_non_fraction",
-        "description": "PyXBRLTools.xbrl_loder.ix_non_fraction",
-        "peekOfCode": "class IxNonFraction:\n    pass",
-        "detail": "PyXBRLTools.xbrl_loder.ix_non_fraction",
-        "documentation": {}
-    },
-    {
         "label": "IxbrlType",
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
@@ -736,7 +775,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
-        "peekOfCode": "class XbrlLinkManager(BaseXbrlLinkManager):\n    def __init__(self, xbrl_directory_path, link_type):\n        \"\"\" コンストラクタ\n        Args:\n            xbrl_directory_path (str): xbrlディレクトリのパス\n        \"\"\"\n        super().__init__(xbrl_directory_path)\n        # link_typeをXbrlLinkTypeクラスの定数でなければエラー\n        if link_type != XbrlLinkType.CAL and link_type != XbrlLinkType.DEF and link_type != XbrlLinkType.PRE:\n            self.logger.logger.error('link_typeの値が不正です。')",
+        "peekOfCode": "class XbrlLinkManager(BaseXbrlLinkManager):\n    def __init__(self, xbrl_directory_path, link_type = None):\n        \"\"\" コンストラクタ\n        Args:\n            xbrl_directory_path (str): xbrlディレクトリのパス\n        \"\"\"\n        super().__init__(xbrl_directory_path)\n        if link_type is not None:\n            # link_typeをXbrlLinkTypeクラスの定数でなければエラー\n            if link_type != XbrlLinkType.CAL and link_type != XbrlLinkType.DEF and link_type != XbrlLinkType.PRE:",
         "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
@@ -756,6 +795,24 @@
         "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "peekOfCode": "class XbrlPathManager(BaseXbrlPathManager):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するためのクラス。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリへのパス\n    Raises:\n        ValueError: ディレクトリパスが有効でない場合に発生\n        ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生\n    Properties:\n        xbrl_directory_path (str): XBRLディレクトリへのパス",
         "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
+        "label": "BaseIxbrlModel",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "description": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)\n    @abstractmethod\n    def __str__(self):",
+        "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "documentation": {}
+    },
+    {
+        "label": "IxNonFraction",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "description": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "peekOfCode": "class IxNonFraction(BaseIxbrlModel):\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        super().__init__()\n        self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager\n        self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager\n        self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager\n        # プロパティを初期化\n        self.__ixbrl_numeric = None\n        self.__label_locs = None\n        self.__label_arcs = None",
+        "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },
     {

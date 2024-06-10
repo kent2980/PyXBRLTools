@@ -53,33 +53,33 @@ class BaseXbrlLinkManager(ABC):
 
 class XbrlLinkManager(BaseXbrlLinkManager):
 
-    def __init__(self, xbrl_directory_path, link_type):
+    def __init__(self, xbrl_directory_path, link_type = None):
         """ コンストラクタ
         Args:
             xbrl_directory_path (str): xbrlディレクトリのパス
         """
         super().__init__(xbrl_directory_path)
+        if link_type is not None:
+            # link_typeをXbrlLinkTypeクラスの定数でなければエラー
+            if link_type != XbrlLinkType.CAL and link_type != XbrlLinkType.DEF and link_type != XbrlLinkType.PRE:
+                self.logger.logger.error('link_typeの値が不正です。')
+                raise ValueError('link_typeの値が不正です。')
 
-        # link_typeをXbrlLinkTypeクラスの定数でなければエラー
-        if link_type != XbrlLinkType.CAL and link_type != XbrlLinkType.DEF and link_type != XbrlLinkType.PRE:
-            self.logger.logger.error('link_typeの値が不正です。')
-            raise ValueError('link_typeの値が不正です。')
+            self.__link_type = link_type
 
-        self.__link_type = link_type
+            # リンクタイプによってリンクパスを設定
+            if link_type == XbrlLinkType.CAL:
+                self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.cal_path[0]['file_path']
+            elif link_type == XbrlLinkType.DEF:
+                self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.def_path[0]['file_path']
+            elif link_type == XbrlLinkType.PRE:
+                self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.pre_path[0]['file_path']
+            else:
+                self.logger.logger.error('link_typeの値が不正です。')
+                raise ValueError('link_typeの値が不正です。')
 
-        # リンクタイプによってリンクパスを設定
-        if link_type == XbrlLinkType.CAL:
-            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.cal_path[0]['file_path']
-        elif link_type == XbrlLinkType.DEF:
-            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.def_path[0]['file_path']
-        elif link_type == XbrlLinkType.PRE:
-            self._BaseXbrlLinkManager__link_path = self.xbrl_path_manager.pre_path[0]['file_path']
-        else:
-            self.logger.logger.error('link_typeの値が不正です。')
-            raise ValueError('link_typeの値が不正です。')
-
-        # リンクパーサーを設定
-        self.__link_parser = XmlLinkParser(self.link_path)
+            # リンクパーサーを設定
+            self.__link_parser = XmlLinkParser(self.link_path)
 
     @property
     def link_type(self):
@@ -103,7 +103,10 @@ class XbrlLinkManager(BaseXbrlLinkManager):
         # リンクパーサーを設定
         self.__link_parser = XmlLinkParser(self.link_path)
 
-    def get_link_arcs(self):
+    def get_link_arcs(self, xlink_href: list[str] = None):
+        link_arcs = self.__link_parser.link_arcs
+        if link_arcs is not None:
+            link_arcs = link_arcs[link_arcs['xlink_to'].isin(xlink_href)]
         return self.__link_parser.link_arcs
 
     def get_link_roles(self):
@@ -112,8 +115,11 @@ class XbrlLinkManager(BaseXbrlLinkManager):
     def get_link_base(self):
         return self.__link_parser.link_base
 
-    def get_link_locs(self):
-        return self.__link_parser.link_locs
+    def get_link_locs(self, label_names: list[str] = None):
+        link_locs = self.__link_parser.link_arcs
+        if label_names is not None:
+            link_locs = link_locs[link_locs['xlink_href'].isin(label_names)]
+        return link_locs
 
     def get_selected_link_arcs(self, role_uri):
         return self.__link_parser.get_selected_link_arcs(role_uri)
