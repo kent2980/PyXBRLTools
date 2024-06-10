@@ -802,7 +802,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
         "description": "PyXBRLTools.xbrl_model.ixbrl_models",
-        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)\n    @abstractmethod\n    def __str__(self):",
+        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\n    @abstractmethod\n    def __str__(self):",
         "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },
@@ -811,7 +811,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
         "description": "PyXBRLTools.xbrl_model.ixbrl_models",
-        "peekOfCode": "class IxNonFraction(BaseIxbrlModel):\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        super().__init__()\n        self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager\n        self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager\n        self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager\n        # プロパティを初期化\n        self.__ixbrl_numeric = None\n        self.__label_locs = None\n        self.__label_arcs = None",
+        "peekOfCode": "class IxNonFraction(BaseIxbrlModel):\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        super().__init__()  # ベースクラスのコンストラクタを呼び出す\n        self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager  # ベースクラスからixbrl_managerインスタンスにアクセスする\n        self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする\n        self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする\n        # プロパティを初期化する\n        self.__ixbrl_numeric = None\n        self.__label_locs = None\n        self.__label_arcs = None",
         "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },
