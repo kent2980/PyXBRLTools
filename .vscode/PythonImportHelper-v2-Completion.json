@@ -642,6 +642,15 @@
         "documentation": {}
     },
     {
+        "label": "IxNonFraction",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_loder.ix_non_fraction",
+        "description": "PyXBRLTools.xbrl_loder.ix_non_fraction",
+        "peekOfCode": "class IxNonFraction:\n    pass",
+        "detail": "PyXBRLTools.xbrl_loder.ix_non_fraction",
+        "documentation": {}
+    },
+    {
         "label": "IxbrlType",
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
