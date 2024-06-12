@@ -145,7 +145,7 @@ if __name__ == '__main__':
     # OSによってパスを変更
     # windowsの場合
     if platform.system() == 'Windows':
-        xbrl_zip_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/081220240327560965.zip'
+        xbrl_zip_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/081220240513591710.zip'
         xbrl_direrctory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
         load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
     # macOSの場合

@@ -4,6 +4,7 @@ import os
 from abc import abstractmethod
 from pandas import DataFrame
 import pandas as pd
+import asyncio
 
 class IxbrlType:
     """ iXBRLの種類を表すクラスです。 """
@@ -72,7 +73,7 @@ class BaseIxbrlManager(XbrlPathManager):
         pass
 
     @abstractmethod
-    def _get_ixbrl_file_paths(self):
+    async def _get_ixbrl_file_paths(self):
         pass
 
 class IxbrlManager(BaseIxbrlManager):
@@ -101,7 +102,7 @@ class IxbrlManager(BaseIxbrlManager):
             yield ixbrl_file_path, document
 
     @property
-    def ix_non_fractions(self, ixbrl_type:str = None) -> DataFrame:
+    async def ix_non_fractions(self, ixbrl_type:str = None) -> DataFrame:
         """ 非分数データを含むDataFrameを返します。
 
         Returns:
@@ -120,8 +121,10 @@ class IxbrlManager(BaseIxbrlManager):
         # non_fractions_df(DataFrame)を初期化
         non_fractions_df = None
 
+        ixbrl_file_paths = self._get_ixbrl_file_paths()
+
         # ixbrlファイルのパスを取得
-        for ixbrl_file_path, document in self._get_ixbrl_file_paths():
+        for ixbrl_file_path, document in ixbrl_file_paths:
 
             # ixbrl_typeが指定されている場合は、documentと一致するか確認
             if ixbrl_type is not None and document != ixbrl_type:
@@ -150,7 +153,7 @@ class IxbrlManager(BaseIxbrlManager):
         return self._BaseIxbrlManager__ix_non_fractions
 
     @property
-    def ix_non_numerics(self, ixbrl_type:str = None) -> DataFrame:
+    async def ix_non_numerics(self, ixbrl_type:str = None) -> DataFrame:
         """ 非数値データを含むDataFrameを返します。
 
         Args:
@@ -202,7 +205,7 @@ class IxbrlManager(BaseIxbrlManager):
         return self._BaseIxbrlManager__ix_non_numerics
 
     @property
-    def xbrli_contexts(self, ixbrl_type:str = None) -> DataFrame:
+    async def xbrli_contexts(self, ixbrl_type:str = None) -> DataFrame:
         """ 文脈情報を含むDataFrameを返します。
 
         Args:

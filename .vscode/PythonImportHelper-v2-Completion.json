@@ -369,6 +369,15 @@
         "documentation": {}
     },
     {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
         "label": "XmlSchemaParser",
         "importPath": "xbrl_parser.xml_schema_parser",
         "description": "xbrl_parser.xml_schema_parser",
@@ -535,15 +544,6 @@
         "description": "xbrl_manager.xbrl_link_manager",
         "isExtraImport": true,
         "detail": "xbrl_manager.xbrl_link_manager",
-        "documentation": {}
-    },
-    {
-        "label": "asyncio",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "asyncio",
-        "description": "asyncio",
-        "detail": "asyncio",
         "documentation": {}
     },
     {

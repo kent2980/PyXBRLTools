@@ -85,7 +85,7 @@ class IxbrlModel(BaseIxbrlModel):
             ValueError: プロパティの設定に失敗した場合に発生します。
         """
         # XBRL数値情報を取得
-        ix_non_fraction = self.__ixbrl_manager.ix_non_fractions
+        ix_non_fraction = await self.__ixbrl_manager.ix_non_fractions
 
         # ラベル情報を取得
         label_locs = self.__label_manager.label_locs
@@ -141,7 +141,7 @@ class IxbrlModel(BaseIxbrlModel):
             ValueError: プロパティの設定に失敗した場合に発生します。
         """
         # XBRL数値情報を取得
-        ix_non_numeric = self.__ixbrl_manager.ix_non_numerics
+        ix_non_numeric = await self.__ixbrl_manager.ix_non_numerics
 
         # ラベル情報を取得
         label_locs = self.__label_manager.label_locs
