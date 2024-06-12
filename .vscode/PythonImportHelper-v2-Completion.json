@@ -385,28 +385,12 @@
         "documentation": {}
     },
     {
-        "label": "XmlSchemaParser",
-        "importPath": "xbrl_parser.xml_schema_parser",
-        "description": "xbrl_parser.xml_schema_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_schema_parser",
-        "documentation": {}
-    },
-    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "time",
         "description": "time",
         "detail": "time",
-        "documentation": {}
-    },
-    {
-        "label": "XmlLabelParser",
-        "importPath": "xbrl_parser.xml_label_parser",
-        "description": "xbrl_parser.xml_label_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_label_parser",
         "documentation": {}
     },
     {
@@ -599,14 +583,6 @@
         "description": "utils.utils",
         "isExtraImport": true,
         "detail": "utils.utils",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlIxbrlParser",
-        "importPath": "xbrl_parser.xbrl_ixbrl_parser",
-        "description": "xbrl_parser.xbrl_ixbrl_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xbrl_ixbrl_parser",
         "documentation": {}
     },
     {
@@ -847,15 +823,6 @@
         "description": "PyXBRLTools.xbrl_parser.ixbrl_parser",
         "peekOfCode": "class IxbrlParser(BaseIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    Properties:\n        ix_non_fractions (DataFrame): 非分数データを取得します。\n        ix_non_numerics (DataFrame): 非数値データを取得します。\n        xbrli_contexts (DataFrame): 文脈情報を取得します。\n    Methods:\n        __init__: コンストラクタ\n        __inictialize_class: クラス変数の初期化を行います。",
         "detail": "PyXBRLTools.xbrl_parser.ixbrl_parser",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlParserController",
-        "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
-        "description": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
-        "peekOfCode": "class XbrlParserController:\n    def ixbrl_parser(file_path:str) -> XbrlIxbrlParser:\n        \"\"\" iXBRLパーサを取得します。\"\"\"\n        return XbrlIxbrlParser(file_path)\n    def xml_schema_parser(file_path:str) -> XmlSchemaParser:\n        \"\"\" XMLスキーマパーサを取得します。\"\"\"\n        return XmlSchemaParser(file_path)\n    def xml_label_parser(file_path:str = None) -> XmlLabelParser:\n        \"\"\" XMLラベルパーサを取得します。\"\"\"\n        return XmlLabelParser(file_path)",
-        "detail": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
         "documentation": {}
     },
     {
