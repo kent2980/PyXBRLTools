@@ -1,3 +1,7 @@
+# XBRLManagerモジュール
+
+このモジュール群はディレクトリパスから、ファイル単体の解析クラスへ接続します。
+
 # XbrlkPathManagerクラス
 
 XbrlkPathManagerクラスは、Xbrlkアプリケーションのパス管理を担当するクラスです。
