@@ -2,7 +2,7 @@
 
 このモジュール群はディレクトリパスから、ファイル単体の解析クラスへ接続します。ディレクトリ内の全てのファイルを解析した結果を受け取り出力します。
 
-- Xbrlkpathmanager
+- XbrlPathManager
 - XbrlDownloadManager
 - IxbrlManager 
 - XbrlLabelManager
