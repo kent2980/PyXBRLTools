@@ -1,4 +1,4 @@
-# XbrlReaderクラス README
+# XbrlReaderクラス
 
 ## 概要
 
