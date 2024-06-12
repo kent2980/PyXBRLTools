@@ -137,17 +137,27 @@ class XbrlReader:
 
 
 if __name__ == '__main__':
+    import platform
+
     # 処理時間を計測
     start = time.time()
 
-    xbrl_zip_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/081220240513591710.zip'
-    xbrl_direrctory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
-    load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
+    # OSによってパスを変更
+    # windowsの場合
+    if platform.system() == 'Windows':
+        xbrl_zip_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/081220240327560965.zip'
+        xbrl_direrctory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
+        load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
+    # macOSの場合
+    elif platform.system() == 'Darwin':
+        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/081220240327560965.zip'
+        xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
+        load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
 
     xbrl_read = XbrlReader(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path)
 
-    # connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
-    # connector.connect()
+    connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
+    connector.connect()
 
     ix_non_fractions = xbrl_read.get_ix_non_fractions()
     for key, value in ix_non_fractions.items():
@@ -159,7 +169,7 @@ if __name__ == '__main__':
         print(f'{key}: {value}')
         # connector.create_table_from_df(key, value)
 
-    # connector.disconnect()
+    connector.disconnect()
 
     # 処理時間を表示
     elapsed_time = time.time() - start
