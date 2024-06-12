@@ -1,6 +1,7 @@
 from xbrl_manager.xbrl_label_manager import XbrlLabelManager
 from xbrl_manager.xbrl_link_manager import XbrlLinkManager, XbrlLinkType
 from xbrl_manager.ixbrl_manager import IxbrlManager
+from xbrl_model.ixbrl_models import IxbrlModel
 import zipfile
 import shutil
 import os
@@ -66,38 +67,8 @@ class XbrlReader:
         # zipファイルを解凍
         zipfile.ZipFile(xbrl_zip_path).extractall(self.__xbrl_directory_path)
 
-        # iXBRLマネージャーのインスタンスを作成
-        self.__ixbrl_manager = IxbrlManager(self.__xbrl_directory_path)
-        # IXBRLラベルマネージャーのインスタンスを作成
-        self.__label_manager = XbrlLabelManager(self.__xbrl_directory_path, self.__load_label_directory)
-        # IXBRLリンクマネージャーのインスタンスを作成
-        self.__link_manager = XbrlLinkManager(self.__xbrl_directory_path, XbrlLinkType.CAL)
-
-        # ラベルLocsを取得
-        self.__label_locs = self.__label_manager.get_label_locs()
-        # ラベルArcsを取得
-        self.__label_arcs = self.__label_manager.get_label_arcs()
-        # ラベルを取得
-        self.__labels = self.__label_manager.get_labels()
-
-        # リンクlocsを取得
-        self.__cal_link_locs = self.__link_manager.get_link_locs()
-        # リンクArcsを取得
-        self.__cal_link_arcs = self.__link_manager.get_link_arcs()
-
-        # link_typeをDEFに変更
-        self.__link_manager.link_type = XbrlLinkType.DEF
-        # リンクlocsを取得
-        self.__def_link_locs = self.__link_manager.get_link_locs()
-        # リンクArcsを取得
-        self.__def_link_arcs = self.__link_manager.get_link_arcs()
-
-        # link_typeをPREに変更
-        self.__link_manager.link_type = XbrlLinkType.PRE
-        # リンクlocsを取得
-        self.__pre_link_locs = self.__link_manager.get_link_locs()
-        # リンクArcsを取得
-        self.__pre_link_arcs = self.__link_manager.get_link_arcs()
+        # XBRLモデルをインスタンス化
+        self.__ixbrl_model = IxbrlModel(self.__xbrl_directory_path, self.__load_label_directory)
 
     def __del__(self):
         """ デストラクタ """
@@ -139,55 +110,8 @@ class XbrlReader:
             dict['ix_non_fractions_def_link_locs']: DEFリンクLocs
             dict['ix_non_fractions_pre_link_locs']: PREリンクLocs
         """
-        dict = {}
-        # ix_non_fractionsを取得
-        ix_non_fractions = self.__ixbrl_manager.ix_non_fractions
-        # ix_non_fractionsのnameを取得
-        ix_non_fractions_name = list(set(ix_non_fractions['name'].to_list()))
 
-        # label_locsを取得
-        label_locs = self.__label_locs[self.__label_locs['xlink_href'].isin(ix_non_fractions_name)]
-        # label_locsのxlink_labelを取得
-        label_locs_xlink_label = list(set(label_locs['xlink_label'].to_list()))
-        # label_arcsを取得
-        label_arcs = self.__label_arcs[self.__label_arcs['xlink_from'].isin(label_locs_xlink_label)]
-        # label_arcsのxlink_toを取得
-        label_arcs_xlink_to = list(set(label_arcs['xlink_to'].to_list()))
-        # labelを取得
-        labels = self.__labels[self.__labels['xlink_label'].isin(label_arcs_xlink_to)]
-
-        # cal_link_locsを取得
-        cal_link_locs = self.__cal_link_locs[self.__cal_link_locs['xlink_href'].isin(ix_non_fractions_name)]
-        # cal_link_locsのxlink_labelを取得
-        cal_link_locs_xlink_label = list(set(cal_link_locs['xlink_label'].to_list()))
-        # cal_link_arcsを取得
-        cal_link_arcs = self.__cal_link_arcs[self.__cal_link_arcs['xlink_to'].isin(cal_link_locs_xlink_label)]
-
-        # def_link_locsを取得
-        def_link_locs = self.__def_link_locs[self.__def_link_locs['xlink_href'].isin(ix_non_fractions_name)]
-        # def_link_locsのxlink_labelを取得
-        def_link_locs_xlink_label = list(set(def_link_locs['xlink_label'].to_list()))
-        # def_link_arcsを取得
-        def_link_arcs = self.__def_link_arcs[self.__def_link_arcs['xlink_to'].isin(def_link_locs_xlink_label)]
-
-        # pre_link_locsを取得
-        pre_link_locs = self.__pre_link_locs[self.__pre_link_locs['xlink_href'].isin(ix_non_fractions_name)]
-        # pre_link_locsのxlink_labelを取得
-        pre_link_locs_xlink_label = list(set(pre_link_locs['xlink_label'].to_list()))
-        # pre_link_arcsを取得
-        pre_link_arcs = self.__pre_link_arcs[self.__pre_link_arcs['xlink_to'].isin(pre_link_locs_xlink_label)]
-
-        # 辞書に各値を格納します
-        dict['ix_non_fractions'] = ix_non_fractions
-        dict['ix_non_fractions_label_arcs'] = label_arcs
-        dict['ix_non_fractions_label_locs'] = label_locs
-        dict['ix_non_fractions_labels'] = labels
-        dict['ix_non_fractions_cal_link_locs'] = cal_link_locs
-        dict['ix_non_fractions_cal_link_arcs'] = cal_link_arcs
-        dict['ix_non_fractions_def_link_locs'] = def_link_locs
-        dict['ix_non_fractions_def_link_arcs'] = def_link_arcs
-        dict['ix_non_fractions_pre_link_locs'] = pre_link_locs
-        dict['ix_non_fractions_pre_link_arcs'] = pre_link_arcs
+        dict = self.__ixbrl_model.ix_non_fraction
 
         # ix_non_fractions, label_arcs, label_locs, labels, cal_link_locs, cal_link_arcs, def_link_arcs, pre_link_arcs, def_link_locs, pre_link_locsを返す
         return dict
@@ -205,29 +129,9 @@ class XbrlReader:
             dict['ix_non_numerics_label_locs']: ラベルLocs
             dict['ix_non_numerics_labels']: ラベル
         """
-        dict = {}
-        # ix_non_numericsを取得
-        ix_non_numerics = self.__ixbrl_manager.ix_non_numerics
-        # ix_non_numericsのnameを取得
-        ix_non_numerics_name = list(set(ix_non_numerics['name'].to_list()))
-
-        # label_locsを取得
-        label_locs = self.__label_locs[self.__label_locs['xlink_href'].isin(ix_non_numerics_name)]
-        # label_locsのxlink_labelを取得
-        label_locs_xlink_label = list(set(label_locs['xlink_label'].to_list()))
-        # label_arcsを取得
-        label_arcs = self.__label_arcs[self.__label_arcs['xlink_from'].isin(label_locs_xlink_label)]
-        # label_arcsのxlink_toを取得
-        label_arcs_xlink_to = list(set(label_arcs['xlink_to'].to_list()))
-        # labelを取得
-        labels = self.__labels[self.__labels['xlink_label'].isin(label_arcs_xlink_to)]
-
-        # 辞書に各値を格納します
-        dict['ix_non_numerics'] = ix_non_numerics
-        dict['ix_non_numerics_label_arcs'] = label_arcs
-        dict['ix_non_numerics_label_locs'] = label_locs
-        dict['ix_non_numerics_labels'] = labels
-
+        dict = self.__ixbrl_model.ix_non_numeric
+        print("********ix_non_numerics********************************************")
+        print(dict)
         # ix_non_numerics, label_arcs, label_locs, labelsを返す
         return dict
 

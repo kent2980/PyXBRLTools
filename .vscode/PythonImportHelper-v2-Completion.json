@@ -361,6 +361,14 @@
         "documentation": {}
     },
     {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
         "label": "XmlSchemaParser",
         "importPath": "xbrl_parser.xml_schema_parser",
         "description": "xbrl_parser.xml_schema_parser",
@@ -475,34 +483,74 @@
     },
     {
         "label": "IxbrlManager",
-        "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
-        "description": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
         "isExtraImport": true,
-        "detail": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "detail": "xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.ixbrl_manager",
         "documentation": {}
     },
     {
         "label": "XbrlLabelManager",
-        "importPath": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
-        "description": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "importPath": "xbrl_manager.xbrl_label_manager",
+        "description": "xbrl_manager.xbrl_label_manager",
         "isExtraImport": true,
-        "detail": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "detail": "xbrl_manager.xbrl_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLabelManager",
+        "importPath": "xbrl_manager.xbrl_label_manager",
+        "description": "xbrl_manager.xbrl_label_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_label_manager",
         "documentation": {}
     },
     {
         "label": "XbrlLinkManager",
-        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
-        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
         "isExtraImport": true,
-        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "detail": "xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
         "label": "XbrlLinkType",
-        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
-        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
         "isExtraImport": true,
-        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkManager",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkType",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
@@ -579,43 +627,11 @@
         "documentation": {}
     },
     {
-        "label": "IxbrlManager",
-        "importPath": "xbrl_manager.ixbrl_manager",
-        "description": "xbrl_manager.ixbrl_manager",
+        "label": "IxbrlModel",
+        "importPath": "xbrl_model.ixbrl_models",
+        "description": "xbrl_model.ixbrl_models",
         "isExtraImport": true,
-        "detail": "xbrl_manager.ixbrl_manager",
-        "documentation": {}
-    },
-    {
-        "label": "IxbrlManager",
-        "importPath": "xbrl_manager.ixbrl_manager",
-        "description": "xbrl_manager.ixbrl_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.ixbrl_manager",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlLabelManager",
-        "importPath": "xbrl_manager.xbrl_label_manager",
-        "description": "xbrl_manager.xbrl_label_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.xbrl_label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlLinkManager",
-        "importPath": "xbrl_manager.xbrl_link_manager",
-        "description": "xbrl_manager.xbrl_link_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.xbrl_link_manager",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlLinkType",
-        "importPath": "xbrl_manager.xbrl_link_manager",
-        "description": "xbrl_manager.xbrl_link_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.xbrl_link_manager",
+        "detail": "xbrl_model.ixbrl_models",
         "documentation": {}
     },
     {
@@ -775,7 +791,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
-        "peekOfCode": "class XbrlLinkManager(BaseXbrlLinkManager):\n    def __init__(self, xbrl_directory_path, link_type = None):\n        \"\"\" コンストラクタ\n        Args:\n            xbrl_directory_path (str): xbrlディレクトリのパス\n        \"\"\"\n        super().__init__(xbrl_directory_path)\n        if link_type is not None:\n            # link_typeをXbrlLinkTypeクラスの定数でなければエラー\n            if link_type != XbrlLinkType.CAL and link_type != XbrlLinkType.DEF and link_type != XbrlLinkType.PRE:",
+        "peekOfCode": "class XbrlLinkManager(BaseXbrlLinkManager):\n    \"\"\"XBRLリンクマネージャークラス\n    XBRLファイルのリンク情報を管理するクラスです。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリのパス\n        link_type (XbrlLinkType): リンクタイプ\n        link_parser (XmlLinkParser): リンクパーサー\n    \"\"\"\n    def __init__(self, xbrl_directory_path, link_type = None):\n        \"\"\"コンストラクタ",
         "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
@@ -802,16 +818,16 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
         "description": "PyXBRLTools.xbrl_model.ixbrl_models",
-        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\n    @abstractmethod\n    def __str__(self):",
+        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\nclass IxbrlModel(BaseIxbrlModel):\n    \"\"\" iXBRL数値情報モデルクラス",
         "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },
     {
-        "label": "IxNonFraction",
+        "label": "IxbrlModel",
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
         "description": "PyXBRLTools.xbrl_model.ixbrl_models",
-        "peekOfCode": "class IxNonFraction(BaseIxbrlModel):\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        super().__init__()  # ベースクラスのコンストラクタを呼び出す\n        self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager  # ベースクラスからixbrl_managerインスタンスにアクセスする\n        self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする\n        self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする\n        # プロパティを初期化する\n        self.__ixbrl_numeric = None\n        self.__label_locs = None\n        self.__label_arcs = None",
+        "peekOfCode": "class IxbrlModel(BaseIxbrlModel):\n    \"\"\" iXBRL数値情報モデルクラス\n    Attributes:\n        ixbrl_numeric (DataFrame): XBRL数値情報\n        label_locs (DataFrame): ラベル情報\n        label_arcs (DataFrame): ラベルアーク情報\n        labels (DataFrame): ラベル情報\n        cal_link_locs (DataFrame): 計算リンク情報\n        cal_link_arcs (DataFrame): 計算リンクアーク情報\n        def_link_locs (DataFrame): 定義リンク情報",
         "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },

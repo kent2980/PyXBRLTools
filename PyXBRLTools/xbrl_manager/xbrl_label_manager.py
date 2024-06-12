@@ -68,6 +68,17 @@ class BaseXbrlLabelManager(ABC):
         # XmlLabelParserクラスのインスタンスを作成
         self.__label_parser = XmlLabelParser()
 
+        self.__inicialize_properties()
+
+    def __inicialize_properties(self):
+        """
+        プロパティを初期化するメソッドです。
+        """
+        self.__label_arcs = None
+        self.__label_locs = None
+        self.__role_refs = None
+        self.__labels = None
+
     @property
     def xbrl_directory_path(self):
         """
@@ -92,6 +103,9 @@ class BaseXbrlLabelManager(ABC):
 
         # ラベルパスをXBRLパスマネージャーから取得
         self.__label_paths = self.__xbrl_path_manager.label_path
+
+        # プロパティを初期化
+        self.__inicialize_properties
 
     @property
     def load_label_directory(self):
@@ -147,29 +161,33 @@ class BaseXbrlLabelManager(ABC):
         """
         pass
 
+    @property
     @abstractmethod
-    def get_label_arcs(self):
+    def label_arcs(self):
         """
         ラベルアークを取得するメソッドです。
         """
         pass
 
+    @property
     @abstractmethod
-    def get_label_locs(self):
+    def label_locs(self):
         """
         ラベルロケーションを取得するメソッドです。
         """
         pass
 
+    @property
     @abstractmethod
-    def get_role_refs(self):
+    def role_refs(self):
         """
         ロール参照を取得するメソッドです。
         """
         pass
 
+    @property
     @abstractmethod
-    def get_labels(self):
+    def labels(self):
         """
         ラベルを取得するメソッドです。
         """
@@ -246,7 +264,8 @@ class XbrlLabelManager(BaseXbrlLabelManager):
         # ローカルファイルのパスを返す
         return label_paths
 
-    def get_label_arcs(self, xlink_label:list[str] | None = None) -> DataFrame:
+    @property
+    def label_arcs(self) -> DataFrame:
 
         """
         ラベルアークを取得するメソッドです。
@@ -271,6 +290,9 @@ class XbrlLabelManager(BaseXbrlLabelManager):
                 }
             ]
         """
+        if self._BaseXbrlLabelManager__label_arcs is not None:
+            return self._BaseXbrlLabelManager__label_arcs
+
         parser:XmlLabelParser = self._BaseXbrlLabelManager__label_parser
 
         label_arcs = None
@@ -281,12 +303,12 @@ class XbrlLabelManager(BaseXbrlLabelManager):
             else:
                 label_arcs = pd.concat([label_arcs, parser.link_label_arcs])
 
-        if xlink_label is not None:
-            label_arcs = label_arcs[label_arcs['xlink_from'].isin(xlink_label)]
+        self._BaseXbrlLabelManager__label_arcs = label_arcs.drop_duplicates()
 
-        return label_arcs
+        return self._BaseXbrlLabelManager__label_arcs
 
-    def get_label_locs(self, label_names:list[str] | None = None) -> DataFrame:
+    @property
+    def label_locs(self) -> DataFrame:
         """
         ラベルロケーションを取得するメソッドです。
 
@@ -308,6 +330,9 @@ class XbrlLabelManager(BaseXbrlLabelManager):
                 }
             ]
         """
+        if self._BaseXbrlLabelManager__label_locs is not None:
+            return self._BaseXbrlLabelManager__label_locs
+
         parser:XmlLabelParser = self._BaseXbrlLabelManager__label_parser
 
         label_locs = None
@@ -318,13 +343,12 @@ class XbrlLabelManager(BaseXbrlLabelManager):
             else:
                 label_locs = pd.concat([label_locs, parser.link_locs])
 
-        # label_locsのxlink_hrefがlabel_namesに含まれるものだけを取得
-        if label_names is not None:
-            label_locs = label_locs[label_locs['xlink_href'].isin(label_names)]
+        self._BaseXbrlLabelManager__label_locs = label_locs.drop_duplicates()
 
-        return label_locs
+        return self._BaseXbrlLabelManager__label_locs
 
-    def get_role_refs(self) -> DataFrame:
+    @property
+    def role_refs(self) -> DataFrame:
         """
         ロール参照を取得するメソッドです。
 
@@ -346,6 +370,9 @@ class XbrlLabelManager(BaseXbrlLabelManager):
                 }
             ]
         """
+        if self._BaseXbrlLabelManager__role_refs is not None:
+            return self._BaseXbrlLabelManager__role_refs
+
         parser:XmlLabelParser = self._BaseXbrlLabelManager__label_parser
 
         role_refs = None
@@ -356,9 +383,12 @@ class XbrlLabelManager(BaseXbrlLabelManager):
             else:
                 role_refs = pd.concat([role_refs, parser.role_refs])
 
-        return role_refs
+        self._BaseXbrlLabelManager__role_refs = role_refs.drop_duplicates()
 
-    def get_labels(self, xlink_to:list[str] | None = None) -> DataFrame:
+        return self._BaseXbrlLabelManager__role_refs
+
+    @property
+    def labels(self) -> DataFrame:
         """
         ラベルを取得するメソッドです。
 
@@ -380,6 +410,9 @@ class XbrlLabelManager(BaseXbrlLabelManager):
                 }
             ]
         """
+        if self._BaseXbrlLabelManager__labels is not None:
+            return self._BaseXbrlLabelManager__labels
+
         parser:XmlLabelParser = self._BaseXbrlLabelManager__label_parser
 
         labels = None
@@ -390,7 +423,6 @@ class XbrlLabelManager(BaseXbrlLabelManager):
             else:
                 labels = pd.concat([labels, parser.link_labels])
 
-        if xlink_to is not None:
-            labels = labels[labels['xlink_label'].isin(xlink_to)]
+        self._BaseXbrlLabelManager__labels = labels.drop_duplicates()
 
-        return labels
+        return self._BaseXbrlLabelManager__labels
