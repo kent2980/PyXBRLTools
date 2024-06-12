@@ -4,6 +4,7 @@ from xbrl_manager.ixbrl_manager import IxbrlManager
 from xbrl_manager.xbrl_label_manager import XbrlLabelManager
 from xbrl_manager.xbrl_link_manager import XbrlLinkManager, XbrlLinkType
 from pandas import DataFrame
+import asyncio
 
 class BaseIxbrlModel(ABC):
     """ iXBRLモデルの基底クラス """
@@ -58,6 +59,10 @@ class IxbrlModel(BaseIxbrlModel):
         self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする
         self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする
 
+        asyncio.run(self.async_inicialize())
+
+    async def async_inicialize(self):
+
         # 処理時間を計測する
         start = time.time()
 
@@ -66,14 +71,14 @@ class IxbrlModel(BaseIxbrlModel):
         self.__ix_non_numeric = None
 
         # プロパティを設定する
-        self.__set_ix_non_fraction()
-        self.__set_ix_non_numeric()
+        await self.__set_ix_non_fraction()
+        await self.__set_ix_non_numeric()
 
         # 処理時間を出力する
         elapsed_time = time.time() - start
         print(f'処理時間: {elapsed_time} [sec]')
 
-    def __set_ix_non_fraction(self):
+    async def __set_ix_non_fraction(self):
         """ プロパティを設定します。
 
         Raises:
@@ -129,7 +134,7 @@ class IxbrlModel(BaseIxbrlModel):
             'pre_link_arcs': pre_link_arcs
         }
 
-    def __set_ix_non_numeric(self):
+    async def __set_ix_non_numeric(self):
         """ プロパティを設定します。
 
         Raises:
