@@ -151,7 +151,9 @@ class IxbrlParser(BaseIxbrlParser):
             tags = self.soup.find_all(name='ix:nonFraction')
             for tag in tags:
                 lists.append({
-                    'context_ref': tag.get('contextRef'),
+                    'context_period': tag.get('contextRef').split("_")[0],
+                    'context_entity': tag.get('contextRef').split("_")[1] if len(tag.get('contextRef').split("_")) > 1 else None,
+                    'context_category': tag.get('contextRef').split("_")[2] if len(tag.get('contextRef').split("_")) > 2 else None,
                     'decimals': int(tag.get('decimals')) if tag.get('decimals') else None,
                     'format': tag.get('format'),
                     'name': tag.get('name').replace(":", "_"),
@@ -197,10 +199,13 @@ class IxbrlParser(BaseIxbrlParser):
                 text = tag.text.splitlines()[0].replace("　", "").replace(" ", "") if tag.text else None
                 # 辞書に追加
                 lists.append({
-                    'context_ref': tag.get('contextRef'),
+                    'context_period': tag.get('contextRef').split("_")[0],
+                    'context_entity': tag.get('contextRef').split("_")[1] if len(tag.get('contextRef').split("_")) > 1 else None,
+                    'context_category': tag.get('contextRef').split("_")[2] if len(tag.get('contextRef').split("_")) > 2 else None,
                     'name': tag.get('name').replace(":", "_"),
                     'xsi_nil': xsi_nil,
                     'escape': escape,
+                    'format': tag.get('format').split(':')[-1] if tag.get('format') else None,
                     'text': text if escape == False else None
                 })
 

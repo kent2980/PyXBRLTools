@@ -11,5 +11,6 @@
   "python.testing.pytestArgs": ["tests"],
   "editor.fontFamily": "\"Source Han Code JP\"",
   "editor.fontLigatures": true,
-  "editor.fontSize": 12
+  "editor.fontSize": 12,
+  "terminal.integrated.fontFamily": "\"monospace\""
 }

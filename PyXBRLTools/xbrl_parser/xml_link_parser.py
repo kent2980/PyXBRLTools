@@ -36,7 +36,7 @@ class BaseXmlLinkParser(ABC):
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
 
-        self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
+        # self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
 
         if file_path is not None:
 
@@ -63,7 +63,7 @@ class BaseXmlLinkParser(ABC):
         Args:
             file_path (str): パースするXMLファイルのパス。
         """
-        self.logger.logger.debug(f'file_pathを設定中: {file_path}')
+        # self.logger.logger.debug(f'file_pathを設定中: {file_path}')
 
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
@@ -162,7 +162,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._role_refs is None:
 
-            self.logger.logger.debug('link:role要素を取得中。')
+            # self.logger.logger.debug('link:role要素を取得中。')
 
             lists = []
             tags = self._soup.find_all(['link:role', 'roleRef'])
@@ -200,7 +200,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
 
-            self.logger.logger.debug('link:loc要素を取得中。')
+            # self.logger.logger.debug('link:loc要素を取得中。')
 
             dict = {}
 
@@ -252,7 +252,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         # link_arcsがNoneの場合は取得する
         if self._link_arcs is None:
 
-            self.logger.logger.debug('link:labelArc要素を取得中。')
+            # self.logger.logger.debug('link:labelArc要素を取得中。')
 
             dict = {}
 
@@ -300,7 +300,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._link_base is None:
 
-            self.logger.logger.debug('link:base要素を取得中。')
+            # self.logger.logger.debug('link:base要素を取得中。')
 
             lists = []
             tags = self._soup.find_all(name='link:linkbase')
@@ -332,7 +332,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._link is None:
 
-            self.logger.logger.debug('link要素を取得中。')
+            # self.logger.logger.debug('link要素を取得中。')
 
             lists = []
             tag_names = ["link:calculationLink", "link:definitionLink", "link:presentationLink"]

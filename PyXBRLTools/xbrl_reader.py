@@ -130,8 +130,6 @@ class XbrlReader:
             dict['ix_non_numerics_labels']: ラベル
         """
         dict = self.__ixbrl_model.ix_non_numeric
-        print("********ix_non_numerics********************************************")
-        print(dict)
         # ix_non_numerics, label_arcs, label_locs, labelsを返す
         return dict
 
@@ -161,13 +159,15 @@ if __name__ == '__main__':
 
     ix_non_fractions = xbrl_read.get_ix_non_fractions()
     for key, value in ix_non_fractions.items():
-        print(f'{key}: {value}')
-        # connector.create_table_from_df(key, value)
+        # print(f'{key}: {value}')
+        connector.create_table_from_df(key, value)
+        pass
 
     ix_non_numerics = xbrl_read.get_ix_non_numerics()
     for key, value in ix_non_numerics.items():
-        print(f'{key}: {value}')
-        # connector.create_table_from_df(key, value)
+        # print(f'{key}: {value}')
+        connector.create_table_from_df(key, value)
+        pass
 
     connector.disconnect()
 
