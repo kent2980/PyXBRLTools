@@ -5,3 +5,7 @@ extract_csv
 doc
 Log/*.log
 *.pyc
+.vscode
+**/__pycache__
+.pytest_cache
+__pycache__

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import logging
-import pandas as pd
 from xbrl_parser.xml_link_parser import XmlLinkParser
 from xbrl_manager.xbrl_path_manager import XbrlPathManager
 from log.py_xbrl_tools_loging import PyXBRLToolsLogging

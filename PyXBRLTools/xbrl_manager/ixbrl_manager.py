@@ -4,7 +4,6 @@ import os
 from abc import abstractmethod
 from pandas import DataFrame
 import pandas as pd
-import asyncio
 
 class IxbrlType:
     """ iXBRLの種類を表すクラスです。 """

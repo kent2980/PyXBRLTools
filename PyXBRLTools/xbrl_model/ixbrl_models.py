@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import time
 from xbrl_manager.ixbrl_manager import IxbrlManager
 from xbrl_manager.xbrl_label_manager import XbrlLabelManager
 from xbrl_manager.xbrl_link_manager import XbrlLinkManager, XbrlLinkType
-from pandas import DataFrame
 import asyncio
 import uuid
 

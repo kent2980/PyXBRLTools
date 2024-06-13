@@ -224,14 +224,6 @@
         "documentation": {}
     },
     {
-        "label": "abstractmethod",
-        "importPath": "abc",
-        "description": "abc",
-        "isExtraImport": true,
-        "detail": "abc",
-        "documentation": {}
-    },
-    {
         "label": "ABC",
         "importPath": "abc",
         "description": "abc",
@@ -358,23 +350,6 @@
         "description": "pandas",
         "isExtraImport": true,
         "detail": "pandas",
-        "documentation": {}
-    },
-    {
-        "label": "DataFrame",
-        "importPath": "pandas",
-        "description": "pandas",
-        "isExtraImport": true,
-        "detail": "pandas",
-        "documentation": {}
-    },
-    {
-        "label": "asyncio",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "asyncio",
-        "description": "asyncio",
-        "detail": "asyncio",
         "documentation": {}
     },
     {
@@ -544,6 +519,15 @@
         "description": "xbrl_manager.xbrl_link_manager",
         "isExtraImport": true,
         "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
         "documentation": {}
     },
     {
