@@ -40,7 +40,7 @@ class XbrlReader:
         >>> for key, value in ix_non_numerics.items():
         >>>     print(f'{key}: {value}')
     """
-    def __init__(self, xbrl_zip_path, xbrl_directory_path, load_label_directory):
+    def __init__(self, xbrl_zip_path, xbrl_directory_path, load_label_directory, load_link_directory):
         """ コンストラクタ
 
         Args:
@@ -64,11 +64,13 @@ class XbrlReader:
         self.__xbrl_directory_path = f"{xbrl_directory_path}/{self.__xbrl_zip_filename}"
         # グローバルラベルファイルをロードするディレクトリのパスを設定
         self.__load_label_directory = load_label_directory
+        # グローバルリンクファイルをロードするディレクトリのパスを設定
+        self.__load_link_directory = load_link_directory
         # zipファイルを解凍
         zipfile.ZipFile(xbrl_zip_path).extractall(self.__xbrl_directory_path)
 
         # XBRLモデルをインスタンス化
-        self.__ixbrl_model = IxbrlModel(self.__xbrl_directory_path, self.__load_label_directory)
+        self.__ixbrl_model = IxbrlModel(self.__xbrl_directory_path, self.__load_label_directory, self.__load_link_directory)
 
     def __del__(self):
         """ デストラクタ """
@@ -90,6 +92,11 @@ class XbrlReader:
     def load_label_directory(self):
         """ グローバルラベルファイルをロードするディレクトリのパスを取得するプロパティです。"""
         return self.__load_label_directory
+
+    @property
+    def load_link_directory(self):
+        """ グローバルリンクファイルをロードするディレクトリのパスを取得するプロパティです。"""
+        return self.__load_link_directory
 
     def get_ix_non_fractions(self):
         """
@@ -145,14 +152,16 @@ if __name__ == '__main__':
     if platform.system() == 'Windows':
         xbrl_zip_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/081220240513591710.zip'
         xbrl_direrctory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
-        load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
+        load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/LABEL'
+        load_link_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/LINK'
     # macOSの場合
     elif platform.system() == 'Darwin':
-        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/081220240327560965.zip'
+        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/091220240605522106.zip'
         xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
-        load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
+        load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/LABEL'
+        load_link_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/LINK'
 
-    xbrl_read = XbrlReader(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path)
+    xbrl_read = XbrlReader(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path, load_link_directory_path)
 
     connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
     connector.connect()
@@ -160,14 +169,14 @@ if __name__ == '__main__':
     ix_non_fractions = xbrl_read.get_ix_non_fractions()
     for key, value in ix_non_fractions.items():
         # print(f'{key}: {value}')
-        connector.create_table_from_df(key, value)
-        pass
+        # connector.create_table_from_df(key, value)
+        connector.add_data_from_df(key, value)
 
     ix_non_numerics = xbrl_read.get_ix_non_numerics()
     for key, value in ix_non_numerics.items():
         # print(f'{key}: {value}')
-        connector.create_table_from_df(key, value)
-        pass
+        # connector.create_table_from_df(key, value)
+        connector.add_data_from_df(key, value)
 
     connector.disconnect()
 

@@ -132,8 +132,8 @@ class XBRLDownloadManager:
             url_list (list): XBRLファイルのURLリスト
 
         Yields:
-            xbrl_file (str): XBRLファイルのURL
-            xbrl_file_path (str): XBRLファイルのローカルパス
+            url_path (str): XBRLファイルのURL
+            local_path (str): XBRLファイルのローカルパス
 
         Examples:
             >>> xbrl_download_manager = XBRLDownloadManager(xbrl_schema_path, Xbrl_save_dir)
