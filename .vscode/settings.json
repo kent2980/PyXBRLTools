@@ -8,9 +8,5 @@
   ],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true,
-  "python.testing.pytestArgs": ["tests"],
-  "editor.fontFamily": "\"Source Han Code JP\"",
-  "editor.fontLigatures": true,
-  "editor.fontSize": 12,
-  "terminal.integrated.fontFamily": "\"monospace\""
+  "python.testing.pytestArgs": ["tests"]
 }
