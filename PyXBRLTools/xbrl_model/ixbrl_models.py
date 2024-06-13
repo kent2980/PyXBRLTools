@@ -9,12 +9,12 @@ import uuid
 class BaseIxbrlModel(ABC):
     """ iXBRLモデルの基底クラス """
 
-    def __init__(self, xbrl_directory_path: str, load_label_directory: str):
+    def __init__(self, xbrl_directory_path: str, load_label_directory: str, load_link_directory: str):
         """ コンストラクタ """
         # マネージャークラスを初期化
         self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化
         self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化
-        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化
+        self.__link_manager = XbrlLinkManager(xbrl_directory_path, load_link_directory)  # リンクマネージャーを初期化
 
         self.__xbrl_id = str(uuid.uuid4())  # iXBRのuuid4を生成
 
@@ -60,15 +60,15 @@ class IxbrlModel(BaseIxbrlModel):
         >>> print(ix_non_fraction.pre_link_arcs)
     """
 
-    def __init__(self, xbrl_directory_path: str, load_label_directory: str):
-        super().__init__(xbrl_directory_path, load_label_directory)  # ベースクラスのコンストラクタを呼び出す
+    def __init__(self, xbrl_directory_path: str, load_label_directory: str, load_link_directory: str):
+        super().__init__(xbrl_directory_path, load_label_directory, load_link_directory)  # ベースクラスのコンストラクタを呼び出す
         self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager  # ベースクラスからixbrl_managerインスタンスにアクセスする
         self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする
         self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする
 
-        asyncio.run(self.async_inicialize())
+        self.async_inicialize()
 
-    async def async_inicialize(self):
+    def async_inicialize(self):
 
         # 処理時間を計測する
         start = time.time()
@@ -76,23 +76,24 @@ class IxbrlModel(BaseIxbrlModel):
         # プロパティを初期化する
         self.__ix_non_fraction = None
         self.__ix_non_numeric = None
+        self.__ix_headline = None
 
         # プロパティを設定する
-        await self.__set_ix_non_fraction()
-        await self.__set_ix_non_numeric()
+        self.__set_ix_non_fraction()
+        self.__set_ix_non_numeric()
 
         # 処理時間を出力する
         elapsed_time = time.time() - start
         print(f'処理時間: {elapsed_time} [sec]')
 
-    async def __set_ix_non_fraction(self):
+    def __set_ix_non_fraction(self):
         """ プロパティを設定します。
 
         Raises:
             ValueError: プロパティの設定に失敗した場合に発生します。
         """
         # XBRL数値情報を取得
-        ix_non_fraction = await self.__ixbrl_manager.ix_non_fractions
+        ix_non_fraction = self.__ixbrl_manager.ix_non_fractions
 
         # ラベル情報を取得
         label_locs = self.__label_manager.label_locs
@@ -151,14 +152,14 @@ class IxbrlModel(BaseIxbrlModel):
             'pre_link_arcs': pre_link_arcs
         }
 
-    async def __set_ix_non_numeric(self):
+    def __set_ix_non_numeric(self):
         """ プロパティを設定します。
 
         Raises:
             ValueError: プロパティの設定に失敗した場合に発生します。
         """
         # XBRL数値情報を取得
-        ix_non_numeric = await self.__ixbrl_manager.ix_non_numerics
+        ix_non_numeric = self.__ixbrl_manager.ix_non_numerics
 
         # ラベル情報を取得
         label_locs = self.__label_manager.label_locs
@@ -204,3 +205,20 @@ class IxbrlModel(BaseIxbrlModel):
             ValueError: XBRL数値情報の取得に失敗した場合に発生します。
         """
         return self.__ix_non_numeric
+
+    @property
+    def ix_headline(self) -> dict:
+        """ XBRLのヘッドライン情報を取得します。
+
+        Returns:
+            dict: XBRLのヘッドライン情報
+
+        Raises:
+            ValueError: XBRL数値情報の取得に失敗した場合に発生します。
+        """
+        # ix_non_numericsを取得
+        ix_non_numerics = self.__ix_non_numeric
+
+
+
+        return self.__ix_headline

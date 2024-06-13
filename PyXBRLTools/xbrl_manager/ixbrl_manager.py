@@ -101,7 +101,7 @@ class IxbrlManager(BaseIxbrlManager):
             yield ixbrl_file_path, document
 
     @property
-    async def ix_non_fractions(self, ixbrl_type:str = None) -> DataFrame:
+    def ix_non_fractions(self, ixbrl_type:str = None) -> DataFrame:
         """ 非分数データを含むDataFrameを返します。
 
         Returns:
@@ -152,7 +152,7 @@ class IxbrlManager(BaseIxbrlManager):
         return self._BaseIxbrlManager__ix_non_fractions
 
     @property
-    async def ix_non_numerics(self, ixbrl_type:str = None) -> DataFrame:
+    def ix_non_numerics(self, ixbrl_type:str = None) -> DataFrame:
         """ 非数値データを含むDataFrameを返します。
 
         Args:
@@ -204,7 +204,7 @@ class IxbrlManager(BaseIxbrlManager):
         return self._BaseIxbrlManager__ix_non_numerics
 
     @property
-    async def xbrli_contexts(self, ixbrl_type:str = None) -> DataFrame:
+    def xbrli_contexts(self, ixbrl_type:str = None) -> DataFrame:
         """ 文脈情報を含むDataFrameを返します。
 
         Args:
