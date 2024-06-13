@@ -76,6 +76,7 @@ class IxbrlModel(BaseIxbrlModel):
         # プロパティを初期化する
         self.__ix_non_fraction = None
         self.__ix_non_numeric = None
+        self.__ix_headline = None
 
         # プロパティを設定する
         await self.__set_ix_non_fraction()
@@ -204,3 +205,20 @@ class IxbrlModel(BaseIxbrlModel):
             ValueError: XBRL数値情報の取得に失敗した場合に発生します。
         """
         return self.__ix_non_numeric
+
+    @property
+    def ix_headline(self) -> dict:
+        """ XBRLのヘッドライン情報を取得します。
+
+        Returns:
+            dict: XBRLのヘッドライン情報
+
+        Raises:
+            ValueError: XBRL数値情報の取得に失敗した場合に発生します。
+        """
+        # ix_non_numericsを取得
+        ix_non_numerics = self.__ix_non_numeric
+
+
+
+        return self.__ix_headline

@@ -148,9 +148,9 @@ if __name__ == '__main__':
         load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
     # macOSの場合
     elif platform.system() == 'Darwin':
-        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/081220240327560965.zip'
+        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/081220240612527584.zip'
         xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
-        load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
+        load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/LABEL'
 
     xbrl_read = XbrlReader(xbrl_zip_path, xbrl_direrctory_path, load_xbrl_directory_path)
 
@@ -160,14 +160,14 @@ if __name__ == '__main__':
     ix_non_fractions = xbrl_read.get_ix_non_fractions()
     for key, value in ix_non_fractions.items():
         # print(f'{key}: {value}')
-        connector.create_table_from_df(key, value)
-        pass
+        # connector.create_table_from_df(key, value)
+        connector.add_data_from_df(key, value)
 
     ix_non_numerics = xbrl_read.get_ix_non_numerics()
     for key, value in ix_non_numerics.items():
         # print(f'{key}: {value}')
-        connector.create_table_from_df(key, value)
-        pass
+        # connector.create_table_from_df(key, value)
+        connector.add_data_from_df(key, value)
 
     connector.disconnect()
 
