@@ -9,12 +9,12 @@ import uuid
 class BaseIxbrlModel(ABC):
     """ iXBRLモデルの基底クラス """
 
-    def __init__(self, xbrl_directory_path: str, load_label_directory: str):
+    def __init__(self, xbrl_directory_path: str, load_label_directory: str, load_link_directory: str):
         """ コンストラクタ """
         # マネージャークラスを初期化
         self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化
         self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化
-        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化
+        self.__link_manager = XbrlLinkManager(xbrl_directory_path, load_link_directory)  # リンクマネージャーを初期化
 
         self.__xbrl_id = str(uuid.uuid4())  # iXBRのuuid4を生成
 
@@ -60,8 +60,8 @@ class IxbrlModel(BaseIxbrlModel):
         >>> print(ix_non_fraction.pre_link_arcs)
     """
 
-    def __init__(self, xbrl_directory_path: str, load_label_directory: str):
-        super().__init__(xbrl_directory_path, load_label_directory)  # ベースクラスのコンストラクタを呼び出す
+    def __init__(self, xbrl_directory_path: str, load_label_directory: str, load_link_directory: str):
+        super().__init__(xbrl_directory_path, load_label_directory, load_link_directory)  # ベースクラスのコンストラクタを呼び出す
         self.__ixbrl_manager: IxbrlManager = self._BaseIxbrlModel__ixbrl_manager  # ベースクラスからixbrl_managerインスタンスにアクセスする
         self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする
         self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする
