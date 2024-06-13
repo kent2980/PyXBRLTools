@@ -547,6 +547,15 @@
         "documentation": {}
     },
     {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
         "label": "BeautifulSoup",
         "importPath": "bs4",
         "description": "bs4",
@@ -803,7 +812,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
         "description": "PyXBRLTools.xbrl_model.ixbrl_models",
-        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\nclass IxbrlModel(BaseIxbrlModel):\n    \"\"\" iXBRL数値情報モデルクラス",
+        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\n        self.__xbrl_id = str(uuid.uuid4())  # iXBRのuuid4を生成\n    @property",
         "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },

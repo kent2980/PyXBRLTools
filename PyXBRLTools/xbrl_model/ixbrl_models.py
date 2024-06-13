@@ -5,6 +5,7 @@ from xbrl_manager.xbrl_label_manager import XbrlLabelManager
 from xbrl_manager.xbrl_link_manager import XbrlLinkManager, XbrlLinkType
 from pandas import DataFrame
 import asyncio
+import uuid
 
 class BaseIxbrlModel(ABC):
     """ iXBRLモデルの基底クラス """
@@ -15,6 +16,13 @@ class BaseIxbrlModel(ABC):
         self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化
         self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化
         self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化
+
+        self.__xbrl_id = str(uuid.uuid4())  # iXBRのuuid4を生成
+
+    @property
+    def xbrl_id(self):
+        """ iXBRLのIDを取得します。"""
+        return self.__xbrl_id
 
 class IxbrlModel(BaseIxbrlModel):
     """ iXBRL数値情報モデルクラス
@@ -120,6 +128,16 @@ class IxbrlModel(BaseIxbrlModel):
 
         pre_link_locs = pre_link_locs[pre_link_locs['xlink_href'].isin(ix_non_fraction['name'])]
         pre_link_arcs = pre_link_arcs[pre_link_arcs['xlink_to'].isin(pre_link_locs['xlink_label'])]
+
+        # IDを設定する
+        ix_non_fraction['xbrl_id'] = self.xbrl_id
+        cal_link_locs['xbrl_id'] = self.xbrl_id
+        cal_link_arcs['xbrl_id'] = self.xbrl_id
+        def_link_locs['xbrl_id'] = self.xbrl_id
+        def_link_arcs['xbrl_id'] = self.xbrl_id
+        pre_link_locs['xbrl_id'] = self.xbrl_id
+        pre_link_arcs['xbrl_id'] = self.xbrl_id
+
         # プロパティを設定する
         self.__ix_non_fraction = {
             'ix_non_fraction': ix_non_fraction,
@@ -152,6 +170,9 @@ class IxbrlModel(BaseIxbrlModel):
         label_locs = label_locs[label_locs['xlink_href'].isin(ix_non_numeric['name'])]
         label_arcs = label_arcs[label_arcs['xlink_from'].isin(label_locs['xlink_label'])]
         labels = labels[labels['xlink_label'].isin(label_arcs['xlink_to'])]
+
+                # IDを設定する
+        ix_non_numeric['xbrl_id'] = self.xbrl_id
 
         # プロパティを設定する
         self.__ix_non_numeric = {
