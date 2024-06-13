@@ -77,8 +77,8 @@ class BaseXmlLabelParser(ABC):
             self._soup = bs(file, features='xml')
 
         # DataFrameの初期化
-        self._link_labels = None
         self._link_locs = None
+        self._link_labels = None
         self._link_label_arcs = None
         self._role_refs = None
 
@@ -110,17 +110,17 @@ class XmlLabelParser(BaseXmlLabelParser):
     """ XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。
 
     Attributes:
-        file_path (str): パースするXMLファイルのパス。
+        file_path (str): パースするXMLファイルのパス。\n
 
     Properties:
-        link_labels (DataFrame): link:label要素を取得するプロパティ。
-        link_locs (DataFrame): link:loc要素を取得するプロパティ。
-        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。
-        role_refs (DataFrame): roleRef要素を取得するプロパティ。
+        link_labels (DataFrame): link:label要素を取得するプロパティ。\n
+        link_locs (DataFrame): link:loc要素を取得するプロパティ。\n
+        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。\n
+        role_refs (DataFrame): roleRef要素を取得するプロパティ。\n
 
     Methods:
-        __init__: 初期化メソッド。
-        __inictialize_class: クラス変数の初期化を行うメソッド。
+        __init__: 初期化メソッド。\n
+        __inictialize_class: クラス変数の初期化を行うメソッド。\n
     """
 
     @property
@@ -143,8 +143,9 @@ class XmlLabelParser(BaseXmlLabelParser):
             label (str): 株式の種類
         """
 
-        if self._link_labels is None:
-
+        if self._link_labels is not None:
+            return self._link_labels
+        else:
             lists = []
 
             tags = self._soup.find_all(name=['link:label', 'label'])
@@ -172,7 +173,13 @@ class XmlLabelParser(BaseXmlLabelParser):
 
             self._link_labels = DataFrame(lists)
 
-        return self._link_labels
+            link_arcs = self.link_label_arcs
+
+            # self._link_labels(xlink_label)にlink_arcs(xlink_to)のxlink_schemaカラムを追加
+            self._link_labels = self._link_labels.merge(link_arcs[['xlink_to', 'xlink_schema']],
+                                left_on='xlink_label', right_on='xlink_to', how='left').drop(columns='xlink_to')
+
+            return self._link_labels
 
     @property
     def link_locs(self) -> DataFrame:
@@ -191,8 +198,9 @@ class XmlLabelParser(BaseXmlLabelParser):
             xlink_href (str): jppfs_cor_EquityClassOfShares\n
             xlink_label (str): label_EquityClassOfShares
         """
-        if self._link_locs is None:
-
+        if self._link_locs is not None:
+            return self._link_locs
+        else:
             lists = []
             tags = None
 
@@ -208,7 +216,7 @@ class XmlLabelParser(BaseXmlLabelParser):
 
             self._link_locs = DataFrame(lists)
 
-        return self._link_locs
+            return self._link_locs
 
     @property
     def link_label_arcs(self) -> DataFrame:
@@ -227,8 +235,9 @@ class XmlLabelParser(BaseXmlLabelParser):
             xlink_from (str): EquityClassOfShares\n
             xlink_to (str): label_EquityClassOfShares
         """
-        if self._link_label_arcs is None:
-
+        if self._link_label_arcs is not None:
+            return self._link_label_arcs
+        else:
             lists = []
             tags = self._soup.find_all(name=['link:labelArc', 'labelArc'])
             for tag in tags:
@@ -242,7 +251,13 @@ class XmlLabelParser(BaseXmlLabelParser):
 
             self._link_label_arcs = DataFrame(lists)
 
-        return self._link_label_arcs
+            link_locs = self.link_locs
+
+            # self._link_label_arcs(xlink_from)にlink_locs(xlink_label)のxlink_schemaカラムを追加
+            self._link_label_arcs = self._link_label_arcs.merge(link_locs[['xlink_label', 'xlink_schema']],
+                                    left_on='xlink_from', right_on='xlink_label', how='left').drop(columns='xlink_label')
+
+            return self._link_label_arcs
 
     @property
     def role_refs(self) -> DataFrame:
@@ -261,8 +276,9 @@ class XmlLabelParser(BaseXmlLabelParser):
             xlink_schema (str): jpcrp_rt_2023-12-01.xsd\n
             xlink_href (str): rol_std_altLabel
         """
-        if self._role_refs is None:
-
+        if self._role_refs is not None:
+            return self._role_refs
+        else:
             lists = []
             tags = self._soup.find_all(name=['link:roleRef', 'roleRef'])
             for tag in tags:
@@ -276,4 +292,4 @@ class XmlLabelParser(BaseXmlLabelParser):
 
             self._role_refs = DataFrame(lists)
 
-        return self._role_refs
+            return self._role_refs

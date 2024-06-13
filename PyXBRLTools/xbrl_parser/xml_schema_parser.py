@@ -10,23 +10,25 @@ class BaseXmlSchemaParser(ABC):
     XMLスキーマの情報を取得するクラスです。
     """
 
-    def __init__(self, file_path:str) -> None:
+    def __init__(self, file_path:str = None) -> None:
         """ BaseXmlSchemaParserのコンストラクタです。
 
         Args:
             file_path (str): XMLファイルのパス。
         """
 
-        # ファイルパスを設定
-        self.__file_path = file_path
-
-        # クラス変数の初期化
-        self.__inictialize_class(file_path)
-
         # ログ設定
         class_name = self.__class__.__name__
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
+
+        if file_path is not None:
+
+            # ファイルパスを設定
+            self.__file_path = file_path
+
+            # クラス変数の初期化
+            self.__inictialize_class(file_path)
 
     @property
     def file_path(self) -> str:
@@ -157,13 +159,12 @@ class XmlSchemaParser(BaseXmlSchemaParser):
         example:
         get_link_base_refs()の出力例
         >>> df = get_link_base_refs()
-            print(df)
-        output:
-        |    | xlink_type | xlink_href | xlink_role | xlink_arcrole |
-        |----|------------|------------|------------|---------------|
-        | 0  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
-        | 1  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
-        | 2  | simple | http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd | http://www.xbrl.org/2003/role/linkbaseRef | None |
+
+        [取得するDataFrameの例]\n
+        xlink_type: 'simple'\n
+        xlink_href: 'tse-acedjpfr-57210-2024-03-31-01-2024-05-13-cal.xml'\n
+        xlink_role: 'http://www.xbrl.org/2003/role/calculationLinkbaseRef'\n
+        xlink_arcrole: 'http://www.w3.org/1999/xlink/properties/linkbase'\n
         """
         if self._link_base_refs is None:
 

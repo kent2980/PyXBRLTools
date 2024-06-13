@@ -1,36 +1,11 @@
-from xbrl_parser.xml_link_parser import XmlLinkParser
-from xbrl_manager.link_managers import CalLinkManager, DefLinkManager, PreLinkManager
-from xbrl_manager.label_manager import BaseLabelManager
+from xbrl_manager.ixbrl_manager import IxbrlManager
 
-# if __name__ == "__main__":
-#     print("Test sample")
+if __name__ == '__main__':
 
-#     file_path = "doc/extract_to_dir/XBRLData/Attachment/tse-acedjpfr-57210-2024-03-31-01-2024-05-13-def.xml"
-#     xbrl_parser = XmlLinkParser(file_path)
-#     print(xbrl_parser.link)
-#     print(xbrl_parser.link_arcs)
-#     print(xbrl_parser.link_roles)
-#     print(xbrl_parser.link_base)
-#     print(xbrl_parser.link_locs)
-#     role_uri = "http://disclosure.edinet-fsa.go.jp/role/jppfs/rol_ConsolidatedStatementOfChangesInEquity"
+    xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData'
+    load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir'
 
-#     print(f'selected_link_arcs 読み込み中・・・:[{role_uri}]')
-#     print(xbrl_parser.get_selected_link_arcs(role_uri))
-#     print(f'selected_link_locs 読み込み中・・・:[{role_uri}]')
-#     print(xbrl_parser.get_selected_link_locs(role_uri))
-#     print(f'role_uriが存在するか確認中・・・:[{role_uri}]')
-#     print(xbrl_parser.is_role_exist(role_uri))
-
-if __name__ == "__main__":
-    print("Test sample")
-
-    dir_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData"
-    # link_manager = DefLinkManager(dir_path)
-    # link_parser = link_manager.link_parser
-    # print(link_parser.link_arcs)
-    # print(link_parser.link_roles)
-    # print(link_parser.link_base)
-    # print(link_parser.link_locs)
-
-    label_manager = BaseLabelManager(dir_path)
-    # print(label_manager.schema_files)
+    manager = IxbrlManager(xbrl_direrctory_path)
+    print(manager.ix_non_fractions)
+    print(manager.ix_non_numerics)
+    print(manager.xbrli_contexts)

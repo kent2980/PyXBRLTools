@@ -25,7 +25,7 @@ class BaseXmlLinkParser(ABC):
         __inicialize_class: クラス変数の初期化を行うメソッド。
     """
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str = None) -> None:
         """初期化メソッド。
 
         Args:
@@ -36,18 +36,20 @@ class BaseXmlLinkParser(ABC):
         self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)
         self.logger.set_log_file(f'Log/{class_name}.log')
 
-        self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
+        # self.logger.logger.debug(f'{class_name} を初期化中、file_path: {file_path}')
 
-        # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
-        if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
-            self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
-            raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
+        if file_path is not None:
 
-        # ファイルパスを設定
-        self.__file_path = file_path
+            # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
+            if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
+                self.logger.error('無効なファイル名です。 ファイル名は cal.xml, def.xml, pre.xml である必要があります。')
+                raise ValueError('ファイル名がcal.xml,def.xml,pre.xmlではありません。')
 
-        # クラス変数の初期化
-        self.__inicialize_class(file_path)
+            # ファイルパスを設定
+            self.__file_path = file_path
+
+            # クラス変数の初期化
+            self.__inicialize_class(file_path)
 
     @property
     def file_path(self) -> str:
@@ -61,7 +63,7 @@ class BaseXmlLinkParser(ABC):
         Args:
             file_path (str): パースするXMLファイルのパス。
         """
-        self.logger.logger.debug(f'file_pathを設定中: {file_path}')
+        # self.logger.logger.debug(f'file_pathを設定中: {file_path}')
 
         # ファイル名が**cal.xml,**def.xml,**pre.xmlでない場合はエラーを出力する
         if not re.search(r'.*cal\.xml$|.*def\.xml$|.*pre\.xml$', file_path):
@@ -160,7 +162,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._role_refs is None:
 
-            self.logger.logger.debug('link:role要素を取得中。')
+            # self.logger.logger.debug('link:role要素を取得中。')
 
             lists = []
             tags = self._soup.find_all(['link:role', 'roleRef'])
@@ -176,7 +178,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         return self._role_refs
 
     @property
-    def link_locs(self) -> dict[str, DataFrame]:
+    def link_locs(self) -> DataFrame:
         """ link:loc要素を取得するメソッド。
 
         Returns:
@@ -198,7 +200,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         # link_locsがNoneの場合は取得する
         if self._link_locs is None:
 
-            self.logger.logger.debug('link:loc要素を取得中。')
+            # self.logger.logger.debug('link:loc要素を取得中。')
 
             dict = {}
 
@@ -206,27 +208,27 @@ class XmlLinkParser(BaseXmlLinkParser):
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
             link_tags = self._soup.find_all(link_tag_names)
 
+            tag_lists = []
             for link_tag in link_tags:
-                tag_lists = []
 
                 attr_value = link_tag.get('xlink:role')
 
                 tags = link_tag.find_all(['link:loc'])
                 for tag in tags:
                     tag_lists.append({
+                        'attr_value': attr_value,
                         'xlink_type': tag.get('xlink:type'),
-                        'xlink_href': tag.get('xlink:href').split('#')[0],
+                        'xlink_schema': tag.get('xlink:href').split('#')[0],
+                        'xlink_href': tag.get('xlink:href').split('#')[1],
                         'xlink_label': tag.get('xlink:label'),
                     })
 
-                dict[attr_value] = DataFrame(tag_lists)
-
-            self._link_locs = dict
+            self._link_locs = DataFrame(tag_lists)
 
         return self._link_locs
 
     @property
-    def link_arcs(self) -> dict[str, DataFrame]:
+    def link_arcs(self) -> DataFrame:
         """ link:labelArc要素を取得するメソッド。
 
         Returns:
@@ -250,7 +252,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         # link_arcsがNoneの場合は取得する
         if self._link_arcs is None:
 
-            self.logger.logger.debug('link:labelArc要素を取得中。')
+            # self.logger.logger.debug('link:labelArc要素を取得中。')
 
             dict = {}
 
@@ -258,8 +260,8 @@ class XmlLinkParser(BaseXmlLinkParser):
             link_tag_names = ['link:calculationLink', 'link:definitionLink', 'link:presentationLink']
             link_tags = self._soup.find_all(link_tag_names)
 
+            tag_lists = []
             for link_tag in link_tags:
-                tag_lists = []
 
                 attr_value = link_tag.get('xlink:role')
 
@@ -267,17 +269,16 @@ class XmlLinkParser(BaseXmlLinkParser):
                 tags = link_tag.find_all(arc_tag_names)
                 for tag in tags:
                     tag_lists.append({
+                        'attr_value': attr_value,
                         'xlink_type': tag.get('xlink:type'),
                         'xlink_from': tag.get('xlink:from'),
                         'xlink_to': tag.get('xlink:to'),
                         'xlink_arcrole': tag.get('xlink:arcrole'),
-                        'xlink_order': tag.get('order'),
-                        'xlink_weight': tag.get('weight'),
+                        'xlink_order': float(tag.get('order')) if tag.get('order') is not None else None,
+                        'xlink_weight': float(tag.get('weight')) if tag.get('weight') is not None else None,
                     })
 
-                dict[attr_value] = DataFrame(tag_lists)
-
-            self._link_arcs = dict
+            self._link_arcs = DataFrame(tag_lists)
 
         return self._link_arcs
 
@@ -299,7 +300,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._link_base is None:
 
-            self.logger.logger.debug('link:base要素を取得中。')
+            # self.logger.logger.debug('link:base要素を取得中。')
 
             lists = []
             tags = self._soup.find_all(name='link:linkbase')
@@ -331,7 +332,7 @@ class XmlLinkParser(BaseXmlLinkParser):
         """
         if self._link is None:
 
-            self.logger.logger.debug('link要素を取得中。')
+            # self.logger.logger.debug('link要素を取得中。')
 
             lists = []
             tag_names = ["link:calculationLink", "link:definitionLink", "link:presentationLink"]

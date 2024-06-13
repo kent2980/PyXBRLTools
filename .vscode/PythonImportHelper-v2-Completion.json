@@ -128,7 +128,71 @@
         "documentation": {}
     },
     {
+        "label": "IxbrlParser",
+        "importPath": "xbrl_parser.ixbrl_parser",
+        "description": "xbrl_parser.ixbrl_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlPathManager",
+        "importPath": "xbrl_manager.xbrl_path_manager",
+        "description": "xbrl_manager.xbrl_path_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlPathManager",
+        "importPath": "xbrl_manager.xbrl_path_manager",
+        "description": "xbrl_manager.xbrl_path_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlPathManager",
+        "importPath": "xbrl_manager.xbrl_path_manager",
+        "description": "xbrl_manager.xbrl_path_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_path_manager",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
         "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
         "importPath": "abc",
         "description": "abc",
         "isExtraImport": true,
@@ -281,6 +345,55 @@
         "documentation": {}
     },
     {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "DataFrame",
+        "importPath": "pandas",
+        "description": "pandas",
+        "isExtraImport": true,
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XmlSchemaParser",
+        "importPath": "xbrl_parser.xml_schema_parser",
+        "description": "xbrl_parser.xml_schema_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_schema_parser",
+        "documentation": {}
+    },
+    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
@@ -290,276 +403,195 @@
         "documentation": {}
     },
     {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "PyXBRLToolsLogging",
-        "importPath": "log.py_xbrl_tools_loging",
-        "description": "log.py_xbrl_tools_loging",
-        "isExtraImport": true,
-        "detail": "log.py_xbrl_tools_loging",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlRole",
-        "importPath": "xbrl_parser.xbrl_roles_definitions",
-        "description": "xbrl_parser.xbrl_roles_definitions",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xbrl_roles_definitions",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlParserController",
-        "importPath": "xbrl_parser.xbrl_parser_controller",
-        "description": "xbrl_parser.xbrl_parser_controller",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xbrl_parser_controller",
-        "documentation": {}
-    },
-    {
-        "label": "Utils",
-        "importPath": "utils.utils",
-        "description": "utils.utils",
-        "isExtraImport": true,
-        "detail": "utils.utils",
-        "documentation": {}
-    },
-    {
-        "label": "Utils",
-        "importPath": "utils.utils",
-        "description": "utils.utils",
-        "isExtraImport": true,
-        "detail": "utils.utils",
-        "documentation": {}
-    },
-    {
-        "label": "Type",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "BaseXbrlManager",
-        "importPath": "xbrl_manager.base_xbrl_manager",
-        "description": "xbrl_manager.base_xbrl_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.base_xbrl_manager",
-        "documentation": {}
-    },
-    {
-        "label": "XmlSchemaParser",
-        "importPath": "xbrl_parser.xml_schema_parser",
-        "description": "xbrl_parser.xml_schema_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_schema_parser",
-        "documentation": {}
-    },
-    {
-        "label": "XmlSchemaParser",
-        "importPath": "xbrl_parser.xml_schema_parser",
-        "description": "xbrl_parser.xml_schema_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_schema_parser",
-        "documentation": {}
-    },
-    {
-        "label": "XmlLinkParser",
-        "importPath": "xbrl_parser.xml_link_parser",
-        "description": "xbrl_parser.xml_link_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_link_parser",
-        "documentation": {}
-    },
-    {
-        "label": "XmlLinkParser",
-        "importPath": "xbrl_parser.xml_link_parser",
-        "description": "xbrl_parser.xml_link_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xml_link_parser",
-        "documentation": {}
-    },
-    {
-        "label": "unittest",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "unittest",
-        "description": "unittest",
-        "detail": "unittest",
-        "documentation": {}
-    },
-    {
-        "label": "patch",
-        "importPath": "unittest.mock",
-        "description": "unittest.mock",
-        "isExtraImport": true,
-        "detail": "unittest.mock",
-        "documentation": {}
-    },
-    {
-        "label": "patch",
-        "importPath": "unittest.mock",
-        "description": "unittest.mock",
-        "isExtraImport": true,
-        "detail": "unittest.mock",
-        "documentation": {}
-    },
-    {
-        "label": "LabelManager",
-        "importPath": "label_manager",
-        "description": "label_manager",
-        "isExtraImport": true,
-        "detail": "label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "LabelManager",
-        "importPath": "label_manager",
-        "description": "label_manager",
-        "isExtraImport": true,
-        "detail": "label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "*",
-        "importPath": "exceptions",
-        "description": "exceptions",
-        "isExtraImport": true,
-        "detail": "exceptions",
-        "documentation": {}
-    },
-    {
-        "label": "Utils",
-        "importPath": "utils",
-        "description": "utils",
-        "isExtraImport": true,
-        "detail": "utils",
-        "documentation": {}
-    },
-    {
-        "label": "Utils",
-        "importPath": "utils",
-        "description": "utils",
-        "isExtraImport": true,
-        "detail": "utils",
-        "documentation": {}
-    },
-    {
-        "label": "CalculationLinkManager",
-        "importPath": "link_managers",
-        "description": "link_managers",
-        "isExtraImport": true,
-        "detail": "link_managers",
-        "documentation": {}
-    },
-    {
-        "label": "DefinitionLinkManager",
-        "importPath": "link_managers",
-        "description": "link_managers",
-        "isExtraImport": true,
-        "detail": "link_managers",
-        "documentation": {}
-    },
-    {
-        "label": "PresentationLinkManager",
-        "importPath": "link_managers",
-        "description": "link_managers",
-        "isExtraImport": true,
-        "detail": "link_managers",
-        "documentation": {}
-    },
-    {
-        "label": "BeautifulSoup",
-        "importPath": "bs4",
-        "description": "bs4",
-        "isExtraImport": true,
-        "detail": "bs4",
-        "documentation": {}
-    },
-    {
-        "label": "BeautifulSoup",
-        "importPath": "bs4",
-        "description": "bs4",
-        "isExtraImport": true,
-        "detail": "bs4",
-        "documentation": {}
-    },
-    {
-        "label": "BeautifulSoup",
-        "importPath": "bs4",
-        "description": "bs4",
-        "isExtraImport": true,
-        "detail": "bs4",
-        "documentation": {}
-    },
-    {
-        "label": "BeautifulSoup",
-        "importPath": "bs4",
-        "description": "bs4",
-        "isExtraImport": true,
-        "detail": "bs4",
-        "documentation": {}
-    },
-    {
-        "label": "BeautifulSoup",
-        "importPath": "bs4",
-        "description": "bs4",
-        "isExtraImport": true,
-        "detail": "bs4",
-        "documentation": {}
-    },
-    {
-        "label": "XbrlIxbrlParser",
-        "importPath": "xbrl_parser.xbrl_ixbrl_parser",
-        "description": "xbrl_parser.xbrl_ixbrl_parser",
-        "isExtraImport": true,
-        "detail": "xbrl_parser.xbrl_ixbrl_parser",
-        "documentation": {}
-    },
-    {
         "label": "XmlLabelParser",
         "importPath": "xbrl_parser.xml_label_parser",
         "description": "xbrl_parser.xml_label_parser",
         "isExtraImport": true,
         "detail": "xbrl_parser.xml_label_parser",
+        "documentation": {}
+    },
+    {
+        "label": "XBRLDownloadManager",
+        "importPath": "xbrl_manager.xbrl_download_manager",
+        "description": "xbrl_manager.xbrl_download_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_download_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XmlLinkParser",
+        "importPath": "xbrl_parser.xml_link_parser",
+        "description": "xbrl_parser.xml_link_parser",
+        "isExtraImport": true,
+        "detail": "xbrl_parser.xml_link_parser",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "PyXBRLToolsLogging",
+        "importPath": "log.py_xbrl_tools_loging",
+        "description": "log.py_xbrl_tools_loging",
+        "isExtraImport": true,
+        "detail": "log.py_xbrl_tools_loging",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlManager",
+        "importPath": "xbrl_manager.ixbrl_manager",
+        "description": "xbrl_manager.ixbrl_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.ixbrl_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLabelManager",
+        "importPath": "xbrl_manager.xbrl_label_manager",
+        "description": "xbrl_manager.xbrl_label_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLabelManager",
+        "importPath": "xbrl_manager.xbrl_label_manager",
+        "description": "xbrl_manager.xbrl_label_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_label_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkManager",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkType",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkManager",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "XbrlLinkType",
+        "importPath": "xbrl_manager.xbrl_link_manager",
+        "description": "xbrl_manager.xbrl_link_manager",
+        "isExtraImport": true,
+        "detail": "xbrl_manager.xbrl_link_manager",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils.utils",
+        "description": "utils.utils",
+        "isExtraImport": true,
+        "detail": "utils.utils",
         "documentation": {}
     },
     {
@@ -572,43 +604,27 @@
         "documentation": {}
     },
     {
-        "label": "CalLinkManager",
-        "importPath": "xbrl_manager.link_managers",
-        "description": "xbrl_manager.link_managers",
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
         "isExtraImport": true,
-        "detail": "xbrl_manager.link_managers",
+        "detail": "utils",
         "documentation": {}
     },
     {
-        "label": "DefLinkManager",
-        "importPath": "xbrl_manager.link_managers",
-        "description": "xbrl_manager.link_managers",
+        "label": "IxbrlModel",
+        "importPath": "xbrl_model.ixbrl_models",
+        "description": "xbrl_model.ixbrl_models",
         "isExtraImport": true,
-        "detail": "xbrl_manager.link_managers",
+        "detail": "xbrl_model.ixbrl_models",
         "documentation": {}
     },
     {
-        "label": "PreLinkManager",
-        "importPath": "xbrl_manager.link_managers",
-        "description": "xbrl_manager.link_managers",
+        "label": "PostgreSqlConnector",
+        "importPath": "db_connector.postgre_sql_connector",
+        "description": "db_connector.postgre_sql_connector",
         "isExtraImport": true,
-        "detail": "xbrl_manager.link_managers",
-        "documentation": {}
-    },
-    {
-        "label": "BaseLabelManager",
-        "importPath": "xbrl_manager.label_manager",
-        "description": "xbrl_manager.label_manager",
-        "isExtraImport": true,
-        "detail": "xbrl_manager.label_manager",
-        "documentation": {}
-    },
-    {
-        "label": "LabelManager",
-        "importPath": "PyXBRLTools.label_manager",
-        "description": "PyXBRLTools.label_manager",
-        "isExtraImport": true,
-        "detail": "PyXBRLTools.label_manager",
+        "detail": "db_connector.postgre_sql_connector",
         "documentation": {}
     },
     {
@@ -616,7 +632,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.db_connector.postgre_sql_connector",
         "description": "PyXBRLTools.db_connector.postgre_sql_connector",
-        "peekOfCode": "class PostgreSqlConnector:\n    \"\"\" PostgreSQL database コネクター\n    Attributes:\n    host (str): ホスト名\n    port (int): ポート番号\n    database (str): データベース名\n    user (str): ユーザー名\n    password (str): パスワード\n    connection (psycopg2.extensions.connection): データベース接続オブジェクト\n    \"\"\"",
+        "peekOfCode": "class PostgreSqlConnector:\n    \"\"\" PostgreSQL database コネクター\n    Attributes:\n        host (str): ホスト名\n        port (int): ポート番号\n        database (str): データベース名\n        user (str): ユーザー名\n        password (str): パスワード\n        connection (psycopg2.extensions.connection): データベース接続オブジェクト\n    Methods:",
         "detail": "PyXBRLTools.db_connector.postgre_sql_connector",
         "documentation": {}
     },
@@ -675,129 +691,147 @@
         "documentation": {}
     },
     {
-        "label": "BaseXbrlManager",
+        "label": "IxbrlType",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
-        "description": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
-        "peekOfCode": "class BaseXbrlManager(ABC):\n    \"\"\" XBRLファイルのパスを取得するための基底クラス。\n    Attributes:\\n\n        dir_path (str): パースするディレクトリのパス。\\n\n        _ixbrl_files (list[dict[str: str]]): ixbrlファイルのパスと文書の種類を格納したリスト。\\n\n        _schema_files (list[dict[str: str]]): スキーマファイルのパスと文書の種類を格納したリスト。\\n\n        SUMMARY (str): 決算短信サマリー\\n\n        CASH_FLOW (str): キャッシュフロー計算書\\n\n        BARANCE_SHEET (str): 貸借対照表\\n\n        PROFIT_AND_LOSS (str): 損益計算書\\n",
-        "detail": "PyXBRLTools.xbrl_manager.base_xbrl_manager",
+        "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "description": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "peekOfCode": "class IxbrlType:\n    \"\"\" iXBRLの種類を表すクラスです。 \"\"\"\n    # キャッシュフロー計算書\n    CASHFLOW_STATEMENT = 'cf'\n    # 貸借対照表\n    BALANCE_SHEET = 'bs'\n    # 損益計算書\n    INCOME_STATEMENT = 'pl'\n    # 財務状態計算書\n    STATEMENT_OF_FINANCIAL_POSITION = 'fs'",
+        "detail": "PyXBRLTools.xbrl_manager.ixbrl_manager",
         "documentation": {}
     },
     {
-        "label": "BaseLabelManager",
+        "label": "BaseIxbrlManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.label_manager copy",
-        "description": "PyXBRLTools.xbrl_manager.label_manager copy",
-        "peekOfCode": "class BaseLabelManager(ABC):\n    \"\"\" XBRLラベルの基底クラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
-        "detail": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "description": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "peekOfCode": "class BaseIxbrlManager(XbrlPathManager):\n    def __init__(self, xbrl_directory_path:str) -> None:\n        super().__init__(xbrl_directory_path)\n        # xbrl_directory_pathが有効かどうかを確認\n        if not os.path.exists(xbrl_directory_path):\n            raise ValueError('指定されたパスが存在しません。')\n        # xbrl_directory_pathを設定\n        self.__xbrl_directory_path = xbrl_directory_path\n        # iXBRLファイルのパスを取得\n        self.__ixbrl_files_path = self.ixbrl_path",
+        "detail": "PyXBRLTools.xbrl_manager.ixbrl_manager",
         "documentation": {}
     },
     {
-        "label": "LabelManager",
+        "label": "IxbrlManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.label_manager copy",
-        "description": "PyXBRLTools.xbrl_manager.label_manager copy",
-        "peekOfCode": "class LabelManager(BaseLabelManager):\n    \"\"\" XBRLラベルのクラスです。\n        XBRLのelementからラベルを取得するクラスです。\n    Attributes:\n        dir_path (str): ディレクトリのパス。\n        label_parser (XbrlParserController): XMLラベルパーサ。\n        _element_names (list): 要素名のリスト。\n    Properties:\n        dir_path: ディレクトリのパスを取得します。\n    Methods:",
-        "detail": "PyXBRLTools.xbrl_manager.label_manager copy",
+        "importPath": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "description": "PyXBRLTools.xbrl_manager.ixbrl_manager",
+        "peekOfCode": "class IxbrlManager(BaseIxbrlManager):\n    def _get_ixbrl_file_paths(self):\n        \"\"\" iXBRLファイルのパスを取得するメソッドです。\n        Returns:\n            iXBRLファイルのパスと種類を返します。\n        Examples:\n            >>> for ixbrl_file_path, document in self._get_ixbrl_file_paths():\n            >>>     print(ixbrl_file_path, document)\n            output:\n            /Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData/jpcrp030000-asr-001_E03001-000_2021-03-31_01_2021-06-25_ixbrl.htm cf",
+        "detail": "PyXBRLTools.xbrl_manager.ixbrl_manager",
         "documentation": {}
     },
     {
-        "label": "BaseLabelManager",
+        "label": "XBRLDownloadManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.label_manager",
-        "description": "PyXBRLTools.xbrl_manager.label_manager",
-        "peekOfCode": "class BaseLabelManager(BaseXbrlManager):\n    \"\"\" labelファイルの情報を取得するクラス。\"\"\"\n    def __init__(self, dir_path: str):\n        \"\"\" コンストラクタ \"\"\"\n        super().__init__(dir_path)\n        self.__get_label_path()\n    def __get_label_path(self) -> str:\n        \"\"\" labelファイルのパスを取得するメソッド。\"\"\"\n        for schema_file in self.schema_files:\n            print(schema_file['path'])",
-        "detail": "PyXBRLTools.xbrl_manager.label_manager",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_download_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_download_manager",
+        "peekOfCode": "class XBRLDownloadManager:\n    \"\"\" XBRLファイルをダウンロードするクラスです。\n    Attributes:\n        Xbrl_save_dir (str): XBRLファイルの保存ディレクトリ\n    Properties:\n        Xbrl_save_dir (str): XBRLファイルの保存ディレクトリ\n    Methods:\n        __init__: コンストラクタ\n        __get_xbrl_files: XBRLスキーマファイルからXBRLファイルのリストを取得するメソッド\n        load_xbrl_files_from_schema: XBRLファイルをスキーマファイルからダウンロードするメソッド",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_download_manager",
         "documentation": {}
     },
     {
-        "label": "LabelManager",
+        "label": "LabelLanguege",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.label_manager",
-        "description": "PyXBRLTools.xbrl_manager.label_manager",
-        "peekOfCode": "class LabelManager(BaseLabelManager):\n    pass\n# テストコード\nif __name__ == \"__main__\":\n    print(\"Test sample\")\n    dir_path = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData\"\n    label_manager = BaseLabelManager(dir_path)\n    print(label_manager.schema_files)",
-        "detail": "PyXBRLTools.xbrl_manager.label_manager",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "peekOfCode": "class LabelLanguege:\n    \"\"\" XBRLラベルの言語を表すクラスです。 \"\"\"\n    JA = 'ja'\n    EN = 'en'\nclass BaseXbrlLabelManager(ABC):\n    \"\"\"\n    XBRLラベルマネージャーの基底クラスです。\n    Attributes:\n        __xbrl_directory_path (str): XBRLファイルが格納されているディレクトリのパス\n        __xbrl_path_manager (XbrlPathManager): XBRLパスマネージャーのインスタンス",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
         "documentation": {}
     },
     {
-        "label": "BaseLinkManager",
+        "label": "BaseXbrlLabelManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
-        "description": "PyXBRLTools.xbrl_manager.link_managers",
-        "peekOfCode": "class BaseLinkManager(ABC):\n    \"\"\" linkファイルの情報を取得するクラス。\n    Args:\n        BaseXbrlManager (class): XBRLデータの基底クラス。\n    Attributes:\n        link_path (str): linkファイルのパス。\n        link_parser (XmlLinkParser): linkファイルのパーサ。\n    Properties:\n        link_path (str): linkファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): linkファイルのパーサを取得するプロパティ。",
-        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "peekOfCode": "class BaseXbrlLabelManager(ABC):\n    \"\"\"\n    XBRLラベルマネージャーの基底クラスです。\n    Attributes:\n        __xbrl_directory_path (str): XBRLファイルが格納されているディレクトリのパス\n        __xbrl_path_manager (XbrlPathManager): XBRLパスマネージャーのインスタンス\n        __label_paths (dict): ラベルファイルのパス\n        __label_parser (XmlLabelParser): XMLラベルパーサのインスタンス\n    Properties:\n        xbrl_directory_path (str): XBRLディレクトリのパスを取得するプロパティ",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
         "documentation": {}
     },
     {
-        "label": "CalLinkManager",
+        "label": "XbrlLabelManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
-        "description": "PyXBRLTools.xbrl_manager.link_managers",
-        "peekOfCode": "class CalLinkManager(BaseLinkManager):\n    \"\"\" cal.xmlファイルの情報を取得するクラス。\n    Args:\n        BaseLinkManager (class): linkファイルの基底クラス。\n    Attributes:\n        link_path (str): cal.xmlファイルのパス。\n        link_parser (XmlLinkParser): cal.xmlファイルのパーサ。\n    Properties:\n        link_path (str): cal.xmlファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): cal.xmlファイルのパーサを取得するプロパティ。",
-        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
+        "peekOfCode": "class XbrlLabelManager(BaseXbrlLabelManager):\n    \"\"\" ラベルマネージャ\n    Properties:\n        label_paths (dict): ラベルファイルのパスを取得するプロパティ\n        language (str): 言語設定を取得するプロパティ\n    Methods:\n        __init__: コンストラクタ\n        get_label_arcs: ラベルアークを取得するメソッド\n        get_label_locs: ラベルロケーションを取得するメソッド\n        get_role_refs: ロール参照を取得するメソッド",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_label_manager",
         "documentation": {}
     },
     {
-        "label": "DefLinkManager",
+        "label": "XbrlLinkType",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
-        "description": "PyXBRLTools.xbrl_manager.link_managers",
-        "peekOfCode": "class DefLinkManager(BaseLinkManager):\n    \"\"\" def.xmlファイルの情報を取得するクラス。\n    Args:\n        BaseLinkManager (class): linkファイルの基底クラス。\n    Attributes:\n        link_path (str): def.xmlファイルのパス。\n        link_parser (XmlLinkParser): def.xmlファイルのパーサ。\n    Properties:\n        link_path (str): def.xmlファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): def.xmlファイルのパーサを取得するプロパティ。",
-        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "peekOfCode": "class XbrlLinkType:\n    CAL = 'cal'\n    DEF = 'def'\n    PRE = 'pre'\nclass BaseXbrlLinkManager(ABC):\n    def __init__(self, xbrl_directory_path):\n        # ログ設定\n        class_name = self.__class__.__name__\n        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)\n        self.logger.set_log_file(f'Log/{class_name}.log')",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
-        "label": "PreLinkManager",
+        "label": "BaseXbrlLinkManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.link_managers",
-        "description": "PyXBRLTools.xbrl_manager.link_managers",
-        "peekOfCode": "class PreLinkManager(BaseLinkManager):\n    \"\"\" pre.xmlファイルの情報を取得するクラス。\n    Args:\n        BaseLinkManager (class): linkファイルの基底クラス。\n    Attributes:\n        link_path (str): pre.xmlファイルのパス。\n        link_parser (XmlLinkParser): pre.xmlファイルのパーサ。\n    Properties:\n        link_path (str): pre.xmlファイルのパスを取得するプロパティ。\n        link_parser (XmlLinkParser): pre.xmlファイルのパーサを取得するプロパティ。",
-        "detail": "PyXBRLTools.xbrl_manager.link_managers",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "peekOfCode": "class BaseXbrlLinkManager(ABC):\n    def __init__(self, xbrl_directory_path):\n        # ログ設定\n        class_name = self.__class__.__name__\n        self.logger = PyXBRLToolsLogging(log_level=logging.DEBUG)\n        self.logger.set_log_file(f'Log/{class_name}.log')\n        # XBRLディレクトリのパスを設定\n        self.__xbrl_directory_path = xbrl_directory_path\n        # XBRLディレクトリマネージャを設定\n        try:",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
-        "label": "TestLabelManager",
+        "label": "XbrlLinkManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.test_label_manager",
-        "description": "PyXBRLTools.xbrl_manager.test_label_manager",
-        "peekOfCode": "class TestLabelManager(unittest.TestCase):\n    def setUp(self):\n        # テストのセットアップ時に実行されるメソッド\n        self.extra_dir = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir\"\n        self.lm = LabelManager(self.extra_dir)\n    def test_link_label(self):\n        \"\"\" link_labelメソッドのテスト \"\"\"\n        # link_labelメソッドをテストします\n        index = 0\n        expected_label = \"Test Label\"",
-        "detail": "PyXBRLTools.xbrl_manager.test_label_manager",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
+        "peekOfCode": "class XbrlLinkManager(BaseXbrlLinkManager):\n    \"\"\"XBRLリンクマネージャークラス\n    XBRLファイルのリンク情報を管理するクラスです。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリのパス\n        link_type (XbrlLinkType): リンクタイプ\n        link_parser (XmlLinkParser): リンクパーサー\n    \"\"\"\n    def __init__(self, xbrl_directory_path, link_type = None):\n        \"\"\"コンストラクタ",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_link_manager",
         "documentation": {}
     },
     {
-        "label": "XbrlRead",
+        "label": "BaseXbrlPathManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_manager.xbrl_reader",
-        "description": "PyXBRLTools.xbrl_manager.xbrl_reader",
-        "peekOfCode": "class XbrlRead:\n    def __init__(self, xbrl_zip_path: str = None):\n        ...\n    def get_company_code(self):\n        ...\n    def company_explain_df(self):\n        ...\n    def to_dataframe(self):\n        ...\n    # add_label_df() の中身は LabelManager を使用するように変更",
-        "detail": "PyXBRLTools.xbrl_manager.xbrl_reader",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "peekOfCode": "class BaseXbrlPathManager(ABC):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するための基底クラス。\n    Raises:\n        ValueError: ディレクトリパスが有効でない場合に発生\n        ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリへのパス\n        _ixbrl_path (list[dict[str, str]]): iXBRLファイルへのパス\n        _xsd_path (list[dict[str, str]]): XSDファイルへのパス",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "documentation": {}
     },
     {
-        "label": "BaseXbrlIxbrlParser",
+        "label": "XbrlPathManager",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
-        "description": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
-        "peekOfCode": "class BaseXbrlIxbrlParser(ABC):\n    \"\"\"\n    iXBRLファイルを解析するための抽象ベースクラスです。\n    \"\"\"\n    def __init__(self, file_path) -> None:\n        \"\"\"\n        コンストラクタ。iXBRLファイルを読み込んでBeautifulSoupオブジェクトを初期化します。\n        Args:\n            file_path (str): 解析するiXBRLファイルのパス。\n        \"\"\"",
-        "detail": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "importPath": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "description": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
+        "peekOfCode": "class XbrlPathManager(BaseXbrlPathManager):\n    \"\"\"\n    XBRLディレクトリ内のパスを管理するためのクラス。\n    Attributes:\n        xbrl_directory_path (str): XBRLディレクトリへのパス\n    Raises:\n        ValueError: ディレクトリパスが有効でない場合に発生\n        ValueError: ディレクトリ内にixbrl.htmファイルが存在しない場合に発生\n    Properties:\n        xbrl_directory_path (str): XBRLディレクトリへのパス",
+        "detail": "PyXBRLTools.xbrl_manager.xbrl_path_manager",
         "documentation": {}
     },
     {
-        "label": "XbrlIxbrlParser",
+        "label": "BaseIxbrlModel",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
-        "description": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
-        "peekOfCode": "class XbrlIxbrlParser(BaseXbrlIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    \"\"\"\n    @property\n    def ix_non_fractions(self):\n        \"\"\"非分数データを取得します。\"\"\"\n        # DataFrameがNoneの場合は取得する\n        if self._ix_non_fractions is None:\n            lists = []",
-        "detail": "PyXBRLTools.xbrl_parser.xbrl_ixbrl_parser",
+        "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "description": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "peekOfCode": "class BaseIxbrlModel(ABC):\n    \"\"\" iXBRLモデルの基底クラス \"\"\"\n    def __init__(self, xbrl_directory_path: str, load_label_directory: str):\n        \"\"\" コンストラクタ \"\"\"\n        # マネージャークラスを初期化\n        self.__ixbrl_manager = IxbrlManager(xbrl_directory_path)  # iXBRLマネージャーを初期化\n        self.__label_manager = XbrlLabelManager(xbrl_directory_path, load_label_directory)  # ラベルマネージャーを初期化\n        self.__link_manager = XbrlLinkManager(xbrl_directory_path)  # リンクマネージャーを初期化\nclass IxbrlModel(BaseIxbrlModel):\n    \"\"\" iXBRL数値情報モデルクラス",
+        "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
         "documentation": {}
     },
     {
-        "label": "XbrlParserController",
+        "label": "IxbrlModel",
         "kind": 6,
-        "importPath": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
-        "description": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
-        "peekOfCode": "class XbrlParserController:\n    def ixbrl_parser(file_path:str) -> XbrlIxbrlParser:\n        \"\"\" iXBRLパーサを取得します。\"\"\"\n        return XbrlIxbrlParser(file_path)\n    def xml_schema_parser(file_path:str) -> XmlSchemaParser:\n        \"\"\" XMLスキーマパーサを取得します。\"\"\"\n        return XmlSchemaParser(file_path)\n    def xml_label_parser(file_path:str = None) -> XmlLabelParser:\n        \"\"\" XMLラベルパーサを取得します。\"\"\"\n        return XmlLabelParser(file_path)",
-        "detail": "PyXBRLTools.xbrl_parser.xbrl_parser_controller",
+        "importPath": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "description": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "peekOfCode": "class IxbrlModel(BaseIxbrlModel):\n    \"\"\" iXBRL数値情報モデルクラス\n    Attributes:\n        ixbrl_numeric (DataFrame): XBRL数値情報\n        label_locs (DataFrame): ラベル情報\n        label_arcs (DataFrame): ラベルアーク情報\n        labels (DataFrame): ラベル情報\n        cal_link_locs (DataFrame): 計算リンク情報\n        cal_link_arcs (DataFrame): 計算リンクアーク情報\n        def_link_locs (DataFrame): 定義リンク情報",
+        "detail": "PyXBRLTools.xbrl_model.ixbrl_models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseIxbrlParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.ixbrl_parser",
+        "description": "PyXBRLTools.xbrl_parser.ixbrl_parser",
+        "peekOfCode": "class BaseIxbrlParser(ABC):\n    \"\"\"\n    iXBRLファイルを解析するための抽象ベースクラスです。\n    Attributes:\n        __file_path (str): 解析するiXBRLファイルのパス\n        soup (bs): BeautifulSoupオブジェクト\n    Properties:\n        file_path (str): ファイルパスを取得または設定します。\n        ix_non_fractions (DataFrame): 非分数データを含むDataFrameを取得します。\n        ix_non_numerics (DataFrame): 非数値データを含むDataFrameを取得します。",
+        "detail": "PyXBRLTools.xbrl_parser.ixbrl_parser",
+        "documentation": {}
+    },
+    {
+        "label": "IxbrlParser",
+        "kind": 6,
+        "importPath": "PyXBRLTools.xbrl_parser.ixbrl_parser",
+        "description": "PyXBRLTools.xbrl_parser.ixbrl_parser",
+        "peekOfCode": "class IxbrlParser(BaseIxbrlParser):\n    \"\"\"\n    iXBRLファイルを解析するための具象クラスです。\n    Properties:\n        ix_non_fractions (DataFrame): 非分数データを取得します。\n        ix_non_numerics (DataFrame): 非数値データを取得します。\n        xbrli_contexts (DataFrame): 文脈情報を取得します。\n    Methods:\n        __init__: コンストラクタ\n        __inictialize_class: クラス変数の初期化を行います。",
+        "detail": "PyXBRLTools.xbrl_parser.ixbrl_parser",
         "documentation": {}
     },
     {
@@ -805,7 +839,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
         "description": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
-        "peekOfCode": "class XbrlQualitativeParser:\n    \"\"\"\n    \"qualitative.htm\"から情報を解析して抽出するためのクラスです。\n    \"\"\"\n    def __init__(self, file_path: str) -> None:\n        \"\"\"\n        QualitativeParserクラスのコンストラクタです。\n        \"\"\"\n        # ファイル名がqualitative.htmでない場合はエラーを出力する\n        if not re.search(r'.*qualitative\\.htm$', file_path):",
+        "peekOfCode": "class XbrlQualitativeParser:\n    \"\"\"\n    \"qualitative.htm\"から情報を解析して抽出するためのクラスです。\n    \"\"\"\n    def __init__(self, file_path: str = None) -> None:\n        \"\"\"\n        QualitativeParserクラスのコンストラクタです。\n        \"\"\"\n        # ログ設定\n        class_name = self.__class__.__name__",
         "detail": "PyXBRLTools.xbrl_parser.xbrl_qualitative_parser",
         "documentation": {}
     },
@@ -841,7 +875,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_label_parser",
-        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\n    Properties:\n        link_labels (DataFrame): link:label要素を取得するプロパティ。\n        link_locs (DataFrame): link:loc要素を取得するプロパティ。\n        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。\n        role_refs (DataFrame): roleRef要素を取得するプロパティ。\n    Methods:",
+        "peekOfCode": "class XmlLabelParser(BaseXmlLabelParser):\n    \"\"\" XMLラベルパーサの具象クラス。XMLラベルの情報を取得するクラス。\n    Attributes:\n        file_path (str): パースするXMLファイルのパス。\\n\n    Properties:\n        link_labels (DataFrame): link:label要素を取得するプロパティ。\\n\n        link_locs (DataFrame): link:loc要素を取得するプロパティ。\\n\n        link_label_arcs (DataFrame): link:labelArc要素を取得するプロパティ。\\n\n        role_refs (DataFrame): roleRef要素を取得するプロパティ。\\n\n    Methods:",
         "detail": "PyXBRLTools.xbrl_parser.xml_label_parser",
         "documentation": {}
     },
@@ -868,7 +902,7 @@
         "kind": 6,
         "importPath": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "description": "PyXBRLTools.xbrl_parser.xml_schema_parser",
-        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        # ファイルパスを設定",
+        "peekOfCode": "class BaseXmlSchemaParser(ABC):\n    \"\"\" XMLスキーマパーサの基底クラスです。\n    XMLスキーマの情報を取得するクラスです。\n    \"\"\"\n    def __init__(self, file_path:str = None) -> None:\n        \"\"\" BaseXmlSchemaParserのコンストラクタです。\n        Args:\n            file_path (str): XMLファイルのパス。\n        \"\"\"\n        # ログ設定",
         "detail": "PyXBRLTools.xbrl_parser.xml_schema_parser",
         "documentation": {}
     },
@@ -882,12 +916,12 @@
         "documentation": {}
     },
     {
-        "label": "TestLabelManager",
+        "label": "XbrlReader",
         "kind": 6,
-        "importPath": "tests.test_label_manager",
-        "description": "tests.test_label_manager",
-        "peekOfCode": "class TestLabelManager(unittest.TestCase):\n    def setUp(self):\n        self.extra_dir = \"/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir\"\n        self.lm = LabelManager(self.extra_dir)\n    def test_link_label(self):\n        # Test the link_label method\n        index = 0\n        expected_label = \"Test Label\"\n        with patch.object(LabelManager, 'link_label', return_value=expected_label):\n            result = self.lm.link_label(index)",
-        "detail": "tests.test_label_manager",
+        "importPath": "PyXBRLTools.xbrl_reader",
+        "description": "PyXBRLTools.xbrl_reader",
+        "peekOfCode": "class XbrlReader:\n    \"\"\" XBRLファイルを読み込むクラスです。\n    Args:\n        xbrl_zip_path (str): XBRLファイルのZIPファイルのパス\n        xbrl_directory_path (str): XBRLファイルを解凍するディレクトリのパス\n        load_label_directory (str): グローバルラベルファイルをロードするディレクトリのパス\n    Properties:\n        xbrl_zip_path (str): XBRLファイルのZIPファイルのパス\n        xbrl_directory_path (str): XBRLファイルを解凍するディレクトリのパス\n        load_label_directory (str): グローバルラベルファイルをロードするディレクトリのパス",
+        "detail": "PyXBRLTools.xbrl_reader",
         "documentation": {}
     }
 ]
