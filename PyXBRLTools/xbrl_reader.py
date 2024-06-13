@@ -148,7 +148,7 @@ if __name__ == '__main__':
         load_xbrl_directory_path = 'C:/Users/kent2/OneDrive/ドキュメント/vscode/python/PyXBRLTools/doc/extract_to_dir/labels'
     # macOSの場合
     elif platform.system() == 'Darwin':
-        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/081220240612527584.zip'
+        xbrl_zip_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRLData.zip'
         xbrl_direrctory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/XBRL'
         load_xbrl_directory_path = '/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/LABEL'
 

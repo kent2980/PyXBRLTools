@@ -66,9 +66,9 @@ class IxbrlModel(BaseIxbrlModel):
         self.__label_manager: XbrlLabelManager = self._BaseIxbrlModel__label_manager  # ベースクラスからlabel_managerインスタンスにアクセスする
         self.__link_manager: XbrlLinkManager = self._BaseIxbrlModel__link_manager  # ベースクラスからlink_managerインスタンスにアクセスする
 
-        asyncio.run(self.async_inicialize())
+        self.async_inicialize()
 
-    async def async_inicialize(self):
+    def async_inicialize(self):
 
         # 処理時間を計測する
         start = time.time()
@@ -79,21 +79,21 @@ class IxbrlModel(BaseIxbrlModel):
         self.__ix_headline = None
 
         # プロパティを設定する
-        await self.__set_ix_non_fraction()
-        await self.__set_ix_non_numeric()
+        self.__set_ix_non_fraction()
+        self.__set_ix_non_numeric()
 
         # 処理時間を出力する
         elapsed_time = time.time() - start
         print(f'処理時間: {elapsed_time} [sec]')
 
-    async def __set_ix_non_fraction(self):
+    def __set_ix_non_fraction(self):
         """ プロパティを設定します。
 
         Raises:
             ValueError: プロパティの設定に失敗した場合に発生します。
         """
         # XBRL数値情報を取得
-        ix_non_fraction = await self.__ixbrl_manager.ix_non_fractions
+        ix_non_fraction = self.__ixbrl_manager.ix_non_fractions
 
         # ラベル情報を取得
         label_locs = self.__label_manager.label_locs
@@ -152,7 +152,7 @@ class IxbrlModel(BaseIxbrlModel):
             'pre_link_arcs': pre_link_arcs
         }
 
-    async def __set_ix_non_numeric(self):
+    def __set_ix_non_numeric(self):
         """ プロパティを設定します。
 
         Raises:
