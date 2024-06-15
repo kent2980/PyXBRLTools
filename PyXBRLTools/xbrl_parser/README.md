@@ -1,128 +1,75 @@
-# モジュール群のREADME
+# BaseXBRLParser
 
-このディレクトリには、各種XBRLをパースするモジュールが含まれます。
-対応するXBRLファイルを下記に記します。
-マークダウンで表を作成するには、以下のような書式を使用します。
+`BaseXBRLParser`はXBRLを解析するための基底クラスです。
+このクラスを継承したクラスには以下の機能を提供します。
 
-| 対応する<br/>ファイル名 | モジュール名                 | 説明                                                         |
-|-------------------|--------------------------|------------------------------------------------------------|
-| **-ixbrl.htm      | xbrl_ixbrl_parser.py     | 短信サマリー、各財務諸表の数値、非数値情報を取得します。                   |
-| qualitative.htm   | xbrl_qualitative_parser.py | 決算短信の「経営状況の概要」など、定性的情報を取得します。                |
-| **.xsd            | xml_schema_parser.py     | XBRLのデータ構造を定義しており、関連ファイルを取得します。                   |
-| **-lab.xml        | xml_label_parser.py      | 各財務諸表の数値、非数値データと関連づけられた名称ラベルを取得します。           |
-| **-cal.xml<br/> **-def.xml<br/> *-pre.xml | xml_link_parser.py       | 計算リンク、表示リンク、定義リンクから順序関係に関するデータを取得します。 |
+## 機能
 
-以下に、各モジュールの概要と使用方法について説明します。
+`BaseXBRLParser`クラスは以下の機能を提供します:
 
-## 1.xbrl_ixbrl_parser.py
+- XBRLのダウンロード
+- XBRLの解析
+- XBRLの情報取得
+- 出力形式の選択
 
-このモジュールは、XBRLから財務諸表の数値、非数値データを取得する機能を提供するために作成されました。以下の手順に従って、モジュールを使用することができます。
+## 引数
 
-1. モジュールからクラスをインポートします。
+-`xbrl_url` (str): XBRLのURL
 
-```python
-from xbrl_ixbrl_parser import XbrlIxbrlParser
-```
+-`output_path` (str): ファイルの保存先
 
-2. パーサーのインスタンスを作成します。
+## プロパティ
 
-```python
-parser = XbrlIxbrlParser('path_to_ixbrl_file')
-```
+-`data` (list[dict]): 解析結果のデータ
 
-3. 必要なデータを取得します。
+## メソッド
 
-```python
-financial_data = parser.parse_financials()
-notes = parser.parse_notes()
-```
+-`read_xbrl()`: XBRLを読み込む
 
-## 2.xbrl_qualitative_parser.py
+-`parse_xbrl()`: XBRLを解析する
 
-このモジュールは、決算短信の定性的情報を抽出するために使用されます。使い方は以下の通りです。
+-`fetch_url()`: URLからXBRLを取得する
 
-1. モジュールをインポートします。
+-`is_url_in_local()`: URLがローカルに存在するか判定する
 
-```python
-from xbrl_qualitative_parser import XbrlQualitativeParser
-```
+-`create()`: `BaseXBRLParser`の初期化を行うクラスメソッド
 
-2. パーサーのインスタンスを作成し、ファイルを読み込みます。
+-`to_csv()`: CSV形式で出力する
+
+-`to_DataFrame()`: DataFrame形式で出力する
+
+-`to_json()`: JSON形式で出力する
+
+-`to_dict()`: 辞書形式で出力する
+
+## 使用方法
 
 ```python
-parser = XbrlQualitativeParser('path_to_qualitative_file')
+parser = BaseXBRLParser.create(xbrl_path, output_dir)
+df = parser.to_DataFrame()
 ```
 
-3. 定性的情報を取得します。
+# IxbrlParser
+
+`IxbrlParser`はiXBRLを解析するためのクラスです。このクラスは `BaseXBRLParser`を継承しており、iXBRLの解析に関する機能を提供します。
+
+## 引数
+
+- `xbrl_url` (str): XBRLのURL
+- `output_path` (str): ファイルの保存先
+
+## プロパティ
+
+- `data` (list[dict]): 解析結果のデータ
+
+## メソッド
+
+- `ix_non_numeric()`: iXBRLの非数値情報を取得します。
+- `ix_non_fractions()`: iXBRLの非分数情報を取得します。
+
+## 使用例
 
 ```python
-qualitative_data = parser.get_qualitative_data()
+parser = IxbrlParser.create(xbrl_path)
+df = parser.ix_non_numeric().to_DataFrame()
 ```
-
-## 3.xml_schema_parser.py
-
-このモジュールは、XBRLのXMLスキーマファイルを解析し、タクソノミの構造を理解するために使用されます。以下の手順で使用します。
-
-1. モジュールのインポート:
-
-```python
-from xml_schema_parser import XmlSchemaParser
-```
-
-2. スキーマファイルのパーサーを初期化:
-
-```python
-parser = XmlSchemaParser('path_to_xsd_file')
-```
-
-3. スキーマ情報の取得:
-
-```python
-schema_info = parser.parse_schema()
-```
-
-## 4.xml_label_parser.py
-
-このモジュールは、ラベルリンクベースを解析して、要素に対するラベル情報を抽出します。使い方は次のとおりです。
-
-1. モジュールをインポートします。
-
-```python
-from xml_label_parser import XmlLabelParser
-```
-
-2. ラベルパーサーをインスタンス化します。
-
-```python
-parser = XmlLabelParser('path_to_lab_file')
-```
-
-3. ラベルデータを取得します。
-
-```python
-labels = parser.get_labels()
-```
-
-## 5.xml_link_parser.py
-
-このモジュールは、計算、表示、定義リンクベースを解析して、要素間の関係性を取得するために使用されます。以下の手順に従います。
-
-1. モジュールをインポートします。
-
-```python
-from xml_link_parser import XmlLinkParser
-```
-
-2. リンクパーサーをインスタンス化します。
-
-```python
-parser = XmlLinkParser('path_to_linkbase_file')
-```
-
-3. リンクデータを取得します。
-
-```python
-link_data = parser.get_links()
-```
-
-これで、各モジュールの基本的な使い方を説明しました。実際のコードでは、適切なファイルパスや追加の処理が必要になる場合があります。
