@@ -14,8 +14,7 @@
 
 ## 引数
 
--`xbrl_url` (str): XBRLのURL
-
+-`xbrl_url` (str): XBRLのURL、またはローカルパス
 -`output_path` (str): ファイルの保存先
 
 ## プロパティ
@@ -55,7 +54,7 @@ df = parser.to_DataFrame()
 
 ## 引数
 
-- `xbrl_url` (str): XBRLのURL
+- `xbrl_url` (str): XBRLのURL、またはローカルパス
 - `output_path` (str): ファイルの保存先
 
 ## プロパティ
