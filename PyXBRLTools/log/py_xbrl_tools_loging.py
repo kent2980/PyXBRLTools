@@ -1,6 +1,7 @@
 import logging
 
 class PyXBRLToolsLogging(object):
+    """ PyXBRLToolsのログ設定クラス。"""
     def __init__(self, log_level=logging.INFO):
         self.logger = logging.getLogger('PyXBRLTools')
         self.logger.setLevel(log_level)

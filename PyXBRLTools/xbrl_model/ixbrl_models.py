@@ -3,7 +3,6 @@ import time
 from xbrl_manager.ixbrl_manager import IxbrlManager
 from xbrl_manager.xbrl_label_manager import XbrlLabelManager
 from xbrl_manager.xbrl_link_manager import XbrlLinkManager, XbrlLinkType
-import asyncio
 import uuid
 
 class BaseIxbrlModel(ABC):
