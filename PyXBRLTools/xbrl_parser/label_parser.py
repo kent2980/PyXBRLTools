@@ -19,8 +19,14 @@ class LabelParser(BaseXBRLParser):
         解析結果のデータ
 
     Methods:
-    - label
-        ラベル情報を取得する
+    - link_labels
+        link:label要素を取得する
+    - link_locs
+        link:loc要素を取得する
+    - link_label_arcs
+        link:labelArc要素を取得する
+    - role_refs
+        roleRef要素を取得する
 
     Examples:
         >>> from xbrl_parser.label_parser import LabelParser
@@ -32,7 +38,7 @@ class LabelParser(BaseXBRLParser):
         """link:label要素を取得するメソッド。
 
         returns:
-            DataFrame: link:label要素を含むDataFrame。
+            self: LabelParser
 
         example:
             >>> parser = XmlLabelParser("**-lab.xml")
@@ -88,7 +94,7 @@ class LabelParser(BaseXBRLParser):
         """link:loc要素を取得するメソッド。
 
         returns:
-            DataFrame: link:loc要素を含むDataFrame。
+            self: LabelParser
 
         Example:
             >>> parser = XmlLabelParser("**-lab.xml")
@@ -120,7 +126,7 @@ class LabelParser(BaseXBRLParser):
         """link:labelArc要素を取得するメソッド。
 
         returns:
-            DataFrame: link:labelArc要素を含むDataFrame。
+            self: LabelParser
 
         Example:
             >>> parser = XmlLabelParser("**-lab.xml")
@@ -159,7 +165,7 @@ class LabelParser(BaseXBRLParser):
         """ roleRef要素を取得するメソッド。
 
         returns:
-            DataFrame: roleRef要素を含むDataFrame。
+            self: LabelParser
 
         Example:
             >>> parser = XmlLabelParser("**-lab.xml")
