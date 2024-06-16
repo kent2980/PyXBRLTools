@@ -4,12 +4,27 @@ import pandas as pd
 
 class IxbrlManager(BaseXbrlManager):
     def __init__(self, directory_path) -> None:
+        """
+        IxbrlManagerクラスのコンストラクタです。
+
+        Parameters:
+            directory_path (str): XBRLファイルが格納されているディレクトリのパス
+
+        Returns:
+            None
+        """
         super().__init__(directory_path)
         self.set_htmlbase_files("ixbrl")
         self.ix_non_fraction = None
         self.ix_non_numeric = None
 
     def set_ix_non_fraction(self):
+        """
+        ix_non_fraction属性を設定します。
+
+        Returns:
+            self (IxbrlManager): 自身のインスタンス
+        """
         df = None
         files = self.files
         if self.document_type is not None:
@@ -27,6 +42,12 @@ class IxbrlManager(BaseXbrlManager):
         return self
 
     def set_ix_non_numeric(self):
+        """
+        ix_non_numeric属性を設定します。
+
+        Returns:
+            self (IxbrlManager): 自身のインスタンス
+        """
         df = None
         files = self.files
         if self.document_type is not None:
