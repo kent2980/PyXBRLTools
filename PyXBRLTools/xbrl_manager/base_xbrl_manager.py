@@ -1,7 +1,5 @@
-import os
-import re
-from xbrl_parser.base_xbrl_parser import BaseXBRLParser
-from xbrl_parser.schema_parser import SchemaParser
+from pathlib import Path
+from PyXBRLTools.xbrl_parser.schema_parser import SchemaParser
 import pandas as pd
 from pandas import DataFrame
 
@@ -32,7 +30,8 @@ class BaseXbrlManager:
 
     @directory_path.setter
     def directory_path(self, directory_path):
-        if not os.path.exists(directory_path):
+        directory_path = Path(directory_path)
+        if not directory_path.exists():
             raise FileNotFoundError(f"{directory_path} is not found.")
         self.__directory_path = directory_path
 
@@ -42,9 +41,9 @@ class BaseXbrlManager:
         Returns:
             list: ファイル一覧
         """
-        return [os.path.join(root, file)
-                for root, _, files in os.walk(self.directory_path)
-                for file in files if not file.startswith(".")]
+        return [file
+                for file in self.directory_path.glob("**/*")
+                if file.is_file() and not file.name.startswith(".")]
 
     def xbrl_type(self):
         """書類品種を取得します
@@ -63,8 +62,8 @@ class BaseXbrlManager:
         """
         files = self.__to_filelist()
         for file in files:
-            if file.endswith('.xsd') and "fr" not in file:
-                type_str = file.split("-")[1]
+            if file.suffix == '.xsd' and "fr" not in file.name:
+                type_str = file.name.split("-")[1]
                 code = type_str[:4] if len(type_str) == 4 else type_str[2:6]
                 return code, self.REPORT_TYPE.get(code)
 
@@ -75,17 +74,17 @@ class BaseXbrlManager:
             pd.DataFrame: 関係ファイルのデータフレーム
         """
         files = self.__to_filelist()
-        xsd_files = [file for file in files if file.endswith('.xsd')]
+        xsd_files = [file for file in files if file.suffix == '.xsd']
 
-        data_frames = [SchemaParser.create(file).link_base_refs().to_DataFrame() for file in xsd_files]
+        data_frames = [SchemaParser.create(file.as_posix()).link_base_refs().to_DataFrame() for file in xsd_files]
         df = pd.concat(data_frames, ignore_index=True)
 
         href_map = {row["xlink_href"]: file
                     for file in files
                     for index, row in df.iterrows()
-                    if not row["xlink_href"].startswith('http') and row["xlink_href"] in file}
+                    if not row["xlink_href"].startswith('http') and row["xlink_href"] in file.as_posix()}
 
-        df["xlink_href"] = df["xlink_href"].apply(lambda href: href_map.get(href, href))
+        df["xlink_href"] = df["xlink_href"].astype(str).apply(lambda href: href_map.get(href, href))
 
         # dfのxlink_roleカラムを整形
         df["xlink_role"] = df["xlink_role"].apply(lambda role: role.split("/")[-1] if isinstance(role, str) else role)
@@ -97,6 +96,7 @@ class BaseXbrlManager:
             df = df.query(query)
 
         self.files = df
+        return self
 
     def set_htmlbase_files(self, xlink_role=None):
         """ HTMLベースのファイルリストを取得する
@@ -107,12 +107,12 @@ class BaseXbrlManager:
         lists = []
         files = self.__to_filelist()
         for file in files:
-            if file.endswith('.htm') or file.endswith('.html'):
-                document_type = os.path.basename(file).split('-')[1][2:4] if "fr" in file else "sm"
+            if file.suffix == '.htm' or file.suffix == '.html':
+                document_type = file.name.split('-')[1][2:4] if "fr" in file.name else "sm"
                 lists.append({
                     'xlink_type': 'simple',
-                    'xlink_href': file,
-                    'xlink_role': f"{os.path.basename(file).split('-')[-1].split('.')[0]}",
+                    'xlink_href': file.as_posix(),
+                    'xlink_role': f"{file.name.split('-')[-1].split('.')[0]}",
                     'xlink_arcrole': "htmlbase",
                     'document_type': document_type,
                 })
@@ -125,21 +125,22 @@ class BaseXbrlManager:
 
         self.files = df
 
+        return self
+
     def to_csv(self, file_path):
         """ CSV形式で出力する """
-        df = self.data
+        df = DataFrame(self.data)
         df.to_csv(file_path, index=False)
 
     def to_DataFrame(self):
         """ DataFrame形式で出力する """
-        return self.data
+        return DataFrame(self.data)
 
     def to_json(self, file_path):
         """ JSON形式で出力する """
-        df = self.data
+        df = DataFrame(self.data)
         df.to_json(file_path, orient='records')
 
     def to_dict(self):
         """ 辞書形式で出力する """
-        return self.data.to_dict(orient='records')
-
+        return self.data

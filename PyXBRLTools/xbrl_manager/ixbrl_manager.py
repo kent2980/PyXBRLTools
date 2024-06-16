@@ -21,6 +21,7 @@ class IxbrlManager(BaseXbrlManager):
     def set_ix_non_fraction(self, document_type=None):
         """
         ix_non_fraction属性を設定します。
+        非分数のIXBRLデータを取得します。
 
         Returns:
             self (IxbrlManager): 自身のインスタンス
@@ -36,14 +37,15 @@ class IxbrlManager(BaseXbrlManager):
                 else:
                     df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_fractions().to_DataFrame()], ignore_index=True)
 
-        self.ix_non_fraction = df
-        self.data = df
+        self.ix_non_fraction = df.to_dict(orient="records")
+        self.data = self.ix_non_fraction
 
         return self
 
     def set_ix_non_numeric(self, document_type):
         """
         ix_non_numeric属性を設定します。
+        非数値のIXBRLデータを取得します。
 
         Returns:
             self (IxbrlManager): 自身のインスタンス
@@ -59,7 +61,7 @@ class IxbrlManager(BaseXbrlManager):
                 else:
                     df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_numeric().to_DataFrame()], ignore_index=True)
 
-        self.ix_non_numeric = df
-        self.data = df
+        self.ix_non_numeric = df.to_dict(orient="records")
+        self.data = self.ix_non_numeric
 
         return self

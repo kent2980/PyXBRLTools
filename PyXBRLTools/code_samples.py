@@ -1,6 +1,7 @@
 from xbrl_parser.ixbrl_parser import IxbrlParser
 from xbrl_manager.ixbrl_manager import IxbrlManager
 import os
+from xbrl_manager.base_xbrl_manager import BaseXbrlManager
 # テストコード
 if __name__ == "__main__":
     # osがwindowsの場合
@@ -14,3 +15,5 @@ if __name__ == "__main__":
     print(ix_manager.set_ix_non_fraction("pl").to_DataFrame())
     print(ix_manager.set_ix_non_numeric("sm").to_DataFrame())
     print(ix_manager.set_ix_non_numeric("bs").to_DataFrame())
+    manager = BaseXbrlManager(dir)
+    print(manager.set_linkbase_files().files['xlink_role'])
