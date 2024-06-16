@@ -1,39 +1,20 @@
-# XBRLManagerモジュール
+# BaseXbrlManager
 
-このモジュール群はディレクトリパスから、ファイル単体の解析クラスへ接続します。ディレクトリ内の全てのファイルを解析した結果を受け取り出力します。
+XBRLディレクトリの解析をするための基底クラスです。
 
-- XbrlPathManager
-- XbrlDownloadManager
-- IxbrlManager 
-- XbrlLabelManager
-- XbrlLinkManager
+このクラスを継承したクラスには下記の機能を提供します。
 
-## XbrlkPathManagerクラス
+## 機能
 
-XbrlkPathManagerクラスは、Xbrlkアプリケーションのパス管理を担当するクラスです。
+* ファイルの一覧
+* 書類の種類を表示
+* ファイルを抽出
 
-## 使用方法
-ß
-XbrlkPathManagerクラスを使用するには、以下の手順を実行します。
+## メソッド
 
-1. XbrlkPathManagerのインスタンスを作成します。
-
-```python
-from Xbrlkpathmanager import XbrlkPathManager
-
-directory_path = "/user/doc/XBRLData"
-path_manager = XbrlkPathManager(directory_path)
-```
-
-## サポートされているプロパティ
-
-以下のがXbrlkPathManagerクラスでサポートされています。
-
-```python
-path_manager.ixbrl_path
-```
-
-
-## ライセンス
-
-XbrlkPathManagerクラスはMITライセンスのもとで提供されています。
+| メソッド           | 説明                                       |
+| ------------------ | ------------------------------------------ |
+| to_filelist        | ディレクトリ内のファイルをlistで返します。 |
+| xbrl_type          | XBRLの種類を確認します。                   |
+| to_schema_filelist | 関係ファイルのリストを返します。           |
+| to_htmlbase_files  | htmlbaseファイルのリストを返します。       |

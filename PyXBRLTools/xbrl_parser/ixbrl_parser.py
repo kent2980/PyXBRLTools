@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+import os
 from .base_xbrl_parser import BaseXBRLParser
 import re
 
@@ -30,6 +32,20 @@ class IxbrlParser(BaseXBRLParser):
         >>> parser = IxbrlParser.create(file_path)
         >>> print(parser.ix_non_numeric().to_dataframe())
     """
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+        self.__set_document(xbrl_url)
+
+    def __set_document(self, xbrl_url):
+        if xbrl_url.startswith('http'):
+            parse_url = urlparse(xbrl_url)
+            file_name = os.path.basename(parse_url.path)
+        else:
+            file_name = os.path.basename(xbrl_url)
+        if "sm" in file_name:
+            self.document = "sm"
+        else:
+            self.document = file_name.split('-')[1][2:4]
 
     def ix_non_numeric(self):
         """ iXBRLの非数値情報を取得する
@@ -68,7 +84,8 @@ class IxbrlParser(BaseXBRLParser):
                 'xsi_nil': xsi_nil,
                 'escape': escape,
                 'format': tag.get('format').split(':')[-1] if tag.get('format') else None,
-                'text': text if escape == False else None
+                'text': text if escape == False else None,
+                'document_type': self.document,
             })
 
         self.data = lists
@@ -111,7 +128,8 @@ class IxbrlParser(BaseXBRLParser):
                 'sign': tag.get('sign'),
                 'unit_ref': tag.get('unitRef'),
                 'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
-                'numeric': float(re.sub(',','',tag.text)) if tag.text else None
+                'numeric': float(re.sub(',','',tag.text)) if tag.text else None,
+                'document_type': self.document,
             })
 
         self.data = lists

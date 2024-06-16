@@ -47,6 +47,13 @@ class BaseXBRLParser:
         # URLが指定されている場合は出力先を指定する
         if xbrl_url.startswith('http') and output_path is None:
             raise Exception('Please specify the output path')
+        # ローカルパスが指定されている場合はファイルが存在しなければエラーを出力する
+        if not xbrl_url.startswith('http') and not os.path.exists(xbrl_url):
+            raise FileNotFoundError(f'ファイルが見つかりません。[{xbrl_url}]')
+
+        # documentの設定
+        file_name = os.path.basename(xbrl_url)
+        self.__document_type = "fr" if "fr" in file_name else "sm"
 
         # プロパティの初期化
         self.xbrl_url = xbrl_url
@@ -54,10 +61,14 @@ class BaseXBRLParser:
         self.soup:bs | None = None
         self.data = []
 
+    @property
+    def document_type(self):
+        return self.__document_type
+
     def _read_xbrl(self, xbrl_path):
         """ XBRLをBeautifulSoup読み込む """
         with open(xbrl_path, 'r', encoding='utf-8') as f:
-            self.soup = bs(f, features='xml')
+            self.soup = bs(f, features='lxml-xml')
             return self.soup
 
     def _fetch_url(self):

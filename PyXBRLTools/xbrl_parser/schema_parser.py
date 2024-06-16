@@ -1,6 +1,24 @@
 from .base_xbrl_parser import BaseXBRLParser
-
+import os
 class SchemaParser(BaseXBRLParser):
+    """ スキーマファイルを解析するクラス
+
+    Attributes:
+        soup (BeautifulSoup): BeautifulSoupオブジェクト
+        data (list): 解析結果を格納するリスト
+
+    Properties:
+        import_schemas: importタグの情報を取得する
+        link_base_refs: linkbaseRefタグの情報を取得する
+        elements: elementタグの情報を取得する
+
+    Examples:
+        >>> from PyXBRLTools.xbrl_manager.schema_manager import SchemaManager
+        >>> schema_manager = SchemaManager.create("path/to/schema_file.xsd")
+        >>> schema_manager.parser.import_schemas()
+        >>> schema_manager.parser.link_base_refs()
+        >>> schema_manager.parser.elements()
+    """
     def import_schemas(self):
         lists = []
 
@@ -8,7 +26,8 @@ class SchemaParser(BaseXBRLParser):
         for tag in tags:
             dict = {
                 'schema_location': tag.get('schemaLocation'),
-                'name_space': tag.get('namespace')
+                'name_space': tag.get('namespace'),
+                'document_type': self.document_type
             }
 
             lists.append(dict)
@@ -26,7 +45,8 @@ class SchemaParser(BaseXBRLParser):
                 'xlink_type': tag.get('xlink:type'),
                 'xlink_href': tag.get('xlink:href'),
                 'xlink_role': tag.get('xlink:role'),
-                'xlink_arcrole': tag.get('xlink:arcrole')
+                'xlink_arcrole': tag.get('xlink:arcrole'),
+                'document_type': self.document_type
             }
 
             lists.append(dict)
@@ -49,6 +69,7 @@ class SchemaParser(BaseXBRLParser):
                 'substitution_group': tag.get('substitutionGroup'),
                 'type': tag.get('type'),
                 'abstract': tag.get('abstract'),
+                'document_type': self.document_type
             }
 
             lists.append(dict)
