@@ -18,7 +18,7 @@ class IxbrlManager(BaseXbrlManager):
         self.ix_non_fraction = None
         self.ix_non_numeric = None
 
-    def set_ix_non_fraction(self):
+    def set_ix_non_fraction(self, document_type=None):
         """
         ix_non_fraction属性を設定します。
 
@@ -27,8 +27,8 @@ class IxbrlManager(BaseXbrlManager):
         """
         df = None
         files = self.files
-        if self.document_type is not None:
-            files = files.query(f"document_type == '{self.document_type}'")
+        if document_type is not None:
+            files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if row["xlink_href"].endswith(".htm"):
                 if df is None:
@@ -41,7 +41,7 @@ class IxbrlManager(BaseXbrlManager):
 
         return self
 
-    def set_ix_non_numeric(self):
+    def set_ix_non_numeric(self, document_type):
         """
         ix_non_numeric属性を設定します。
 
@@ -49,9 +49,9 @@ class IxbrlManager(BaseXbrlManager):
             self (IxbrlManager): 自身のインスタンス
         """
         df = None
-        files = self.files
-        if self.document_type is not None:
-            files = files.query(f"document_type == '{self.document_type}'")
+        files:pd.DataFrame = self.files
+        if document_type is not None:
+            files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if row["xlink_href"].endswith(".htm"):
                 if df is None:

@@ -25,7 +25,6 @@ class BaseXbrlManager:
         self.directory_path = directory_path
         self.files = None
         self.data:DataFrame|None = None
-        self.document_type = None
 
     @property
     def directory_path(self):
@@ -125,29 +124,6 @@ class BaseXbrlManager:
             df = df.query(query)
 
         self.files = df
-
-    def get_document_types(self):
-        """書類種別を取得する
-
-        Returns:
-            list: 書類種別
-        """
-        if self.files is None:
-            raise ValueError("ファイルリストが読み込まれていません。")
-        return self.files["document_type"].unique()
-
-    def set_document_type(self, document_type):
-        """書類種別を設定する
-
-        Args:
-            document_type (str): 書類種別
-        """
-        self.document_type = document_type
-
-        if self.data is not None:
-            self.data = self.data.query(f"document_type == '{document_type}'")
-
-        return self
 
     def to_csv(self, file_path):
         """ CSV形式で出力する """
