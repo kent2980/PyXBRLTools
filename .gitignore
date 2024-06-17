@@ -9,6 +9,7 @@ Log/
 */tests/data
 */.obsidian
 */tests/output
+.venv
 
 # files
 *.csv
