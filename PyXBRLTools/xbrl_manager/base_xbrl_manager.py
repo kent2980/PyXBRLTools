@@ -20,7 +20,7 @@ class BaseXbrlManager:
     }
 
     def __init__(self, directory_path) -> None:
-        self.directory_path = directory_path
+        self.directory_path = Path(directory_path)
         self.files = None
         self.data:DataFrame|None = None
 
