@@ -152,3 +152,10 @@ class BaseXBRLParser:
     def to_dict(self):
         """ 辞書形式で出力する """
         return self.data
+
+    def basename(self, url):
+        """ URLからファイル名を取得する """
+        if self.xbrl_url.startswith('http'):
+            return urlparse(url).path.split('/')[-1]
+        else:
+            return Path(self.xbrl_url).name
