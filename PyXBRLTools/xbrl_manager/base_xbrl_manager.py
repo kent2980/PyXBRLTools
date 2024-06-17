@@ -79,7 +79,7 @@ class BaseXbrlManager:
         data_frames = [SchemaParser.create(file.as_posix()).link_base_refs().to_DataFrame() for file in xsd_files]
         df = pd.concat(data_frames, ignore_index=True)
 
-        href_map = {row["xlink_href"]: file
+        href_map = {row["xlink_href"]: file.as_posix()
                     for file in files
                     for index, row in df.iterrows()
                     if not row["xlink_href"].startswith('http') and row["xlink_href"] in file.as_posix()}
