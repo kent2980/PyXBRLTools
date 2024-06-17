@@ -118,7 +118,7 @@ def test_link_base(pre_link_parser):
 def test_calculationLink(pre_link_parser):
     # Test calculationLink method
     pre_link_parser.soup = bs(pre_link_content(), "xml")
-    result = pre_link_parser.calculationLink()
+    result = pre_link_parser.link()
     assert isinstance(result, PreLinkParser)
     assert result.to_dict() == [
         {
