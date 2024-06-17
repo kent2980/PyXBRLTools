@@ -17,7 +17,7 @@ class LabelManager(BaseXbrlManager):
         self.set_linkbase_files("labelLinkbaseRef")
         self.label = None
 
-    def set_label(self, document_type=None):
+    def set_label(self, output_path, document_type=None):
         """
         label属性を設定します。
         ラベル情報を取得します。
@@ -32,11 +32,11 @@ class LabelManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith("lab.xml"):
                 if df is None:
-                    df = LabelParser.create(row["xlink_href"]).link_labels().to_DataFrame()
+                    df = LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()
                 else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"]).link_labels().to_DataFrame()], ignore_index=True)
+                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()], ignore_index=True)
 
-        self.label = df.to_dict(orient="records")
+        self.label = df
         self.data = self.label
 
         return self

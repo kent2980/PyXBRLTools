@@ -8,6 +8,7 @@ Log/
 .pytest_cache/
 */tests/data
 */.obsidian
+*/tests/output
 
 # files
 *.csv

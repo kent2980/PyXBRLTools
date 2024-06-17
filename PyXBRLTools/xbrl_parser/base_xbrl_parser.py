@@ -2,7 +2,9 @@ from bs4 import BeautifulSoup as bs
 import requests
 from pandas import DataFrame
 import os
+import time
 from urllib.parse import urlparse
+from pathlib import Path
 
 class BaseXBRLParser:
     """ XBRLを解析する基底クラス
@@ -45,8 +47,9 @@ class BaseXBRLParser:
     """
     def __init__(self, xbrl_url, output_path = None):
         # URLが指定されている場合は出力先を指定する
-        if xbrl_url.startswith('http') and output_path is None:
-            raise Exception('Please specify the output path')
+        if xbrl_url.startswith('http'):
+            if output_path is None:
+                raise Exception('Please specify the output path')
         # ローカルパスが指定されている場合はファイルが存在しなければエラーを出力する
         if not xbrl_url.startswith('http') and not os.path.exists(xbrl_url):
             raise FileNotFoundError(f'ファイルが見つかりません。[{xbrl_url}]')
@@ -82,6 +85,7 @@ class BaseXBRLParser:
                     os.makedirs(file_path.rsplit('/', 1)[0])
                 with open(file_path, 'w') as f:
                     f.write(response.text)
+                time.sleep(2)
                 return file_path
             else:
                 raise Exception('Failed to fetch XBRL')
@@ -94,9 +98,9 @@ class BaseXBRLParser:
         - str: ファイルのパス
         """
         if self.xbrl_url.startswith('http'):
-            file_path = os.path.join(self.output_path, self.xbrl_url.split('/')[-1])
+            file_path = Path(self.output_path) / Path(urlparse(self.xbrl_url).path).relative_to('/')
             if os.path.exists(file_path):
-                return True, file_path
+                return True, file_path.as_posix()
             else:
                 return False, None
         else:
