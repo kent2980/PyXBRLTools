@@ -7,6 +7,7 @@ Log/
 .vscode/
 .pytest_cache/
 */tests/data
+*/.obsdian
 
 # files
 *.csv
