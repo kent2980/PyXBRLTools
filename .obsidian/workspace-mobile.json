@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "PyXBRLTools/xbrl_model/README.md",
+                "file": "PyXBRLTools/xbrl_manager/README.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
         "state": {
           "type": "backlink",
           "state": {
-            "file": "PyXBRLTools/xbrl_model/README.md",
+            "file": "PyXBRLTools/xbrl_manager/README.md",
             "collapseAll": false,
             "extraContext": false,
             "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
         "state": {
           "type": "outgoing-link",
           "state": {
-            "file": "PyXBRLTools/xbrl_model/README.md",
+            "file": "PyXBRLTools/xbrl_manager/README.md",
             "linksCollapsed": false,
             "unlinkedCollapsed": true
           }
@@ -114,7 +114,7 @@
         "state": {
           "type": "outline",
           "state": {
-            "file": "PyXBRLTools/xbrl_model/README.md"
+            "file": "PyXBRLTools/xbrl_manager/README.md"
           }
         }
       },
@@ -139,9 +139,10 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "c23a031b23d2d719",
+  "active": "de75fa5a54fd03a6",
   "lastOpenFiles": [
+    "PyXBRLTools/xbrl_model/README.md",
     "PyXBRLTools/xbrl_manager/README.md",
-    "PyXBRLTools/xbrl_model/README.md"
+    "conflict-files-obsidian-git.md"
   ]
 }
