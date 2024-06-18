@@ -4,7 +4,7 @@ from PyXBRLTools.xbrl_manager.link_manager import PreLinkManager
 
 @pytest.fixture
 def pre_link_manager() -> PreLinkManager:
-    directory_path = "/Users/user/Vscode/python/PyXBRLTools/PyXBRLTools/tests/data/edjp"
+    directory_path = "/Users/user/Vscode/python/PyXBRLTools/PyXBRLTools/tests/data/xbrl/edjp"
     return PreLinkManager(directory_path)
 
 def test_get_parser(pre_link_manager):

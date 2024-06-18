@@ -13,7 +13,7 @@ def get_current_dir():
 @pytest.fixture
 def base_xbrl_manager():
     # tests/data/edjpディレクトリのパスを取得
-    test_dir = get_current_dir() / "data" / "edjp"
+    test_dir = get_current_dir() / "data" / "xbrl" / "edjp"
     return BaseXbrlManager(test_dir.as_posix())
 
 def test_xbrl_type(base_xbrl_manager):

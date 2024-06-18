@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup as bs
 @pytest.fixture
 def ixbrl_parser():
-    xbrl_url = "/Users/user/Vscode/python/PyXBRLTools/PyXBRLTools/tests/data/edjp/Attachment/0101010-acbs01-tse-acedjpfr-58200-2024-03-31-01-2024-05-14-ixbrl.htm"
+    xbrl_url = "/Users/user/Vscode/python/PyXBRLTools/PyXBRLTools/tests/data/xbrl/edjp/Attachment/0500000-qcbs01-tse-qcedjpfr-76780-2024-04-30-01-2024-06-13-ixbrl.htm"
     return IxbrlParser.create(xbrl_url)
 
 def test_ix_non_numeric(ixbrl_parser):
