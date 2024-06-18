@@ -5,13 +5,13 @@ import re
 class QualitativeParser(BaseXBRLParser):
     def smt_head(self):
 
-        # h1とh2要素を取得して、辞書のリストとして抽出します
-        titles = self.soup.find_all(['h1', 'h2'])
+        # h1とh2,p2要素を取得して、辞書のリストとして抽出します
+        tags = self.soup.find_all(['h1', 'h2', 'p'])
         content_list = []
-        for title in titles:
+        for tag in tags:
             content_list.append({
-                "title": title.text.strip(),
-                "content": [p.text.strip().split(",") for p in title.find_next_siblings('p')]
+              'tag': tag.name,
+              'text': tag.get_text(strip=True)
             })
 
         self.data = content_list
