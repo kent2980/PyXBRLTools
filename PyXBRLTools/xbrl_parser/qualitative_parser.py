@@ -1,29 +1,19 @@
+from PyXBRLTools.tests.xbrl_manager.test_base_xbrl_manager import test_xbrl_type
 from .base_xbrl_parser import BaseXBRLParser
 import re
 
 class QualitativeParser(BaseXBRLParser):
     def smt_head(self):
 
-        lists = []
-        head1_title = ""
-        head2_title = ""
+        # h1とh2要素を取得して、辞書のリストとして抽出します
+        titles = self.soup.find_all(['h1', 'h2'])
+        content_list = []
+        for title in titles:
+            content_list.append({
+                "title": title.text.strip(),
+                "content": [p.text.strip().split(",") for p in title.find_next_siblings('p')]
+            })
 
-        for tag in self.soup.find_all(class_=True):
-            class_ = tag["class"][0]
-
-            if class_ == "smt_head1":
-                head1_title = tag.text
-            elif class_ == "smt_head2":
-                head2_title = tag.text
-            elif "smt_text" in class_:
-                text = tag.text
-                if not lists or head1_title != lists[-1]['title'] or head2_title != lists[-1]['sub_title']:
-                    lists.append({'title': head1_title, 'sub_title': head2_title, 'text': text})
-                else:
-                    lists[-1]['text'] += text
-
-        lists = [row for row in lists if re.search(r'\d', row['title'])]
-
-        self.data = lists
+        self.data = content_list
 
         return self

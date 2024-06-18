@@ -19,8 +19,8 @@ def test_import_schemas(schema_parser):
     result = schema_parser.import_schemas()
     assert isinstance(result.data, list)
     assert len(result.data) == 2
-    assert result.data[0] == {'schema_location': 'schema1.xsd', 'name_space': 'ns1'}
-    assert result.data[1] == {'schema_location': 'schema2.xsd', 'name_space': 'ns2'}
+    assert result.data[0] == {'document_type': 'sm', 'schema_location': 'schema1.xsd', 'name_space': 'ns1'}
+    assert result.data[1] == {'document_type': 'sm', 'schema_location': 'schema2.xsd', 'name_space': 'ns2'}
 
 def test_link_base_refs(schema_parser):
     result = schema_parser.link_base_refs()

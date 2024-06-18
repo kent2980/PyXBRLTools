@@ -3,6 +3,7 @@ from pandas import DataFrame
 from bs4 import BeautifulSoup as bs
 from PyXBRLTools.xbrl_parser.base_xbrl_parser import BaseXBRLParser
 import os
+from pathlib import Path
 
 @pytest.fixture
 def xbrl_parser():
