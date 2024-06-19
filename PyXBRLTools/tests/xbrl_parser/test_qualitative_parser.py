@@ -21,8 +21,8 @@ def qualitative_parser():
     parser = QualitativeParser.create(file_path.as_posix())
     return parser
 
-def test_smt_head(qualitative_parser):
-    result = qualitative_parser.smt_head()
+def test_qualitative_info(qualitative_parser):
+    result = qualitative_parser.qualitative_info()
     assert isinstance(result.data, list)
     result.to_csv(get_output_dir() + "/smt_head.csv")
     # assert len(result.to_DataFrame()) > 0

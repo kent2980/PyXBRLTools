@@ -1,9 +1,10 @@
 from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
 from PyXBRLTools.xbrl_parser.label_parser import LabelParser
 import pandas as pd
+from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
 
 class LabelManager(BaseXbrlManager):
-    def __init__(self, directory_path) -> None:
+    def __init__(self, directory_path, lang = "jp") -> None:
         """
         LabelManagerクラスのコンストラクタです。
 
@@ -15,7 +16,35 @@ class LabelManager(BaseXbrlManager):
         """
         super().__init__(directory_path)
         self.set_linkbase_files("labelLinkbaseRef")
+        self.set_language(lang)
         self.label = None
+
+        if len(self.files) == 0:
+            raise XbrlListEmptyError("labelLinkbaseRefファイルが見つかりません。")
+
+    def set_language(self, lang):
+        """
+        言語を設定します。
+
+        Parameters:
+            lang (str): 言語の設定
+
+        Returns:
+            self (LabelManager): 自身のインスタンス
+        """
+        self.lang = lang
+
+        if len(self.files) > 0:
+            if lang == "jp":
+                # self.filesのxlink_hrefの末尾が"lab.xml"であるものを抽出
+                self.files = self.files[self.files["xlink_href"].str.endswith("lab.xml")]
+            elif lang == "en":
+                # self.filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
+                self.files = self.files[self.files["xlink_href"].str.endswith("lab-en.xml")]
+            else:
+                raise ValueError("言語の設定が不正です。[jp, en]を指定してください。")
+
+        return self
 
     def set_link_labels(self, output_path, document_type=None):
         """
@@ -30,11 +59,10 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
-            if row["xlink_href"].endswith("lab.xml"):
-                if df is None:
-                    df = LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()
-                else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()], ignore_index=True)
+            if df is None:
+                df = LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()
+            else:
+                df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()], ignore_index=True)
 
         self.label = df
         self.data = self.label

@@ -1,3 +1,4 @@
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 from pandas import DataFrame
 
@@ -33,6 +34,15 @@ class LabelParser(BaseXBRLParser):
         >>> parser = LabelParser.create(file_path)
         >>> print(parser.label().to_dataframe())
     """
+
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+
+        # ファイル名がlab.xmlでない場合はエラーを発生
+        if not self.basename().endswith("lab.xml"):
+            # ファイル名がlab-en.xmlでない場合はエラーを発生
+            if not self.basename().endswith("lab-en.xml"):
+                raise TypeOfXBRLIsDifferent(f"{self.basename()} はlab.xmlではありません。")
 
     def link_labels(self):
         """link:label要素を取得するメソッド。

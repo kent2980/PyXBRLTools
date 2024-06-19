@@ -2,6 +2,7 @@ from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
 from PyXBRLTools.xbrl_parser.link_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
     PreLinkParser)
 import pandas
+from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
 
 class BaseLinkManager(BaseXbrlManager):
     def __init__(self, directory_path) -> None:
@@ -9,6 +10,9 @@ class BaseLinkManager(BaseXbrlManager):
         self.set_linkbase_files(self.get_role())
         self.label = None
         self.parser = self.get_parser()
+
+        if len(self.files) == 0:
+            raise XbrlListEmptyError(f"{self.get_role()}ファイルが見つかりません。")
 
     def get_parser(self) -> BaseLinkParser:
         raise NotImplementedError

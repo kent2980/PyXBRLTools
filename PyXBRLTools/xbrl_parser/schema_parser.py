@@ -1,3 +1,4 @@
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 import os
 class SchemaParser(BaseXBRLParser):
@@ -19,6 +20,13 @@ class SchemaParser(BaseXBRLParser):
         >>> schema_manager.parser.link_base_refs()
         >>> schema_manager.parser.elements()
     """
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+
+        # xsd.xml以外のファイルはエラーを出力する
+        if not self.basename().endswith(".xsd"):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} は[.xsd]ではありません。")
+
     def import_schemas(self):
         lists = []
 

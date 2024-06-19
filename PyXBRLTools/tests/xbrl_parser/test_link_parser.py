@@ -4,7 +4,7 @@ from PyXBRLTools.xbrl_parser.link_parser import PreLinkParser
 
 @pytest.fixture
 def pre_link_parser() -> PreLinkParser:
-    xbrl_url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01.xsd"
+    xbrl_url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01_pre.xml"
     output_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/TEST"
     return PreLinkParser(xbrl_url, output_path)
 

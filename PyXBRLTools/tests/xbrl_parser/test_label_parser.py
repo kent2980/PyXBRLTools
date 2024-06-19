@@ -5,7 +5,7 @@ import os
 
 @pytest.fixture
 def label_parser():
-    xbrl_url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01.xsd"
+    xbrl_url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01_lab.xml"
     output_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/TEST"
     return LabelParser(xbrl_url, output_path)
 

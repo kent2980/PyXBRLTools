@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import os
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 import re
 
@@ -34,6 +35,10 @@ class IxbrlParser(BaseXBRLParser):
     """
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
+
+        if not self.basename().endswith("ixbrl.htm"):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はixbrl.htmではありません。")
+
         self.__set_document(xbrl_url)
 
     def __set_document(self, xbrl_url):

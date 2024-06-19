@@ -1,3 +1,4 @@
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 
 class BaseLinkParser(BaseXBRLParser):
@@ -190,6 +191,13 @@ class BaseLinkParser(BaseXBRLParser):
 
 class CalLinkParser(BaseLinkParser):
     """ CalculationLinkのParserクラス"""
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+
+        # cal.xmlでない場合はエラーを出力
+        if not self.basename().endswith("cal.xml"):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はcal.xmlではありません。")
+
     def set_link_tag_name(self):
         self.link_tag_name = 'link:calculationLink'
 
@@ -197,6 +205,13 @@ class CalLinkParser(BaseLinkParser):
         self.arc_tag_name = 'link:calculationArc'
 class DefLinkParser(BaseLinkParser):
     """ DefinitionLinkのParserクラス"""
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+
+        # def.xmlでない場合はエラーを出力
+        if not self.basename().endswith("def.xml"):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")
+
     def set_link_tag_name(self):
         self.link_tag_name = 'link:definitionLink'
 
@@ -204,6 +219,13 @@ class DefLinkParser(BaseLinkParser):
         self.arc_tag_name = 'link:definitionArc'
 class PreLinkParser(BaseLinkParser):
     """ PresentationLinkのParserクラス"""
+    def __init__(self, xbrl_url, output_path=None):
+        super().__init__(xbrl_url, output_path)
+
+        # pre.xmlでない場合はエラーを出力
+        if not self.basename().endswith("pre.xml"):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はpre.xmlではありません。")
+
     def set_link_tag_name(self):
         self.link_tag_name = 'link:presentationLink'
 

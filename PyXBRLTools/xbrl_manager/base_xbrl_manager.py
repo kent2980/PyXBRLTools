@@ -95,7 +95,8 @@ class BaseXbrlManager:
         if xlink_role:
             query = f"xlink_role == '{xlink_role}'"
             df = df.query(query)
-
+        print(xlink_role)
+        print(df)
         self.files = df
         return self
 
