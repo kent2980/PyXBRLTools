@@ -4,27 +4,23 @@ from pandas import DataFrame
 
 class QualitativeParser(BaseXBRLParser):
     def smt_head(self):
-
+        lists = []
         # h1とh2,p2要素を取得して、辞書のリストとして抽出します
-        tags = self.soup.find_all(['h1', 'h2', 'h3', 'p'])
-        content_list = []
-        tag, tag_id, tag_class, tag_text = None, None, None, None
+        tags = self.soup.find_all(True)
+        title, content =  "", ""
         for tag in tags:
-          if len(tag.get_text(strip=True)) == 0:
-            continue
-          content_list.append({
-            'tag': tag.name,
-            'id':  tag.get('id'),
-            'class': tag.get('class'),
-            'text': tag.get_text(strip=True).replace(" ", "").replace("　", "")
-          })
+            tag_class = tag.get("class")
+            class_names = ['smt_head1', 'smt_head2', 'smt_head3']
+            if tag_class in class_names:
+                if title != tag_class:
+                    if title != "":
+                        lists.append({"title": title, "content": content})
+                    title = tag.get_text(strip=True)
+                    content = ""
+            else:
+                content += tag.get_text(strip=True)
 
-        df = DataFrame(content_list)
-        # head1,head2,head3,hea4が同じである場合、グループ化してtextを連結します
-        # df = df.groupby(['tag', 'class'])['text'].apply(' '.join).reset_index()
-        # dfの全ての要素の全角文字を半角文字に変換します
-        df = df.applymap(lambda x: x.translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
-                        if isinstance(x, str) else x)
-        self.data = df.to_dict(orient='records')
+
+        self.data = lists
 
         return self
