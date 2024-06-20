@@ -2,6 +2,7 @@ from pathlib import Path
 from PyXBRLTools.xbrl_parser.schema_parser import SchemaParser
 import pandas as pd
 from pandas import DataFrame
+from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlDirectoryNotFoundError
 
 class BaseXbrlManager:
     """XBRLディレクトリの解析を行う基底クラス"""
@@ -32,7 +33,7 @@ class BaseXbrlManager:
     def directory_path(self, directory_path):
         directory_path = Path(directory_path)
         if not directory_path.exists():
-            raise FileNotFoundError(f"{directory_path} is not found.")
+            raise XbrlDirectoryNotFoundError(f"無効なパス[{directory_path} ]")
         self.__directory_path = directory_path
 
     def __to_filelist(self):
