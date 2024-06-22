@@ -3,6 +3,7 @@ import os
 from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 import re
+import pandas as pd
 
 class IxbrlParser(BaseXBRLParser):
     """ iXBRLを解析するクラス
@@ -35,13 +36,17 @@ class IxbrlParser(BaseXBRLParser):
     """
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
-
+        # ファイルの拡張子がixbrl.htmでない場合はエラーを出力
         if not self.basename().endswith("ixbrl.htm"):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はixbrl.htmではありません。")
-
+        # ドキュメントの種類を設定
         self.__set_document(xbrl_url)
 
+        self.__ix_non_fraction = None
+        self.__ix_non_numeric = None
+
     def __set_document(self, xbrl_url):
+        """ ドキュメントの種類を設定する"""
         if xbrl_url.startswith('http'):
             parse_url = urlparse(xbrl_url)
             file_name = os.path.basename(parse_url.path)
@@ -71,6 +76,8 @@ class IxbrlParser(BaseXBRLParser):
             format: dateyearmonthdaycjk
             text: 2024年6月13日
         """
+        # ix_non_numericが存在する場合はそのまま返す
+
         lists = []
         tags = self.soup.find_all(name='ix:nonNumeric')
         for tag in tags:
@@ -82,6 +89,7 @@ class IxbrlParser(BaseXBRLParser):
             text = tag.text.splitlines()[0].replace("　", "").replace(" ", "") if tag.text else None
             # 辞書に追加
             lists.append({
+                'xbrl_id': self.xbrl_id,
                 'context_period': tag.get('contextRef').split("_")[0],
                 'context_entity': tag.get('contextRef').split("_")[1] if len(tag.get('contextRef').split("_")) > 1 else None,
                 'context_category': tag.get('contextRef').split("_")[2] if len(tag.get('contextRef').split("_")) > 2 else None,
@@ -119,10 +127,14 @@ class IxbrlParser(BaseXBRLParser):
             xsi_nil: False
             numeric: 1234
         """
+        # ix_non_fractionが存在する場合はそのまま返す
+
         lists = []
         tags = self.soup.find_all(name='ix:nonFraction')
         for tag in tags:
-            lists.append({
+            numeric = re.sub(',','',tag.text) if tag.text else None
+            tag_dict = {
+                'xbrl_id': self.xbrl_id,
                 'context_period': tag.get('contextRef').split("_")[0],
                 'context_entity': tag.get('contextRef').split("_")[1] if len(tag.get('contextRef').split("_")) > 1 else None,
                 'context_category': tag.get('contextRef').split("_")[2] if len(tag.get('contextRef').split("_")) > 2 else None,
@@ -133,10 +145,33 @@ class IxbrlParser(BaseXBRLParser):
                 'sign': tag.get('sign'),
                 'unit_ref': tag.get('unitRef'),
                 'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
-                'numeric': float(re.sub(',','',tag.text)) if tag.text else None,
+                'numeric': numeric,
                 'document_type': self.document,
-            })
+            }
+            lists.append(tag_dict)
 
         self.data = lists
+
+        return self
+
+    def ix_header(self):
+        """  iXBRLのヘッダー情報を取得する"""
+        df = self.ix_non_numeric().to_DataFrame()
+
+        # dfのnameカラムにDocumentNameが含まれるかどうかを判定
+        if not df['name'].str.contains('DocumentName').any():
+            return self
+
+        def extract_fields(group):
+            return pd.Series({
+                'company_name': group.loc[group['name'].str.contains('CompanyName'), 'text'].max(),
+                'code': group.loc[group['name'].str.contains('SecuritiesCode'), 'text'].max(),
+                'DocumentName': group.loc[group['name'].str.contains('DocumentName'), 'text'].max(),
+                'reporting_date': group.loc[group['name'].str.contains('FilingDate|ReportingDateOfFinancialForecastCorrection|ReportingDateOfDividendForecastCorrection|ReportingDateOfDistributionForecastCorrectionREIT'), 'text'].max()
+            })
+
+        result_df = df.groupby('xbrl_id').apply(extract_fields).reset_index()
+
+        self.data = result_df
 
         return self

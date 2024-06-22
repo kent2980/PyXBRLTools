@@ -35,16 +35,16 @@ class EdjpModel(BaseXbrlModel):
     def _initialize_managers(self):
         """マネージャークラスを初期化するメソッド"""
         directory_path = self.directory_path
-        self.ixbrl_manager = IxbrlManager(directory_path)
+        self.ixbrl_manager = IxbrlManager(directory_path).set_xbrl_id(self.xbrl_id)
         self.label_manager = self._create_manager(LabelManager, "label")
-        self.cal_manager = self._create_manager(CalLinkManager, "cal")
-        self.pre_manager = self._create_manager(PreLinkManager, "pre")
-        self.def_manager = self._create_manager(DefLinkManager, "def")
+        self.cal_manager = self._create_manager(CalLinkManager, "cal").set_xbrl_id(self.xbrl_id)
+        self.pre_manager = self._create_manager(PreLinkManager, "pre").set_xbrl_id(self.xbrl_id)
+        self.def_manager = self._create_manager(DefLinkManager, "def").set_xbrl_id(self.xbrl_id)
         # self.qualitative_manager = self._create_manager(QualitativeManager, "qualitative")
 
     def get_ixbrl(self):
         """iXBRLデータを取得するメソッド"""
-        return self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric")
+        return self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric", "set_ix_header")
 
     def get_label(self):
         """ラベルリンクベースのデータを取得するメソッド"""

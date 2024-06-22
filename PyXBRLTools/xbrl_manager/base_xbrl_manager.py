@@ -3,6 +3,7 @@ from PyXBRLTools.xbrl_parser.schema_parser import SchemaParser
 import pandas as pd
 from pandas import DataFrame
 from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlDirectoryNotFoundError
+from uuid import uuid4, UUID
 
 class BaseXbrlManager:
     """XBRLディレクトリの解析を行う基底クラス"""
@@ -24,6 +25,15 @@ class BaseXbrlManager:
         self.directory_path = Path(directory_path)
         self.files = None
         self.data:DataFrame|None = None
+        self.__xbrl_id = str(uuid4())
+
+    @property
+    def xbrl_id(self):
+        return self.__xbrl_id
+
+    def set_xbrl_id(self, xbrl_id:str):
+        self.__xbrl_id = xbrl_id
+        return self
 
     @property
     def directory_path(self):

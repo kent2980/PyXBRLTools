@@ -41,6 +41,7 @@ class BaseLinkParser(BaseXBRLParser):
         tags = self.soup.find_all(name=['link:role', 'roleRef'])
         for tag in tags:
             dict = {
+                    'xbrl_id': self.xbrl_id,
                     'xlink_type': tag.get('xlink:type'),
                     'xlink_href': tag.get('xlink:href'),
                     'role_uri': tag.get('roleURI'),
@@ -76,6 +77,7 @@ class BaseLinkParser(BaseXBRLParser):
             tags = link_tag.find_all(['link:loc', 'loc'])
             for tag in tags:
                 lists.append({
+                    'xbrl_id': self.xbrl_id,
                     'attr_value': attr_value,
                     'xlink_type': tag.get('xlink:type'),
                     'xlink_schema': tag.get('xlink:href').split('#')[0],
@@ -115,6 +117,7 @@ class BaseLinkParser(BaseXBRLParser):
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
                 lists.append({
+                    'xbrl_id': self.xbrl_id,
                     'attr_value': attr_value,
                     'xlink_type': tag.get('xlink:type'),
                     'xlink_from': tag.get('xlink:from'),
@@ -149,6 +152,7 @@ class BaseLinkParser(BaseXBRLParser):
         tags = self.soup.find_all(name=['link:linkbase', 'linkbase'])
         for tag in tags:
             dict = {
+                'xbrl_id': self.xbrl_id,
                 'xmlns_xlink': tag.get('xmlns:xlink'),
                 'xmlns_xsi': tag.get('xmlns:xsi'),
                 'xmlns_link': tag.get('xmlns:link'),
@@ -179,6 +183,7 @@ class BaseLinkParser(BaseXBRLParser):
         tags = self.soup.find_all(self.link_tag_name)
         for tag in tags:
             dict = {
+                    'xbrl_id': self.xbrl_id,
                     'xlink_type': tag.get('xlink:type'),
                     'xlink_role': tag.get('xlink:role'),
             }

@@ -1,9 +1,9 @@
 from pathlib import Path
-import re
 import shutil
 import zipfile
 from PyXBRLTools.xbrl_exception.xbrl_model_exception import (NotXbrlDirectoryException,
     NotXbrlTypeException)
+from uuid import uuid4, UUID
 
 class BaseXbrlModel:
     def __init__(self, xbrl_zip_path, output_path) -> None:
@@ -13,6 +13,15 @@ class BaseXbrlModel:
         # XBRLファイルを解凍したディレクトリのパスを取得
         self.__directory_path = self.__unzip_xbrl()
         self.__xbrl_type = self.__xbrl_type()
+        self.__xbrl_id = str(uuid4())
+
+    @property
+    def xbrl_id(self):
+        return self.__xbrl_id
+
+    def set_xbrl_id(self, xbrl_id):
+        self.__xbrl_id = xbrl_id
+        return self
 
     def _set_manager(self):
         raise NotImplementedError

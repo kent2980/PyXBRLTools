@@ -18,6 +18,7 @@ class IxbrlManager(BaseXbrlManager):
         self.set_htmlbase_files("ixbrl")
         self.ix_non_fraction = None
         self.ix_non_numeric = None
+        self.ix_header = None
 
         if len(self.files) == 0:
             raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
@@ -41,6 +42,7 @@ class IxbrlManager(BaseXbrlManager):
                 else:
                     df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_fractions().to_DataFrame()], ignore_index=True)
 
+        df['xbrl_id'] = self.xbrl_id
         self.ix_non_fraction = df.to_dict(orient="records")
         self.data = self.ix_non_fraction
 
@@ -64,7 +66,32 @@ class IxbrlManager(BaseXbrlManager):
             else:
                 df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_numeric().to_DataFrame()], ignore_index=True)
 
+        df['xbrl_id'] = self.xbrl_id
         self.ix_non_numeric = df.to_dict(orient="records")
         self.data = self.ix_non_numeric
+
+        return self
+
+    def set_ix_header(self, document_type=None):
+        """
+        ix_header属性を設定します。
+        iXBRLのヘッダー情報を取得します。
+
+        Returns:
+            self (IxbrlManager): 自身のインスタンス
+        """
+        df = None
+        files:pd.DataFrame = self.files
+        if document_type is not None:
+            files = files.query(f"document_type == '{document_type}'")
+        for index, row in files.iterrows():
+            if df is None:
+                df = IxbrlParser.create(row["xlink_href"]).ix_header().to_DataFrame()
+            else:
+                df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_header().to_DataFrame()], ignore_index=True)
+
+        df['xbrl_id'] = self.xbrl_id
+        self.ix_header = df.to_dict(orient="records")
+        self.data = self.ix_header
 
         return self

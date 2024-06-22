@@ -5,7 +5,7 @@ import os
 import time
 from urllib.parse import urlparse
 from pathlib import Path
-
+from uuid import UUID, uuid4
 class BaseXBRLParser:
     """ XBRLを解析する基底クラス
         このクラスを継承して、各XBRLの解析クラスを作成する。
@@ -63,6 +63,15 @@ class BaseXBRLParser:
         self.output_path = output_path
         self.soup:bs | None = None
         self.data = []
+        self.__xbrl_id = str(uuid4())
+
+    @property
+    def xbrl_id(self):
+        return self.__xbrl_id
+
+    @xbrl_id.setter
+    def xbrl_id(self, xbrl_id:str):
+        self.__xbrl_id = xbrl_id
 
     @property
     def document_type(self):
