@@ -73,7 +73,7 @@ class BaseLinkParser(BaseXBRLParser):
 
             attr_value = link_tag.get('xlink:role')
 
-            tags = link_tag.find_all(['link:loc'])
+            tags = link_tag.find_all(['link:loc', 'loc'])
             for tag in tags:
                 lists.append({
                     'attr_value': attr_value,
@@ -112,7 +112,6 @@ class BaseLinkParser(BaseXBRLParser):
 
             attr_value = link_tag.get('xlink:role')
 
-            tags = link_tag.find_all('link:calculationArc')
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
                 lists.append({
@@ -147,7 +146,7 @@ class BaseLinkParser(BaseXBRLParser):
 
         lists = []
 
-        tags = self.soup.find_all(name='link:linkbase')
+        tags = self.soup.find_all(name=['link:linkbase', 'linkbase'])
         for tag in tags:
             dict = {
                 'xmlns_xlink': tag.get('xmlns:xlink'),
@@ -213,10 +212,10 @@ class DefLinkParser(BaseLinkParser):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")
 
     def set_link_tag_name(self):
-        self.link_tag_name = 'link:definitionLink'
+        self.link_tag_name = ['link:definitionLink', 'definitionLink']
 
     def set_arc_tag_name(self):
-        self.arc_tag_name = 'link:definitionArc'
+        self.arc_tag_name = ['link:definitionArc', 'definitionArc']
 class PreLinkParser(BaseLinkParser):
     """ PresentationLinkのParserクラス"""
     def __init__(self, xbrl_url, output_path=None):

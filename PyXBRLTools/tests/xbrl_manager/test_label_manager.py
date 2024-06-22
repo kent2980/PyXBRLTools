@@ -3,25 +3,21 @@ from pandas import DataFrame
 from PyXBRLTools.xbrl_manager.label_manager import LabelManager
 from pathlib import Path
 
-def get_current_dir():
-    # Get the current directory path
-    current_dir = Path(__file__).resolve().parent.parent
-    return current_dir
-
-def get_output_dir():
+@pytest.fixture
+def get_output_dir(get_current_path):
     # Get the output directory path
-    output_dir = get_current_dir() / "data" / "label"
+    output_dir = get_current_path / "data" / "label"
     return output_dir.as_posix()
 
 @pytest.fixture
-def label_manager() ->  LabelManager:
+def label_manager(get_current_path, get_output_dir) ->  LabelManager:
     # Get the test directory path
-    test_dir = get_current_dir() / "data" / "xbrl" / "edjp"
-    return LabelManager(test_dir.as_posix())
+    test_dir = get_current_path / "data" / "xbrl" / "edjp"
+    return LabelManager(test_dir.as_posix()).set_output_path(get_output_dir)
 
-def test_set_link_labels(label_manager):
-    result = label_manager.set_link_labels(get_output_dir())
-    result.to_json(str(get_current_dir() / "output" / "label.json"))
+def test_set_link_labels(label_manager, get_current_path):
+    result = label_manager.set_link_labels()
+    result.to_json(str(get_current_path / "output" / "label.json"))
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_dict()) > 0
@@ -36,19 +32,19 @@ def test_set_link_labels(label_manager):
     #     }
 
 def test_set_label_with_document_type(label_manager):
-    result = label_manager.set_link_labels(get_output_dir(), document_type="sm")
+    result = label_manager.set_link_labels(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
 
 def test_set_label_with_invalid_document_type(label_manager):
-    result = label_manager.set_link_labels(get_output_dir(), document_type="bs")
+    result = label_manager.set_link_labels(document_type="bs")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) == 0
 
 def test_set_link_locs(label_manager):
-    result = label_manager.set_link_locs(get_output_dir())
+    result = label_manager.set_link_locs()
     print(result.to_DataFrame().iloc[0].to_dict())
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
@@ -61,13 +57,13 @@ def test_set_link_locs(label_manager):
     #     }
 
 def test_set_link_locs_with_document_type(label_manager):
-    result = label_manager.set_link_locs(get_output_dir(), document_type="sm")
+    result = label_manager.set_link_locs(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
 
 def test_set_link_label_arcs(label_manager):
-    result = label_manager.set_link_label_arcs(get_output_dir())
+    result = label_manager.set_link_label_arcs()
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
@@ -80,13 +76,13 @@ def test_set_link_label_arcs(label_manager):
     #             }
 
 def test_set_link_label_arcs_with_document_type(label_manager):
-    result = label_manager.set_link_label_arcs(get_output_dir(), document_type="sm")
+    result = label_manager.set_link_label_arcs(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
 
 def test_set_role_refs(label_manager):
-    result = label_manager.set_role_refs(get_output_dir())
+    result = label_manager.set_role_refs()
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0

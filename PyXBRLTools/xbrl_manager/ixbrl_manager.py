@@ -1,5 +1,5 @@
-from xbrl_manager.base_xbrl_manager import BaseXbrlManager
-from xbrl_parser.ixbrl_parser import IxbrlParser
+from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
+from PyXBRLTools.xbrl_parser.ixbrl_parser import IxbrlParser
 import pandas as pd
 from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
 
@@ -46,7 +46,7 @@ class IxbrlManager(BaseXbrlManager):
 
         return self
 
-    def set_ix_non_numeric(self, document_type):
+    def set_ix_non_numeric(self, document_type=None):
         """
         ix_non_numeric属性を設定します。
         非数値のIXBRLデータを取得します。

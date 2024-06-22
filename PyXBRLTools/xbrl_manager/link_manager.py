@@ -14,13 +14,28 @@ class BaseLinkManager(BaseXbrlManager):
         if len(self.files) == 0:
             raise XbrlListEmptyError(f"{self.get_role()}ファイルが見つかりません。")
 
+    def set_output_path(self, output_path):
+        """
+        出力先のパスを設定します。
+
+        Parameters:
+            output_path (str): 出力先のパス
+
+        Returns:
+            self (LabelManager): 自身のインスタンス
+        """
+        self.output_path = output_path
+
+        return self
+
     def get_parser(self) -> BaseLinkParser:
         raise NotImplementedError
 
     def get_role(self):
         raise NotImplementedError
 
-    def set_link_roles(self, output_path, document_type = None):
+    def set_link_roles(self, document_type = None):
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -29,14 +44,15 @@ class BaseLinkManager(BaseXbrlManager):
             if df is None:
                 df = self.parser.create(row["xlink_href"], output_path).link_roles().to_DataFrame()
             else:
-                df = pandas.concat([df, CalLinkParser.create(row["xlink_href"], output_path).link_roles().to_DataFrame()], ignore_index=True)
+                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_roles().to_DataFrame()], ignore_index=True)
 
         self.label = df
         self.data = self.label
 
         return self
 
-    def set_link_locs(self, output_path, document_type = None):
+    def set_link_locs(self, document_type = None):
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -45,14 +61,15 @@ class BaseLinkManager(BaseXbrlManager):
             if df is None:
                 df = self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
             else:
-                df = pandas.concat([df, CalLinkParser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()], ignore_index=True)
+                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()], ignore_index=True)
 
         self.label = df
         self.data = self.label
 
         return self
 
-    def set_link_arcs(self, output_path, document_type = None):
+    def set_link_arcs(self, document_type = None):
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -61,7 +78,7 @@ class BaseLinkManager(BaseXbrlManager):
             if df is None:
                 df = self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()
             else:
-                df = pandas.concat([df, CalLinkParser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()], ignore_index=True)
+                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()], ignore_index=True)
 
         self.label = df
         self.data = self.label

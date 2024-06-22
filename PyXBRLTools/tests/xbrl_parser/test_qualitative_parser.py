@@ -1,28 +1,20 @@
 import pytest
-from bs4 import BeautifulSoup as bs
 from PyXBRLTools.xbrl_parser.qualitative_parser import QualitativeParser
-from PyXBRLTools.tests.xbrl_manager.test_base_xbrl_manager import get_current_dir
-from pathlib import Path
-from PyXBRLTools.tests.xbrl_manager.test_label_manager import get_output_dir
 
-def get_current_dir():
-    # Get the current directory path
-    current_dir = Path(__file__).resolve().parent.parent
-    return current_dir
-
-def get_output_dir():
+@pytest.fixture
+def get_output_dir(get_current_path):
     # Get the output directory path
-    output_dir = get_current_dir() / "output"
+    output_dir = get_current_path / "output"
     return output_dir.as_posix()
 
 @pytest.fixture
-def qualitative_parser():
-    file_path = get_current_dir() / "data" / "xbrl" / "edjp" / "Attachment" / "qualitative.htm"
+def qualitative_parser(get_current_path):
+    file_path = get_current_path / "data" / "xbrl" / "edjp" / "Attachment" / "qualitative.htm"
     parser = QualitativeParser.create(file_path.as_posix())
     return parser
 
-def test_qualitative_info(qualitative_parser):
+def test_qualitative_info(qualitative_parser, get_output_dir):
     result = qualitative_parser.qualitative_info()
     assert isinstance(result.data, list)
-    result.to_csv(get_output_dir() + "/smt_head.csv")
+    result.to_csv(get_output_dir + "/smt_head.csv")
     # assert len(result.to_DataFrame()) > 0

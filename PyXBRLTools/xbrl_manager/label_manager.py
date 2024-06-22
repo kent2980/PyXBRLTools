@@ -22,6 +22,20 @@ class LabelManager(BaseXbrlManager):
         if len(self.files) == 0:
             raise XbrlListEmptyError("labelLinkbaseRefファイルが見つかりません。")
 
+    def set_output_path(self, output_path):
+        """
+        出力先のパスを設定します。
+
+        Parameters:
+            output_path (str): 出力先のパス
+
+        Returns:
+            self (LabelManager): 自身のインスタンス
+        """
+        self.output_path = output_path
+
+        return self
+
     def set_language(self, lang):
         """
         言語を設定します。
@@ -46,7 +60,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_link_labels(self, output_path, document_type=None):
+    def set_link_labels(self, document_type=None):
         """
         label属性を設定します。
         ラベル情報を取得します。
@@ -54,6 +68,7 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -69,7 +84,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_link_locs(self, output_path, document_type=None):
+    def set_link_locs(self, document_type=None):
         """
         loc属性を設定します。
         loc情報を取得します。
@@ -77,6 +92,7 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -93,7 +109,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_link_label_arcs(self, output_path, document_type=None):
+    def set_link_label_arcs(self, document_type=None):
         """
         labelArc属性を設定します。
         labelArc情報を取得します。
@@ -101,6 +117,7 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
@@ -117,7 +134,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_role_refs(self, output_path, document_type=None):
+    def set_role_refs(self, document_type=None):
         """
         roleRef属性を設定します。
         roleRef情報を取得します。
@@ -125,6 +142,7 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        output_path = self.output_path
         df = None
         files = self.files
         if document_type is not None:
