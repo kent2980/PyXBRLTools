@@ -6,11 +6,16 @@ doc/
 Log/
 .vscode/
 .pytest_cache/
+*/tests/data
+*/.obsidian
+*/tests/output
+.venv
 
 # files
 *.csv
 *.pyc
 *.DS_Store
+code_test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

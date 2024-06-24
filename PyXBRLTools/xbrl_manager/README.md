@@ -1,39 +1,43 @@
-# XBRLManagerモジュール
+# BaseXbrlManager
 
-このモジュール群はディレクトリパスから、ファイル単体の解析クラスへ接続します。ディレクトリ内の全てのファイルを解析した結果を受け取り出力します。
+XBRLディレクトリの解析をするための基底クラスです。
 
-- XbrlPathManager
-- XbrlDownloadManager
-- IxbrlManager 
-- XbrlLabelManager
-- XbrlLinkManager
+このクラスを継承したクラスには下記の機能を提供します。
 
-## XbrlkPathManagerクラス
+## 機能
 
-XbrlkPathManagerクラスは、Xbrlkアプリケーションのパス管理を担当するクラスです。
+* ファイルの一覧
+* 書類の種類を表示
+* ファイルを抽出
 
-## 使用方法
-ß
-XbrlkPathManagerクラスを使用するには、以下の手順を実行します。
+## メソッド
 
-1. XbrlkPathManagerのインスタンスを作成します。
+| メソッド               | 機能                           | 戻り値    |
+| ------------------ | ---------------------------- | ------ |
+| to_filelist        | ディレクトリ内のファイルをlistで返します。      | ファイル一覧 |
+| xbrl_type          | XBRLの種類を確認します。               | 書類品種   |
+| set_linkbase_files | 関係ファイルのリストを設定します。            | インスタンス |
+| set_htmlbase_files | htmlbaseファイルのリストを設定します。      | インスタンス |
+| get_roles          | ディレクトリ内に存在するファイルのroleを取得します。 | list   |
+| to_csv             | 取得データをCSVに出力します。             | 取得データ  |
+| to_DataFrame       | 取得データをDataFrameで出力します。       | 取得データ  |
+| to_json            | 取得データをJSONで出力します。            | 取得データ  |
+| to_dict            | 取得データを辞書形式で出力します。            | 取得データ  |
 
-```python
-from Xbrlkpathmanager import XbrlkPathManager
+# IxbrlManager
 
-directory_path = "/user/doc/XBRLData"
-path_manager = XbrlkPathManager(directory_path)
-```
+XBRLディレクトリ内のixbrl.htmファイルを解析するクラスです。
 
-## サポートされているプロパティ
+決算サマリー、各財務諸表からデータを受け取り出力します。
 
-以下のがXbrlkPathManagerクラスでサポートされています。
+## 機能
 
-```python
-path_manager.ixbrl_path
-```
+* 全て、または指定ファイルからデータを取得・出力
+*
 
+## メソッド
 
-## ライセンス
-
-XbrlkPathManagerクラスはMITライセンスのもとで提供されています。
+| メソッド            | 機能                             | 戻り値       |
+| ------------------- | -------------------------------- | ------------ |
+| set_ix_non_fraction | 取得データを非分数に設定します。 | インスタンス |
+| set_ix_non_numeric  | 取得データを非数値に設定します。 | インスタンス |
