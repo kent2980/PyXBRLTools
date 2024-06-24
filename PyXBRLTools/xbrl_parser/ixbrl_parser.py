@@ -3,7 +3,7 @@ import os
 from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
 import re
-import pandas as pd
+from datetimejp import JDate
 
 class IxbrlParser(BaseXBRLParser):
     """ iXBRLを解析するクラス
@@ -40,7 +40,8 @@ class IxbrlParser(BaseXBRLParser):
         if not self.basename().endswith("ixbrl.htm"):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はixbrl.htmではありません。")
         # ドキュメントの種類を設定
-        self.__set_document(xbrl_url)
+        self.document = self.__set_document(xbrl_url)
+        self.report_type = self.__set_report_type(xbrl_url)
 
         self.__ix_non_fraction = None
         self.__ix_non_numeric = None
@@ -52,10 +53,24 @@ class IxbrlParser(BaseXBRLParser):
             file_name = os.path.basename(parse_url.path)
         else:
             file_name = os.path.basename(xbrl_url)
-        if "sm" in file_name:
-            self.document = "sm"
+        if "fr" in file_name:
+            return file_name.split('-')[1][2:4]
         else:
-            self.document = file_name.split('-')[1][2:4]
+            return "sm"
+
+    def __set_report_type(self, xbrl_url):
+        """ レポートの種類を設定する"""
+        if xbrl_url.startswith('http'):
+            parse_url = urlparse(xbrl_url)
+            file_name = os.path.basename(parse_url.path)
+        else:
+            file_name = os.path.basename(xbrl_url)
+        if "sm" in file_name:
+            return file_name.split('-')[1][2:6]
+        elif "fr" in file_name:
+            return file_name.split('-')[3][2:6]
+        else:
+            return file_name.split('-')[1]
 
     def ix_non_numeric(self):
         """ iXBRLの非数値情報を取得する
@@ -81,12 +96,43 @@ class IxbrlParser(BaseXBRLParser):
         lists = []
         tags = self.soup.find_all(name='ix:nonNumeric')
         for tag in tags:
+
             # xsi:nil属性が存在する場合はTrueに設定
             xsi_nil = True if tag.get('xsi:nil') == 'true' else False
             # escape属性が存在する場合はTrueに設定
             escape = True if tag.get('escape') == 'true' else False
+
             # text属性が存在する場合は取得
             text = tag.text.splitlines()[0].replace("　", "").replace(" ", "") if tag.text else None
+            # textの数字を半角に変換
+            text = re.sub(r'[０-９]', lambda x: chr(ord(x.group(0)) - 0xFEE0), text) if text else None
+
+            format_str = tag.get('format').split(':')[-1] if tag.get('format') else None
+
+            # 銘柄コードの場合は4文字まで取得
+            if "SecuritiesCode" in tag.get('name'):
+                text = text[0:4]
+
+            # textが日付文字列の場合はフォーマットを統一
+            if format_str:
+                if "dateyearmonthdaycjk" in format_str:
+                    # textの「yyyy年mm月dd日」を「yyyy-mm-dd」に変換
+                    text = text.replace("年", "-").replace("月", "-").replace("日", "")
+                    # textの数字部分を0埋め
+                    text = re.sub(r'(\d+)', lambda x: x.group(0).zfill(2), text)
+                    format_str = "dateyearmonthday"
+                elif "dateerayearmonthdayjp" in format_str:
+                    jd = JDate.strptime(text, '%g%e年%m月%d日')
+                    text = jd.strftime('%Y-%m-%d')
+                    # textの数字部分を0埋め
+                    text = re.sub(r'(\d+)', lambda x: x.group(0).zfill(2), text)
+                    format_str = "dateyearmonthday"
+
+            if text:
+                # textが「yyyy-mm-dd」の場合
+                if re.match(r'^\d{4}-\d{2}-\d{2}$', text):
+                    format_str = "dateyearmonthday"
+
             # 辞書に追加
             lists.append({
                 'xbrl_id': self.xbrl_id,
@@ -96,9 +142,10 @@ class IxbrlParser(BaseXBRLParser):
                 'name': tag.get('name').replace(":", "_"),
                 'xsi_nil': xsi_nil,
                 'escape': escape,
-                'format': tag.get('format').split(':')[-1] if tag.get('format') else None,
+                'format': format_str,
                 'text': text if escape == False else None,
                 'document_type': self.document,
+                'report_type': self.report_type,
             })
 
         self.data = lists
@@ -147,31 +194,10 @@ class IxbrlParser(BaseXBRLParser):
                 'xsi_nil': True if tag.get('xsi:nil') == 'true' else False,
                 'numeric': numeric,
                 'document_type': self.document,
+                'report_type': self.report_type,
             }
             lists.append(tag_dict)
 
         self.data = lists
-
-        return self
-
-    def ix_header(self):
-        """  iXBRLのヘッダー情報を取得する"""
-        df = self.ix_non_numeric().to_DataFrame()
-
-        # dfのnameカラムにDocumentNameが含まれるかどうかを判定
-        if not df['name'].str.contains('DocumentName').any():
-            return self
-
-        def extract_fields(group):
-            return pd.Series({
-                'company_name': group.loc[group['name'].str.contains('CompanyName'), 'text'].max(),
-                'code': group.loc[group['name'].str.contains('SecuritiesCode'), 'text'].max(),
-                'DocumentName': group.loc[group['name'].str.contains('DocumentName'), 'text'].max(),
-                'reporting_date': group.loc[group['name'].str.contains('FilingDate|ReportingDateOfFinancialForecastCorrection|ReportingDateOfDividendForecastCorrection|ReportingDateOfDistributionForecastCorrectionREIT'), 'text'].max()
-            })
-
-        result_df = df.groupby('xbrl_id').apply(extract_fields).reset_index()
-
-        self.data = result_df
 
         return self

@@ -1,6 +1,6 @@
 from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
 from .base_xbrl_parser import BaseXBRLParser
-import os
+
 class SchemaParser(BaseXBRLParser):
     """ スキーマファイルを解析するクラス
 

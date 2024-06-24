@@ -3,7 +3,7 @@ import shutil
 import zipfile
 from PyXBRLTools.xbrl_exception.xbrl_model_exception import (NotXbrlDirectoryException,
     NotXbrlTypeException)
-from uuid import uuid4, UUID
+from uuid import uuid4
 
 class BaseXbrlModel:
     def __init__(self, xbrl_zip_path, output_path) -> None:

@@ -2,8 +2,6 @@ from PyXBRLTools.xbrl_model.base_xbrl_model import BaseXbrlModel
 from PyXBRLTools.xbrl_manager.ixbrl_manager import IxbrlManager
 from PyXBRLTools.xbrl_manager.label_manager import LabelManager
 from PyXBRLTools.xbrl_manager.link_manager import DefLinkManager
-from pathlib import Path
-import re
 
 class RvfcModel(BaseXbrlModel):
     """
@@ -70,3 +68,4 @@ class RvfcModel(BaseXbrlModel):
             tuple: 定義リンクベースデータのリンクロケータ、リンクアークのDataFrame
         """
         return self._get_data_frames(self.def_manager, "set_link_locs", "set_link_arcs")
+

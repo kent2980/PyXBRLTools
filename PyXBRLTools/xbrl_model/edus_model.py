@@ -3,6 +3,7 @@ from PyXBRLTools.xbrl_manager.ixbrl_manager import IxbrlManager
 from PyXBRLTools.xbrl_manager.label_manager import LabelManager
 from PyXBRLTools.xbrl_manager.link_manager import DefLinkManager
 
+
 class EdusModel(BaseXbrlModel):
     """ 決算短信(米国基準)のXBRLファイルを扱うクラス """
     def __init__(self, xbrl_zip_path, output_path) -> None:

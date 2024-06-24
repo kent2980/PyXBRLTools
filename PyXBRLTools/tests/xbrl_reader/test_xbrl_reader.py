@@ -37,8 +37,6 @@ def test_get_model(xbrl_reader):
 
 def test_ixbrl(get_current_path):
     output_path = get_current_path / "data" / "output"
-    output_csv_path = get_current_path / "output" / "xbrl_csv"
-    output_all_csv_path = get_current_path / "output" / "xbrl_all_csv"
     output_error_text_path = get_current_path / "output" / "error_txt"
     zip_path = "/Users/user/Documents/tdnet/tdnet"
     # ディレクトリ内のzipファイルを再起的に取得
@@ -58,21 +56,15 @@ def test_ixbrl(get_current_path):
                 assert not ix_header.empty
                 # zip_fileのファイル名を取得
                 if count == 0:
-                    # connector.create_table_from_df("ix_non_fraction", ix_non_fraction)
-                    # connector.create_table_from_df("ix_non_numeric", ix_non_numeric)
-                    connector.create_table_from_df("ix_title_header", ix_header)
+                    connector.create_table_from_df("aix_non_fraction", ix_non_fraction)
+                    connector.create_table_from_df("aix_non_numeric", ix_non_numeric)
+                    connector.create_table_from_df("aix_title_header", ix_header)
                 else:
-                    # connector.add_data_from_df("ix_non_fraction", ix_non_fraction)
-                    # connector.add_data_from_df("ix_non_numeric", ix_non_numeric)
-                    connector.add_data_from_df("ix_title_header", ix_header)
+                    connector.add_data_from_df("aix_non_fraction", ix_non_fraction)
+                    connector.add_data_from_df("aix_non_numeric", ix_non_numeric)
+                    connector.add_data_from_df("aix_title_header", ix_header)
                 count += 1
-                # file_name = zip_file.name.split(".")[0]
-                # ix_non_fraction.to_csv(output_csv_path / f"{file_name}_ix_non_fraction.csv", index=False)
-                # ix_non_numeric.to_csv(output_csv_path / f"{file_name}_ix_non_numeric.csv", index=False)
-                # 全てのzipファイルから取得したixbrl情報をcsvに追記していく
-                # ix_non_fraction.to_csv(output_all_csv_path / "ix_non_fraction.csv", mode="a", header=False, index=False, encoding="utf-8")
-                # ix_non_numeric.to_csv(output_all_csv_path / "ix_non_numeric.csv", mode="a", header=False, index=False, encoding="utf-8")
-            except ValueError as e:
+            except Exception as e:
                 # エラーが発生したファイル名とエラーメッセージをテキストファイルに出力
                 with open(output_error_text_path / "error.txt", "a") as f:
                     f.write(f"{zip_file}: {e}\n")
