@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<linkbase xmlns="http://www.xbrl.org/2003/linkbase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <labelLink xlink:type="extended" xlink:role="http://www.xbrl.org/2003/role/link">
+    <loc xlink:type="locator" xlink:href="tse-at-t-2014-01-12.xsd#tse-at-t_AttachedDocumentHeading" xlink:label="AttachedDocumentHeading" xlink:title="AttachedDocumentHeading"/>
+    <label xlink:type="resource" xlink:label="label_AttachedDocumentHeading" xlink:role="http://www.xbrl.org/2003/role/label" xlink:title="label_AttachedDocumentHeading" xml:lang="ja" id="label_AttachedDocumentHeading">添付資料</label>
+    <labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AttachedDocumentHeading" xlink:to="label_AttachedDocumentHeading" xlink:title="label: AttachedDocumentHeading to label_AttachedDocumentHeading"/>
+    <label xlink:type="resource" xlink:label="label_AttachedDocumentHeading_2" xlink:role="http://www.xbrl.org/2003/role/verboseLabel" xlink:title="label_AttachedDocumentHeading" xml:lang="ja" id="label_AttachedDocumentHeading_2">添付資料 [目次項目]</label>
+    <labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AttachedDocumentHeading" xlink:to="label_AttachedDocumentHeading_2" xlink:title="label: AttachedDocumentHeading to label_AttachedDocumentHeading"/>
+  </labelLink>
+</linkbase>

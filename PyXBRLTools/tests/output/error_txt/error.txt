@@ -1,0 +1,11 @@
+2024-06-24 07:54:00.231783: /Users/user/Documents/tdnet/tdnet/20230627/081220230626511224.zip: single positional indexer is out-of-bounds
+2024-06-24 10:15:34.907810: /Users/user/Documents/tdnet/tdnet/20230620/081220230613502136.zip: single positional indexer is out-of-bounds
+2024-06-24 10:15:46.383070: /Users/user/Documents/tdnet/tdnet/20230620/081220230614502957.zip: single positional indexer is out-of-bounds
+2024-06-24 10:31:07.094166: /Users/user/Documents/tdnet/tdnet/20230412/081220230410544749.zip: single positional indexer is out-of-bounds
+2024-06-24 10:52:12.312984: /Users/user/Documents/tdnet/tdnet/20230412/081220230411545205.zip: single positional indexer is out-of-bounds
+2024-06-24 11:16:05.617754: /Users/user/Documents/tdnet/tdnet/20240308/081220240307550421.zip: single positional indexer is out-of-bounds
+2024-06-24 11:16:39.361313: /Users/user/Documents/tdnet/tdnet/20240308/081220240308550774.zip: 'NoneType' object has no attribute 'initialize_managers'
+2024-06-24 11:32:27.191331: /Users/user/Documents/tdnet/tdnet/20230629/081220230629514117.zip: single positional indexer is out-of-bounds
+2024-06-24 11:32:52.809230: /Users/user/Documents/tdnet/tdnet/20230629/081220230621508023.zip: 'NoneType' object has no attribute 'initialize_managers'
+2024-06-24 11:34:14.868345: /Users/user/Documents/tdnet/tdnet/20230616/081220230616505020.zip: single positional indexer is out-of-bounds
+2024-06-24 11:34:55.264889: /Users/user/Documents/tdnet/tdnet/20230616/081220230616505265.zip: single positional indexer is out-of-bounds

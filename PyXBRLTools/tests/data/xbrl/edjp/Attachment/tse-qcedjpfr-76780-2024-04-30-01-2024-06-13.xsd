@@ -1,0 +1,31 @@
+﻿<?xml version="1.0"?>
+<!-- XBRL Document Created with WizLabo Platform -->
+<schema xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:tse-qcedjpfr-76780="http://www.xbrl.tdnet.info/jp/tse/tdnet/qc/edjp/fr/76780/2024-04-30/01/2024-06-13" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" targetNamespace="http://www.xbrl.tdnet.info/jp/tse/tdnet/qc/edjp/fr/76780/2024-04-30/01/2024-06-13" xmlns="http://www.w3.org/2001/XMLSchema">
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor" />
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_rt_2022-11-01.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_rt" />
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/jppfs_cor_2022-11-01.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/jppfs_cor" />
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/jppfs_rt_2022-11-01.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/jppfs_rt" />
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/jpdei_cor_2013-08-31.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/jpdei_cor" />
+  <import schemaLocation="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/jpdei_rt_2013-08-31.xsd" namespace="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/jpdei_rt" />
+  <import schemaLocation="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/t/2014-01-12/tse-at-t-2014-01-12.xsd" namespace="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/t/2014-01-12" />
+  <import schemaLocation="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/o/rt/2014-01-12/tse-at-rt-2014-01-12.xsd" namespace="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/o/rt/2014-01-12" />
+  <annotation>
+    <appinfo>
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/label/jpcrp_2022-11-01_lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/label/jpcrp_2022-11-01_lab-en.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/label/jpcrp_2022-11-01_gla.xml" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/label/jppfs_2022-11-01_lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/label/jppfs_2022-11-01_lab-en.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2022-11-01/label/jppfs_2022-11-01_gla.xml" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/label/jpdei_2013-08-31_lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/label/jpdei_2013-08-31_lab-en.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/label/jpdei_2013-08-31_gla.xml" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://disclosure.edinet-fsa.go.jp/taxonomy/jpdei/2013-08-31/r/jpdei_000100-000_2013-08-31_def.xml" xlink:role="http://www.xbrl.org/2003/role/definitionLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/t/2014-01-12/tse-at-t-2014-01-12-lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="http://www.xbrl.tdnet.info/taxonomy/jp/tse/tdnet/at/t/2014-01-12/tse-at-t-2014-01-12-lab-en.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="tse-qcedjpfr-76780-2024-04-30-01-2024-06-13-pre.xml" xlink:role="http://www.xbrl.org/2003/role/presentationLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="tse-qcedjpfr-76780-2024-04-30-01-2024-06-13-def.xml" xlink:role="http://www.xbrl.org/2003/role/definitionLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+      <link:linkbaseRef xlink:type="simple" xlink:href="tse-qcedjpfr-76780-2024-04-30-01-2024-06-13-cal.xml" xlink:role="http://www.xbrl.org/2003/role/calculationLinkbaseRef" xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" />
+    </appinfo>
+  </annotation>
+</schema>
