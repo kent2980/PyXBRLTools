@@ -6,6 +6,10 @@ doc/
 Log/
 .vscode/
 .pytest_cache/
+*/tests/data
+*/.obsidian
+*/tests/output
+.venv
 
 # files
 *.csv
