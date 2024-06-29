@@ -100,7 +100,7 @@ class LabelParser(BaseXBRLParser):
 
         return self
 
-    def link_locs(self):
+    def link_label_locs(self):
         """link:loc要素を取得するメソッド。
 
         returns:
@@ -161,7 +161,7 @@ class LabelParser(BaseXBRLParser):
 
         df = DataFrame(lists)
 
-        link_locs = self.link_locs().to_DataFrame()
+        link_locs = self.link_label_locs().to_DataFrame()
 
         # self._link_label_arcs(xlink_from)にlink_locs(xlink_label)のxlink_schemaカラムを追加
         df = df.merge(link_locs[['xlink_label', 'xlink_schema']],

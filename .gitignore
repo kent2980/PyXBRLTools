@@ -16,6 +16,7 @@ Log/
 *.pyc
 *.DS_Store
 code_test.py
+*.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

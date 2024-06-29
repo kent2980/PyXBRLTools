@@ -35,6 +35,12 @@ def test_get_model(xbrl_reader):
     model = xbrl_reader.get_model()
     assert isinstance(model, (EdifModel, EditModel, EdjpModel, EdusModel, EfjpModel, RejpModel, RrdfModel, RrfcModel, RvdfModel, RvfcModel))
 
+def test_dict_key(xbrl_reader):
+    model = xbrl_reader.get_model()
+    dict = model.get_all_data()
+    # assert isinstance(dict, dict | None)
+    assert all([key in dict for key in ["ixbrl", "label", "cal", "def", "pre"]])
+
 def test_ixbrl(get_current_path):
     output_path = get_current_path / "data" / "output"
     output_error_text_path = get_current_path / "output" / "error_txt"
@@ -42,7 +48,7 @@ def test_ixbrl(get_current_path):
     # ディレクトリ内のzipファイルを再起的に取得
     zip_files = [file for file in Path(zip_path).rglob("*.zip")]
     # sqlコネクターを作成
-    connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "full6839")
+    connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "changethis")
     connector.connect()
     count = 0
     for zip_file in zip_files:
@@ -50,20 +56,53 @@ def test_ixbrl(get_current_path):
         model = xbrl_reader.get_model()
         if not model is  None:
             try:
-                ix_non_fraction, ix_non_numeric, ix_header = model.get_ixbrl()
-                assert not ix_non_fraction.empty
-                assert not ix_non_numeric.empty
-                assert not ix_header.empty
-                # zip_fileのファイル名を取得
-                if count == 0:
-                    connector.create_table_from_df("aix_non_fraction", ix_non_fraction)
-                    connector.create_table_from_df("aix_non_numeric", ix_non_numeric)
-                    connector.create_table_from_df("aix_title_header", ix_header)
-                else:
-                    connector.add_data_from_df("aix_non_fraction", ix_non_fraction)
-                    connector.add_data_from_df("aix_non_numeric", ix_non_numeric)
-                    connector.add_data_from_df("aix_title_header", ix_header)
-                count += 1
+                dict = model.get_all_data()
+                if not dict is None:
+                    if "ixbrl" in dict:
+                        dict_value = dict["ixbrl"]
+                        # テーブルが存在するか確認
+                        if not connector.is_exist_table("ix_non_fraction"):
+                            connector.create_table_from_df("ix_non_fraction", dict_value[0])
+                            connector.create_table_from_df("ix_non_numeric", dict_value[1])
+                            connector.create_table_from_df("ix_header", dict_value[2])
+                        else:
+                            connector.add_data_from_df_ignore_duplicate("ix_non_fraction", dict_value[0])
+                            connector.add_data_from_df_ignore_duplicate("ix_non_numeric", dict_value[1])
+                            connector.add_data_from_df_ignore_duplicate("ix_header", dict_value[2])
+                    if "label" in dict:
+                        dict_value = dict["label"]
+                        if not connector.is_exist_table("link_label_locs"):
+                            connector.create_table_from_df("link_label_locs", dict_value[0])
+                            connector.create_table_from_df("link_label_arcs", dict_value[1])
+                            connector.create_table_from_df("link_labels", dict_value[2])
+                        else:
+                            connector.add_data_from_df_ignore_duplicate("link_label_locs", dict_value[0])
+                            connector.add_data_from_df_ignore_duplicate("link_label_arcs", dict_value[1])
+                            connector.add_data_from_df_ignore_duplicate("link_labels", dict_value[2])
+                    if "def" in dict:
+                        dict_value = dict["def"]
+                        if not connector.is_exist_table("def_link_locs"):
+                            connector.create_table_from_df("def_link_locs", dict_value[0])
+                            connector.create_table_from_df("def_link_arcs", dict_value[1])
+                        else:
+                            connector.add_data_from_df_ignore_duplicate("def_link_locs", dict_value[0])
+                            connector.add_data_from_df_ignore_duplicate("def_link_arcs", dict_value[1])
+                    if "cal" in dict:
+                        dict_value = dict["cal"]
+                        if not connector.is_exist_table("cal_link_locs"):
+                            connector.create_table_from_df("cal_link_locs", dict_value[0])
+                            connector.create_table_from_df("cal_link_arcs", dict_value[1])
+                        else:
+                            connector.add_data_from_df_ignore_duplicate("cal_link_locs", dict_value[0])
+                            connector.add_data_from_df_ignore_duplicate("cal_link_arcs", dict_value[1])
+                    if "pre" in dict:
+                        dict_value = dict["pre"]
+                        if not connector.is_exist_table("pre_link_locs"):
+                            connector.create_table_from_df("pre_link_locs", dict_value[0])
+                            connector.create_table_from_df("pre_link_arcs", dict_value[1])
+                        else:
+                            connector.add_data_from_df_ignore_duplicate("pre_link_locs", dict_value[0])
+                            connector.add_data_from_df_ignore_duplicate("pre_link_arcs", dict_value[1])
             except Exception as e:
                 # エラーが発生したファイル名とエラーメッセージをテキストファイルに出力
                 with open(output_error_text_path / "error.txt", "a") as f:

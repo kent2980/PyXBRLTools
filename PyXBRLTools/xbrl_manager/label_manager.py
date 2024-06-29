@@ -84,7 +84,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_link_locs(self, document_type=None):
+    def set_link_label_locs(self, document_type=None):
         """
         loc属性を設定します。
         loc情報を取得します。
@@ -100,9 +100,9 @@ class LabelManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith("lab.xml"):
                 if df is None:
-                    df = LabelParser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
+                    df = LabelParser.create(row["xlink_href"], output_path).link_label_locs().to_DataFrame()
                 else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()], ignore_index=True)
+                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_label_locs().to_DataFrame()], ignore_index=True)
 
         self.loc = df
         self.data = self.loc

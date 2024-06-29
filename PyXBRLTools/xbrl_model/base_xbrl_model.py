@@ -4,6 +4,7 @@ import zipfile
 from PyXBRLTools.xbrl_exception.xbrl_model_exception import (NotXbrlDirectoryException,
     NotXbrlTypeException)
 from uuid import uuid4
+import pandas as pd
 
 class BaseXbrlModel:
     def __init__(self, xbrl_zip_path, output_path) -> None:
@@ -105,3 +106,11 @@ class BaseXbrlModel:
     def _get_data_frames(self, manager, *methods):
         """指定されたマネージャーとメソッドからDataFrameを取得する"""
         return tuple(getattr(manager, method)().to_DataFrame() for method in methods)
+
+    def _get_xbrl_id(self, tuple):
+        """ tuple内のDataFrameにxbrl_idを追加する"""
+        for df in tuple:
+            if isinstance(df, pd.DataFrame):
+                df['xbrl_id'] = self.xbrl_id
+
+        return tuple

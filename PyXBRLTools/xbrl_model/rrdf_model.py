@@ -19,12 +19,23 @@ class RrdfModel(BaseXbrlModel):
 
     def get_ixbrl(self):
         """iXBRLデータを取得するメソッド"""
-        return self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric", "set_ix_header")
+        value = self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric", "set_ix_header")
+        return self._get_xbrl_id(value)
 
     def get_label(self):
         """ラベルリンクベースのデータを取得するメソッド"""
-        return self._get_data_frames(self.label_manager, "set_link_locs", "set_link_label_arcs", "set_link_labels")
+        return self._get_data_frames(self.label_manager, "set_link_label_locs", "set_link_label_arcs", "set_link_labels")
 
     def get_def_linkbase(self):
         """定義リンクベースのデータを取得するメソッド"""
-        return self._get_data_frames(self.def_manager, "set_link_locs", "set_link_arcs")
+        value = self._get_data_frames(self.def_manager, "set_link_locs", "set_link_arcs")
+        return self._get_xbrl_id(value)
+
+    def get_all_data(self):
+        """全てのデータを取得するメソッド"""
+        dict = {
+            "ixbrl": self.get_ixbrl(),
+            "label": self.get_label(),
+            "def": self.get_def_linkbase()
+        }
+        return dict

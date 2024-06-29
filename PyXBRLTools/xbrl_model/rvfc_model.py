@@ -43,29 +43,25 @@ class RvfcModel(BaseXbrlModel):
         self.def_manager = self._create_manager(DefLinkManager, "def").set_xbrl_id(self.xbrl_id)
 
     def get_ixbrl(self):
-        """
-        iXBRLデータを取得する
-
-        Returns:
-            tuple: iXBRLデータの非分数表現と非数値表現のDataFrame
-        """
-        return self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric", "set_ix_header")
+        """iXBRLデータを取得するメソッド"""
+        value = self._get_data_frames(self.ixbrl_manager, "set_ix_non_fraction", "set_ix_non_numeric", "set_ix_header")
+        return self._get_xbrl_id(value)
 
     def get_label(self):
-        """
-        ラベルデータを取得する
-
-        Returns:
-            tuple: ラベルデータのリンクロケータ、リンクラベルアーク、リンクラベルのDataFrame
-        """
-        return self._get_data_frames(self.label_manager, "set_link_locs", "set_link_label_arcs", "set_link_labels")
+        """ラベルリンクベースのデータを取得するメソッド"""
+        return self._get_data_frames(self.label_manager, "set_link_label_locs", "set_link_label_arcs", "set_link_labels")
 
     def get_def_linkbase(self):
-        """
-        定義リンクベースデータを取得する
+        """定義リンクベースのデータを取得するメソッド"""
+        value = self._get_data_frames(self.def_manager, "set_link_locs", "set_link_arcs")
+        return self._get_xbrl_id(value)
 
-        Returns:
-            tuple: 定義リンクベースデータのリンクロケータ、リンクアークのDataFrame
-        """
-        return self._get_data_frames(self.def_manager, "set_link_locs", "set_link_arcs")
+    def get_all_data(self):
+        """全てのデータを取得するメソッド"""
+        dict = {
+            "ixbrl": self.get_ixbrl(),
+            "label": self.get_label(),
+            "def": self.get_def_linkbase()
+        }
+        return dict
 

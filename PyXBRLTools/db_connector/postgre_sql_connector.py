@@ -281,3 +281,53 @@ class PostgreSqlConnector:
         finally:
             if cursor:
                 cursor.close()
+
+    # テーブルが存在するか確認する関数を追加
+    def is_exist_table(self, table_name):
+        """ テーブルが存在するか確認
+
+        Args:
+        table_name (str): テーブル名
+
+        Returns:
+        bool: テーブルが存在する場合は True、存在しない場合は False
+
+        Examples:
+        >>> connector.is_exist_table("your_table")
+        """
+        try:
+            cursor = self.connection.cursor()
+            query = f"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '{table_name}')"
+            cursor.execute(query)
+            return cursor.fetchone()[0]
+        except (Exception, psycopg2.Error) as error:
+            print("Error while checking table existence:", error)
+        finally:
+            if cursor:
+                cursor.close()
+
+    # データフレームからテーブルにデータを挿入する関数を追加、ただしテーブル内に重複するデータがある場合は挿入しない
+    def add_data_from_df_ignore_duplicate(self, table_name, df):
+        """ データフレームからデータを追加（重複するデータは挿入しない）
+
+        Args:
+        table_name (str): テーブル名
+        df (pandas.DataFrame): データフレーム
+
+        Examples:
+        >>> connector.add_data_from_df_ignore_duplicate("your_table", df)
+        output: Data added successfully!
+        """
+        try:
+            cursor = self.connection.cursor()
+            for index, row in df.iterrows():
+                query = f"INSERT INTO {table_name} ({', '.join(df.columns)}) VALUES ({', '.join(['%s']*len(df.columns))}) ON CONFLICT DO NOTHING"
+                cursor.execute(query, tuple(row))
+            self.connection.commit()
+            print("Data added successfully!")
+        except (Exception, psycopg2.Error) as error:
+            print("Error while adding data:", error)
+            self.connection.rollback()
+        finally:
+            if cursor:
+                cursor.close()
