@@ -306,23 +306,32 @@ class PostgreSqlConnector:
             if cursor:
                 cursor.close()
 
-    # データフレームからテーブルにデータを挿入する関数を追加、ただしテーブル内に重複するデータがある場合は挿入しない
+    # データフレームからテーブルにデータを挿入する関数を追加、EXISTSを使用してユニーク制約や主キーが設定されていなくてもテーブル内に重複するデータがある場合は挿入しない
     def add_data_from_df_ignore_duplicate(self, table_name, df):
-        """ データフレームからデータを追加（重複するデータは挿入しない）
+        """ データフレームからデータを追加（重複データは無視）
 
         Args:
-        table_name (str): テーブル名
-        df (pandas.DataFrame): データフレーム
+            table_name (str): テーブル名
+            df (pandas.DataFrame): データフレーム
 
         Examples:
-        >>> connector.add_data_from_df_ignore_duplicate("your_table", df)
-        output: Data added successfully!
+            >>> connector.add_data_from_df_ignore_duplicate("your_table", df)
         """
         try:
             cursor = self.connection.cursor()
             for index, row in df.iterrows():
-                query = f"INSERT INTO {table_name} ({', '.join(df.columns)}) VALUES ({', '.join(['%s']*len(df.columns))}) ON CONFLICT DO NOTHING"
-                cursor.execute(query, tuple(row))
+                # テーブルのすべての列を使用して重複チェック
+                conditions = ' AND '.join([f"{col} = %s" for col in df.columns])
+                check_query = f"SELECT 1 FROM {table_name} WHERE {conditions} LIMIT 1"
+
+                # 挿入するクエリ
+                insert_query = f"INSERT INTO {table_name} ({', '.join(df.columns)}) VALUES ({', '.join(['%s']*len(df.columns))})"
+
+                # 重複をチェック
+                cursor.execute(check_query, tuple(row))
+                if cursor.fetchone() is None:
+                    cursor.execute(insert_query, tuple(row))
+
             self.connection.commit()
             print("Data added successfully!")
         except (Exception, psycopg2.Error) as error:

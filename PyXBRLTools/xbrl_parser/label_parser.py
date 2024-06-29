@@ -120,10 +120,16 @@ class LabelParser(BaseXBRLParser):
 
         tags = self.soup.find_all(name=['link:loc', 'loc'])
         for tag in tags:
+
+            # Properties
+            xlink_schema = tag.get('xlink:href').split('#')[0].split("/")[-1] if tag.get('xlink:href') else None
+            xlink_href = tag.get('xlink:href').split('#')[-1:][0] if tag.get('xlink:href') else None
+
+            # Add to lists
             dict = {
                 'xlink_type': tag.get('xlink:type'),
-                'xlink_schema': tag.get('xlink:href').split('#')[0],
-                'xlink_href': tag.get('xlink:href').split('#')[-1:][0],
+                'xlink_schema': xlink_schema,
+                'xlink_href': xlink_href,
                 'xlink_label': tag.get('xlink:label'),
             }
             lists.append(dict)
