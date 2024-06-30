@@ -1,5 +1,7 @@
 from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
+from pandas import DataFrame
 from .base_xbrl_parser import BaseXBRLParser
+import pandas as pd
 
 class BaseLinkParser(BaseXBRLParser):
     """ BaseLinkParserのクラス"""
@@ -70,19 +72,33 @@ class BaseLinkParser(BaseXBRLParser):
         link_tags = self.soup.find_all(self.link_tag_name)
 
         lists = []
+
+        arcs = self.link_arcs().to_DataFrame()
         for link_tag in link_tags:
 
             attr_value = link_tag.get('xlink:role')
 
             tags = link_tag.find_all(['link:loc', 'loc'])
             for tag in tags:
+                xlink_schema = tag.get('xlink:href').split('#')[0]
+                if '_' in xlink_schema:
+                    name_space = '_'.join(xlink_schema.split('_')[:-1])
+                elif '/' in xlink_schema:
+                    name_space = '/'.join(xlink_schema.split('/')[:-1])
+                else:
+                    name_space = xlink_schema
+
+                # xlink_labelを取得
+                xlink_label = tag.get('xlink:label')
+
                 lists.append({
                     'xbrl_id': self.xbrl_id,
                     'attr_value': attr_value,
                     'xlink_type': tag.get('xlink:type'),
-                    'xlink_schema': tag.get('xlink:href').split('#')[0],
+                    'xlink_schema': xlink_schema,
                     'xlink_href': tag.get('xlink:href').split('#')[1],
-                    'xlink_label': tag.get('xlink:label'),
+                    'xlink_label': xlink_label,
+                    # 'name_space': name_space,
                 })
 
         self.data = lists
@@ -190,6 +206,45 @@ class BaseLinkParser(BaseXBRLParser):
             lists.append(dict)
 
         self.data = lists
+
+        return self
+
+    def select_loc_in_arcrole(self, arcrole):
+        """arcroleに一致するlink:loc要素を取得するメソッド。
+
+        args:
+            arcrole (str): arcroleの値。
+
+        returns:
+            DataFrame: arcroleに一致するlink:loc要素を含むDataFrame。
+
+        example:
+            >>> parser = XmlLabelParser("**-lab.xml")
+            >>> df = parser.select_loc_in_arcrole('http://www.xbrl.org/2003/arcrole/concept-label').to_DataFrame()
+
+            [取得するDataFrameの例]\n
+            xlink_type (str): locator\n
+        xlink_href (str): jppfs_cor_StatementOfChangesInEquity\n
+        xlink_label (str): jppfs_cor_StatementOfChangesInEquity
+        """
+
+        lists = []
+
+        arcs = self.link_arcs().to_DataFrame()
+        locs = self.link_locs().to_DataFrame()
+        # locsと同じ列名のDataFrameを作成
+        combined_df = DataFrame(columns=locs.columns)
+
+        for arc in arcs[arcs['xlink_arcrole'] == arcrole].iterrows():
+            from_loc = locs[locs['xlink_label'] == arc[1]['xlink_from']]
+            to_loc = locs[locs['xlink_label'] == arc[1]['xlink_to']]
+
+            combined_df = pd.concat([combined_df, from_loc, to_loc])
+
+        # 重複行を削除する
+        unique_df = combined_df.drop_duplicates()
+
+        self.data = unique_df.to_dict(orient='records')
 
         return self
 

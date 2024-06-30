@@ -133,6 +133,10 @@ class IxbrlParser(BaseXBRLParser):
                 if re.match(r'^\d{4}-\d{2}-\d{2}$', text):
                     format_str = "dateyearmonthday"
 
+            # name_spaceを取得
+            name_spaces = self.name_spaces()
+            name_apace = name_spaces[tag.get('name').split(":")[0]]
+
             # 辞書に追加
             lists.append({
                 'xbrl_id': self.xbrl_id,
@@ -146,6 +150,7 @@ class IxbrlParser(BaseXBRLParser):
                 'text': text if escape == False else None,
                 'document_type': self.document,
                 'report_type': self.report_type,
+                # 'name_space': name_apace
             })
 
         self.data = lists
@@ -180,6 +185,10 @@ class IxbrlParser(BaseXBRLParser):
         tags = self.soup.find_all(name='ix:nonFraction')
         for tag in tags:
             numeric = re.sub(',','',tag.text) if tag.text else None
+
+            # name_spaceを取得
+            name_spaces = self.name_spaces()
+            name_apace = name_spaces[tag.get('name').split(":")[0]]
             tag_dict = {
                 'xbrl_id': self.xbrl_id,
                 'context_period': tag.get('contextRef').split("_")[0],
@@ -195,9 +204,31 @@ class IxbrlParser(BaseXBRLParser):
                 'numeric': numeric,
                 'document_type': self.document,
                 'report_type': self.report_type,
+                # 'name_space': name_apace
             }
             lists.append(tag_dict)
 
         self.data = lists
 
         return self
+
+    def name_spaces(self):
+        """ 名前空間を取得する
+
+        Returns:
+            str: 名前空間
+
+        Examples:
+            >>> parser = IxbrlParser.create(file_path)
+            >>> print(parser.name_space())
+            [output]:
+            http://www.xbrl.org/2003/instance
+        """
+        # htmlタグのxmlns:から始まる属性を全て取得
+        name_spaces = {}
+        tags = self.soup.find_all("html")
+        for tag in tags:
+            for key, value in tag.attrs.items():
+                if key.startswith("xmlns:"):
+                    name_spaces[key.split(':')[-1]] = value
+        return name_spaces

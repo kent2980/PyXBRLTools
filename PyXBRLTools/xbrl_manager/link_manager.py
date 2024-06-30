@@ -60,9 +60,12 @@ class BaseLinkManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if df is None:
                 df = self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
+                df['document_type'] = row['document_type']
             else:
-                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()], ignore_index=True)
-
+                new_df = self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
+                new_df['document_type'] = row['document_type']
+                df = pandas.concat([df, new_df], ignore_index=True)
+        print(df)
         self.label = df
         self.data = self.label
 
@@ -77,9 +80,13 @@ class BaseLinkManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if df is None:
                 df = self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()
+                df['document_type'] = row['document_type']
             else:
-                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()], ignore_index=True)
+                new_df = self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()
+                new_df['document_type'] = row['document_type']
+                df = pandas.concat([df, new_df], ignore_index=True)
 
+        print(df)
         self.label = df
         self.data = self.label
 

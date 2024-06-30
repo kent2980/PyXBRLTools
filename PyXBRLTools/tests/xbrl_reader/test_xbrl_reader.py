@@ -12,6 +12,7 @@ from PyXBRLTools.xbrl_model.rvfc_model import RvfcModel
 from PyXBRLTools.xbrl_model.rvdf_model import RvdfModel
 from pathlib import Path
 from PyXBRLTools.db_connector.postgre_sql_connector import PostgreSqlConnector
+import time
 
 @pytest.fixture
 def xbrl_reader(get_current_path):
@@ -50,8 +51,15 @@ def test_ixbrl(get_current_path):
     # sqlコネクターを作成
     connector = PostgreSqlConnector("localhost", 5432, "fsstock", "postgres", "changethis")
     connector.connect()
-    count = 0
+    ix = True
+    label = True
+    cal = True
+    def_link = True
+    pre_link = True
     for zip_file in zip_files:
+        # 実行時間を計測
+        start_time = time.time()
+
         xbrl_reader = XbrlReader(zip_file.as_posix(), output_path)
         model = xbrl_reader.get_model()
         if not model is  None:
@@ -61,50 +69,63 @@ def test_ixbrl(get_current_path):
                     if "ixbrl" in dict:
                         dict_value = dict["ixbrl"]
                         # テーブルが存在するか確認
-                        if not connector.is_exist_table("ix_non_fraction"):
+                        if ix:
                             connector.create_table_from_df("ix_non_fraction", dict_value[0])
                             connector.create_table_from_df("ix_non_numeric", dict_value[1])
                             connector.create_table_from_df("ix_header", dict_value[2])
+                            ix = False
                         else:
-                            connector.add_data_from_df_ignore_duplicate("ix_non_fraction", dict_value[0])
-                            connector.add_data_from_df_ignore_duplicate("ix_non_numeric", dict_value[1])
-                            connector.add_data_from_df_ignore_duplicate("ix_header", dict_value[2])
+                            connector.add_data_from_df("ix_non_fraction", dict_value[0])
+                            connector.add_data_from_df("ix_non_numeric", dict_value[1])
+                            connector.add_data_from_df("ix_header", dict_value[2])
                     if "label" in dict:
                         dict_value = dict["label"]
-                        if not connector.is_exist_table("link_label_locs"):
+                        if label:
                             connector.create_table_from_df("link_label_locs", dict_value[0])
+                            connector.set_unique_key("link_label_locs", ["xlink_schema", "xlink_label"])
                             connector.create_table_from_df("link_label_arcs", dict_value[1])
+                            connector.set_unique_key("link_label_arcs", ["xlink_from", "xlink_to", "xlink_schema"])
                             connector.create_table_from_df("link_labels", dict_value[2])
+                            connector.set_unique_key("link_labels", ["xlink_label", "xlink_role", "xml_lang"])
+                            label = False
                         else:
                             connector.add_data_from_df_ignore_duplicate("link_label_locs", dict_value[0])
                             connector.add_data_from_df_ignore_duplicate("link_label_arcs", dict_value[1])
                             connector.add_data_from_df_ignore_duplicate("link_labels", dict_value[2])
                     if "def" in dict:
                         dict_value = dict["def"]
-                        if not connector.is_exist_table("def_link_locs"):
+                        if def_link:
                             connector.create_table_from_df("def_link_locs", dict_value[0])
                             connector.create_table_from_df("def_link_arcs", dict_value[1])
+                            def_link = False
                         else:
-                            connector.add_data_from_df_ignore_duplicate("def_link_locs", dict_value[0])
-                            connector.add_data_from_df_ignore_duplicate("def_link_arcs", dict_value[1])
+                            connector.add_data_from_df("def_link_locs", dict_value[0])
+                            connector.add_data_from_df("def_link_arcs", dict_value[1])
                     if "cal" in dict:
                         dict_value = dict["cal"]
-                        if not connector.is_exist_table("cal_link_locs"):
+                        if cal:
                             connector.create_table_from_df("cal_link_locs", dict_value[0])
                             connector.create_table_from_df("cal_link_arcs", dict_value[1])
+                            cal = False
                         else:
-                            connector.add_data_from_df_ignore_duplicate("cal_link_locs", dict_value[0])
-                            connector.add_data_from_df_ignore_duplicate("cal_link_arcs", dict_value[1])
+                            connector.add_data_from_df("cal_link_locs", dict_value[0])
+                            connector.add_data_from_df("cal_link_arcs", dict_value[1])
                     if "pre" in dict:
                         dict_value = dict["pre"]
-                        if not connector.is_exist_table("pre_link_locs"):
+                        if pre_link:
                             connector.create_table_from_df("pre_link_locs", dict_value[0])
                             connector.create_table_from_df("pre_link_arcs", dict_value[1])
+                            pre_link = False
                         else:
-                            connector.add_data_from_df_ignore_duplicate("pre_link_locs", dict_value[0])
-                            connector.add_data_from_df_ignore_duplicate("pre_link_arcs", dict_value[1])
+                            connector.add_data_from_df("pre_link_locs", dict_value[0])
+                            connector.add_data_from_df("pre_link_arcs", dict_value[1])
             except Exception as e:
-                # エラーが発生したファイル名とエラーメッセージをテキストファイルに出力
+                # エラーが発生したファイル名とエラーメッセージとエラー発生箇所をテキストファイルに出力
                 with open(output_error_text_path / "error.txt", "a") as f:
                     f.write(f"{zip_file}: {e}\n")
+        # 実行時間を取得
+        elapsed_time = time.time() - start_time
+        # 実行時間をテキストファイルに出力
+        with open(output_error_text_path / "time.txt", "a") as f:
+            f.write(f"{zip_file}: {elapsed_time}\n")
     connector.disconnect()
