@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from uuid import UUID, uuid4
 
@@ -27,7 +28,7 @@ class BaseXbrlManager:
     def __init__(self, directory_path) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
-        self.data: DataFrame | None = None
+        self.data = {}
         self.__xbrl_id = str(uuid4())
 
     @property
@@ -162,19 +163,9 @@ class BaseXbrlManager:
 
         return self
 
-    def to_csv(self, file_path):
-        """CSV形式で出力する"""
-        df = DataFrame(self.data)
-        df.to_csv(file_path, index=False)
-
     def to_DataFrame(self):
         """DataFrame形式で出力する"""
         return DataFrame(self.data)
-
-    def to_json(self, file_path):
-        """JSON形式で出力する"""
-        df = DataFrame(self.data)
-        df.to_json(file_path, orient="records", lines=True)
 
     def to_dict(self):
         """辞書形式で出力する"""
