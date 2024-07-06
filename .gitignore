@@ -6,7 +6,9 @@ doc/
 Log/
 .vscode/
 .pytest_cache/
-*/tests/data
+*/tests/.data
+*/tests/.output
+*/tests/.xbrl
 */.obsidian
 */tests/output
 .venv

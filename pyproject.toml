@@ -4,7 +4,7 @@ version = "1.1.18"
 description = "timery disclosure download API"
 authors = ["kent <kent2980@gmail.com>"]
 readme = "README.md"
-packages = [{include = "PyXBRLTools"}]
+packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
