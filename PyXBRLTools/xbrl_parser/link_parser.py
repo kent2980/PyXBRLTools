@@ -1,10 +1,14 @@
-from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
-from pandas import DataFrame
-from .base_xbrl_parser import BaseXBRLParser
 import pandas as pd
+from pandas import DataFrame
+
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
+
+from .base_xbrl_parser import BaseXBRLParser
+
 
 class BaseLinkParser(BaseXBRLParser):
-    """ BaseLinkParserのクラス"""
+    """BaseLinkParserのクラス"""
+
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
@@ -40,13 +44,13 @@ class BaseLinkParser(BaseXBRLParser):
 
         lists = []
 
-        tags = self.soup.find_all(name=['link:role', 'roleRef'])
+        tags = self.soup.find_all(name=["link:role", "roleRef"])
         for tag in tags:
             dict = {
-                    'xbrl_id': self.xbrl_id,
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_href': tag.get('xlink:href'),
-                    'role_uri': tag.get('roleURI'),
+                "xbrl_id": self.xbrl_id,
+                "xlink_type": tag.get("xlink:type"),
+                "xlink_href": tag.get("xlink:href"),
+                "role_uri": tag.get("roleURI"),
             }
             lists.append(dict)
 
@@ -76,30 +80,32 @@ class BaseLinkParser(BaseXBRLParser):
         arcs = self.link_arcs().to_DataFrame()
         for link_tag in link_tags:
 
-            attr_value = link_tag.get('xlink:role')
+            attr_value = link_tag.get("xlink:role")
 
-            tags = link_tag.find_all(['link:loc', 'loc'])
+            tags = link_tag.find_all(["link:loc", "loc"])
             for tag in tags:
-                xlink_schema = tag.get('xlink:href').split('#')[0]
-                if '_' in xlink_schema:
-                    name_space = '_'.join(xlink_schema.split('_')[:-1])
-                elif '/' in xlink_schema:
-                    name_space = '/'.join(xlink_schema.split('/')[:-1])
+                xlink_schema = tag.get("xlink:href").split("#")[0]
+                if "_" in xlink_schema:
+                    name_space = "_".join(xlink_schema.split("_")[:-1])
+                elif "/" in xlink_schema:
+                    name_space = "/".join(xlink_schema.split("/")[:-1])
                 else:
                     name_space = xlink_schema
 
                 # xlink_labelを取得
-                xlink_label = tag.get('xlink:label')
+                xlink_label = tag.get("xlink:label")
 
-                lists.append({
-                    'xbrl_id': self.xbrl_id,
-                    'attr_value': attr_value,
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_schema': xlink_schema,
-                    'xlink_href': tag.get('xlink:href').split('#')[1],
-                    'xlink_label': xlink_label,
-                    # 'name_space': name_space,
-                })
+                lists.append(
+                    {
+                        "xbrl_id": self.xbrl_id,
+                        "attr_value": attr_value,
+                        "xlink_type": tag.get("xlink:type"),
+                        "xlink_schema": xlink_schema,
+                        "xlink_href": tag.get("xlink:href").split("#")[1],
+                        "xlink_label": xlink_label,
+                        # 'name_space': name_space,
+                    }
+                )
 
         self.data = lists
 
@@ -128,20 +134,30 @@ class BaseLinkParser(BaseXBRLParser):
         lists = []
         for link_tag in link_tags:
 
-            attr_value = link_tag.get('xlink:role')
+            attr_value = link_tag.get("xlink:role")
 
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
-                lists.append({
-                    'xbrl_id': self.xbrl_id,
-                    'attr_value': attr_value,
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_from': tag.get('xlink:from'),
-                    'xlink_to': tag.get('xlink:to'),
-                    'xlink_arcrole': tag.get('xlink:arcrole'),
-                    'xlink_order': float(tag.get('order')) if tag.get('order') is not None else None,
-                    'xlink_weight': float(tag.get('weight')) if tag.get('weight') is not None else None,
-                })
+                lists.append(
+                    {
+                        "xbrl_id": self.xbrl_id,
+                        "attr_value": attr_value,
+                        "xlink_type": tag.get("xlink:type"),
+                        "xlink_from": tag.get("xlink:from"),
+                        "xlink_to": tag.get("xlink:to"),
+                        "xlink_arcrole": tag.get("xlink:arcrole"),
+                        "xlink_order": (
+                            float(tag.get("order"))
+                            if tag.get("order") is not None
+                            else None
+                        ),
+                        "xlink_weight": (
+                            float(tag.get("weight"))
+                            if tag.get("weight") is not None
+                            else None
+                        ),
+                    }
+                )
 
         self.data = lists
 
@@ -165,13 +181,13 @@ class BaseLinkParser(BaseXBRLParser):
 
         lists = []
 
-        tags = self.soup.find_all(name=['link:linkbase', 'linkbase'])
+        tags = self.soup.find_all(name=["link:linkbase", "linkbase"])
         for tag in tags:
             dict = {
-                'xbrl_id': self.xbrl_id,
-                'xmlns_xlink': tag.get('xmlns:xlink'),
-                'xmlns_xsi': tag.get('xmlns:xsi'),
-                'xmlns_link': tag.get('xmlns:link'),
+                "xbrl_id": self.xbrl_id,
+                "xmlns_xlink": tag.get("xmlns:xlink"),
+                "xmlns_xsi": tag.get("xmlns:xsi"),
+                "xmlns_link": tag.get("xmlns:link"),
             }
             lists.append(dict)
 
@@ -199,9 +215,9 @@ class BaseLinkParser(BaseXBRLParser):
         tags = self.soup.find_all(self.link_tag_name)
         for tag in tags:
             dict = {
-                    'xbrl_id': self.xbrl_id,
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_role': tag.get('xlink:role'),
+                "xbrl_id": self.xbrl_id,
+                "xlink_type": tag.get("xlink:type"),
+                "xlink_role": tag.get("xlink:role"),
             }
             lists.append(dict)
 
@@ -235,21 +251,23 @@ class BaseLinkParser(BaseXBRLParser):
         # locsと同じ列名のDataFrameを作成
         combined_df = DataFrame(columns=locs.columns)
 
-        for arc in arcs[arcs['xlink_arcrole'] == arcrole].iterrows():
-            from_loc = locs[locs['xlink_label'] == arc[1]['xlink_from']]
-            to_loc = locs[locs['xlink_label'] == arc[1]['xlink_to']]
+        for arc in arcs[arcs["xlink_arcrole"] == arcrole].iterrows():
+            from_loc = locs[locs["xlink_label"] == arc[1]["xlink_from"]]
+            to_loc = locs[locs["xlink_label"] == arc[1]["xlink_to"]]
 
             combined_df = pd.concat([combined_df, from_loc, to_loc])
 
         # 重複行を削除する
         unique_df = combined_df.drop_duplicates()
 
-        self.data = unique_df.to_dict(orient='records')
+        self.data = unique_df.to_dict(orient="records")
 
         return self
 
+
 class CalLinkParser(BaseLinkParser):
-    """ CalculationLinkのParserクラス"""
+    """CalculationLinkのParserクラス"""
+
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
@@ -258,12 +276,15 @@ class CalLinkParser(BaseLinkParser):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はcal.xmlではありません。")
 
     def set_link_tag_name(self):
-        self.link_tag_name = 'link:calculationLink'
+        self.link_tag_name = "link:calculationLink"
 
     def set_arc_tag_name(self):
-        self.arc_tag_name = 'link:calculationArc'
+        self.arc_tag_name = "link:calculationArc"
+
+
 class DefLinkParser(BaseLinkParser):
-    """ DefinitionLinkのParserクラス"""
+    """DefinitionLinkのParserクラス"""
+
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
@@ -272,12 +293,15 @@ class DefLinkParser(BaseLinkParser):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")
 
     def set_link_tag_name(self):
-        self.link_tag_name = ['link:definitionLink', 'definitionLink']
+        self.link_tag_name = ["link:definitionLink", "definitionLink"]
 
     def set_arc_tag_name(self):
-        self.arc_tag_name = ['link:definitionArc', 'definitionArc']
+        self.arc_tag_name = ["link:definitionArc", "definitionArc"]
+
+
 class PreLinkParser(BaseLinkParser):
-    """ PresentationLinkのParserクラス"""
+    """PresentationLinkのParserクラス"""
+
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
@@ -286,7 +310,7 @@ class PreLinkParser(BaseLinkParser):
             raise TypeOfXBRLIsDifferent(f"{self.basename()} はpre.xmlではありません。")
 
     def set_link_tag_name(self):
-        self.link_tag_name = 'link:presentationLink'
+        self.link_tag_name = "link:presentationLink"
 
     def set_arc_tag_name(self):
-        self.arc_tag_name = 'link:presentationArc'
+        self.arc_tag_name = "link:presentationArc"

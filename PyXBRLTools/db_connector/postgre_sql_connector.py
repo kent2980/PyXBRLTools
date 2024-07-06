@@ -1,8 +1,9 @@
 import psycopg2
-from pandas.api.types import is_string_dtype, is_numeric_dtype, is_bool_dtype
+from pandas.api.types import is_bool_dtype, is_numeric_dtype, is_string_dtype
+
 
 class PostgreSqlConnector:
-    """ PostgreSQL database コネクター
+    """PostgreSQL database コネクター
 
     Attributes:
         host (str): ホスト名
@@ -33,8 +34,9 @@ class PostgreSqlConnector:
         >>> connector.add_foreign_key("your_table", "your_column", "ref_table", "ref_column")
         >>> connector.disconnect()
     """
+
     def __init__(self, host, port, database, user, password):
-        """ コンストラクタ
+        """コンストラクタ
 
         Args:
         host (str): ホスト名
@@ -57,7 +59,7 @@ class PostgreSqlConnector:
         self.connection = None
 
     def connect(self):
-        """ データベースに接続
+        """データベースに接続
 
         Examples:
         >>> connector.connect()
@@ -68,14 +70,14 @@ class PostgreSqlConnector:
                 port=self.port,
                 database=self.database,
                 user=self.user,
-                password=self.password
+                password=self.password,
             )
             print("Connected to PostgreSQL database!")
         except (Exception, psycopg2.Error) as error:
             print("Error while connecting to PostgreSQL database:", error)
 
     def disconnect(self):
-        """ データベースから切断
+        """データベースから切断
 
         Examples:
         >>> connector.disconnect()
@@ -85,7 +87,7 @@ class PostgreSqlConnector:
             print("Disconnected from PostgreSQL database.")
 
     def edit_table(self, table_name, column_name, new_value, condition):
-        """ テーブルのデータを更新
+        """テーブルのデータを更新
 
         Args:
         table_name (str): テーブル名
@@ -112,7 +114,7 @@ class PostgreSqlConnector:
 
     # 新規テーブルを作成する関数を追加
     def create_table(self, table_name, columns):
-        """ テーブルを作成
+        """テーブルを作成
 
         Args:
         table_name (str): テーブル名
@@ -135,9 +137,9 @@ class PostgreSqlConnector:
             if cursor:
                 cursor.close()
 
-    #テーブルに新規データを追加する関数を追加
+    # テーブルに新規データを追加する関数を追加
     def add_data(self, table_name, columns, values):
-        """ テーブルにデータを追加
+        """テーブルにデータを追加
 
         Args:
         table_name (str): テーブル名
@@ -163,7 +165,7 @@ class PostgreSqlConnector:
 
     # データフレームからデータを追加する関数を追加
     def add_data_from_df(self, table_name, df):
-        """ データフレームからデータを追加
+        """データフレームからデータを追加
 
         Args:
         table_name (str): テーブル名
@@ -189,7 +191,7 @@ class PostgreSqlConnector:
 
     # データフレームと同じデータ構造と型のテーブルを作成する関数を追加
     def create_table_from_df(self, table_name, df):
-        """ データフレームと同じデータ構造と型のテーブルを作成してデータを追加
+        """データフレームと同じデータ構造と型のテーブルを作成してデータを追加
 
         Args:
             table_name (str): テーブル名
@@ -204,20 +206,25 @@ class PostgreSqlConnector:
 
             # Pandas dtype から PostgreSQL dtype へのマッピング
             dtype_mapping = {
-                'int64': 'BIGINT',
-                'float64': 'DOUBLE PRECISION',
-                'bool': 'BOOLEAN',
+                "int64": "BIGINT",
+                "float64": "DOUBLE PRECISION",
+                "bool": "BOOLEAN",
                 # 'object' 通常は string を意味する
-                'object': 'TEXT',
+                "object": "TEXT",
                 # 他の pandas dtype に対する変換もここに追加
-                'string': 'TEXT',
+                "string": "TEXT",
             }
 
-            columns = ', '.join([
-                f"{col} {dtype_mapping[str(df.dtypes[col])]}" if str(df.dtypes[col]) in dtype_mapping
-                else f"{col} TEXT"  # マッピングがない場合はデフォルトで TEXT とする
-                for col in df.columns
-            ])
+            columns = ", ".join(
+                [
+                    (
+                        f"{col} {dtype_mapping[str(df.dtypes[col])]}"
+                        if str(df.dtypes[col]) in dtype_mapping
+                        else f"{col} TEXT"
+                    )  # マッピングがない場合はデフォルトで TEXT とする
+                    for col in df.columns
+                ]
+            )
 
             query = f"CREATE TABLE {table_name} ({columns})"
             cursor.execute(query)
@@ -233,7 +240,7 @@ class PostgreSqlConnector:
 
     # 既存のテーブルに外部キー制約を追加する関数を追加
     def add_foreign_key(self, table_name, column_name, ref_table, ref_column):
-        """ テーブルに外部キー制約を追加
+        """テーブルに外部キー制約を追加
 
         Args:
         table_name (str): テーブル名
@@ -259,7 +266,7 @@ class PostgreSqlConnector:
                 cursor.close()
 
     def set_unique_key(self, table_name, column_names: list[str]):
-        """ テーブルに一意制約を追加
+        """テーブルに一意制約を追加
 
         Args:
         table_name (str): テーブル名
@@ -284,7 +291,7 @@ class PostgreSqlConnector:
 
     # テーブルが存在するか確認する関数を追加
     def is_exist_table(self, table_name):
-        """ テーブルが存在するか確認
+        """テーブルが存在するか確認
 
         Args:
         table_name (str): テーブル名
@@ -308,7 +315,7 @@ class PostgreSqlConnector:
 
     # データフレームからテーブルにデータを挿入する関数を追加、重複するデータがある場合は挿入しない
     def add_data_from_df_ignore_duplicate(self, table_name, df):
-        """ データフレームからデータを追加（重複するデータがある場合は挿入しない）
+        """データフレームからデータを追加（重複するデータがある場合は挿入しない）
 
         Args:
         table_name (str): テーブル名

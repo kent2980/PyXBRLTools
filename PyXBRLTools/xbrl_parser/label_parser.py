@@ -1,9 +1,12 @@
-from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
-from .base_xbrl_parser import BaseXBRLParser
 from pandas import DataFrame
 
+from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
+
+from .base_xbrl_parser import BaseXBRLParser
+
+
 class LabelParser(BaseXBRLParser):
-    """ XBRLのラベル情報を取得するクラス
+    """XBRLのラベル情報を取得するクラス
         このクラスはBaseXBRLParserを継承しています。
         XBRLのラベル情報を取得します。
         以下の機能を提供します。
@@ -42,7 +45,9 @@ class LabelParser(BaseXBRLParser):
         if not self.basename().endswith("lab.xml"):
             # ファイル名がlab-en.xmlでない場合はエラーを発生
             if not self.basename().endswith("lab-en.xml"):
-                raise TypeOfXBRLIsDifferent(f"{self.basename()} はlab.xmlではありません。")
+                raise TypeOfXBRLIsDifferent(
+                    f"{self.basename()} はlab.xmlではありません。"
+                )
 
     def link_labels(self):
         """link:label要素を取得するメソッド。
@@ -65,26 +70,26 @@ class LabelParser(BaseXBRLParser):
 
         lists = []
 
-        tags = self.soup.find_all(name=['link:label', 'label'])
+        tags = self.soup.find_all(name=["link:label", "label"])
         for tag in tags:
             # id属性が存在で分岐
-            if tag.get('id') == None:
+            if tag.get("id") == None:
                 dict = {
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_label': tag.get('xlink:label'),
-                    'xlink_role': tag.get('xlink:role'),
-                    'xml_lang': tag.get('xml:lang'),
-                    'id': tag.get('xlink:label'),
-                    'label': tag.text
+                    "xlink_type": tag.get("xlink:type"),
+                    "xlink_label": tag.get("xlink:label"),
+                    "xlink_role": tag.get("xlink:role"),
+                    "xml_lang": tag.get("xml:lang"),
+                    "id": tag.get("xlink:label"),
+                    "label": tag.text,
                 }
             else:
                 dict = {
-                    'xlink_type': tag.get('xlink:type'),
-                    'xlink_label': tag.get('xlink:label'),
-                    'xlink_role': tag.get('xlink:role'),
-                    'xml_lang': tag.get('xml:lang'),
-                    'id': tag.get('id'),
-                    'label': tag.text
+                    "xlink_type": tag.get("xlink:type"),
+                    "xlink_label": tag.get("xlink:label"),
+                    "xlink_role": tag.get("xlink:role"),
+                    "xml_lang": tag.get("xml:lang"),
+                    "id": tag.get("id"),
+                    "label": tag.text,
                 }
             lists.append(dict)
 
@@ -93,10 +98,14 @@ class LabelParser(BaseXBRLParser):
         link_arcs = self.link_label_arcs().to_DataFrame()
 
         # self._link_labels(xlink_label)にlink_arcs(xlink_to)のxlink_schemaカラムを追加
-        df = df.merge(link_arcs[['xlink_to', 'xlink_schema']],
-                            left_on='xlink_label', right_on='xlink_to', how='left').drop(columns='xlink_to')
+        df = df.merge(
+            link_arcs[["xlink_to", "xlink_schema"]],
+            left_on="xlink_label",
+            right_on="xlink_to",
+            how="left",
+        ).drop(columns="xlink_to")
 
-        self.data =  df.to_dict(orient='records')
+        self.data = df.to_dict(orient="records")
 
         return self
 
@@ -118,23 +127,31 @@ class LabelParser(BaseXBRLParser):
         """
         lists = []
 
-        tags = self.soup.find_all(name=['link:loc', 'loc'])
+        tags = self.soup.find_all(name=["link:loc", "loc"])
         for tag in tags:
 
             # Properties
-            xlink_schema = tag.get('xlink:href').split('#')[0].split("/")[-1] if tag.get('xlink:href') else None
-            xlink_href = tag.get('xlink:href').split('#')[-1:][0] if tag.get('xlink:href') else None
+            xlink_schema = (
+                tag.get("xlink:href").split("#")[0].split("/")[-1]
+                if tag.get("xlink:href")
+                else None
+            )
+            xlink_href = (
+                tag.get("xlink:href").split("#")[-1:][0]
+                if tag.get("xlink:href")
+                else None
+            )
 
             # Add to lists
             dict = {
-                'xlink_type': tag.get('xlink:type'),
-                'xlink_schema': xlink_schema,
-                'xlink_href': xlink_href,
-                'xlink_label': tag.get('xlink:label'),
+                "xlink_type": tag.get("xlink:type"),
+                "xlink_schema": xlink_schema,
+                "xlink_href": xlink_href,
+                "xlink_label": tag.get("xlink:label"),
             }
             lists.append(dict)
 
-        self.data =  lists
+        self.data = lists
 
         return self
 
@@ -155,13 +172,13 @@ class LabelParser(BaseXBRLParser):
             xlink_to (str): label_EquityClassOfShares
         """
         lists = []
-        tags = self.soup.find_all(name=['link:labelArc', 'labelArc'])
+        tags = self.soup.find_all(name=["link:labelArc", "labelArc"])
         for tag in tags:
             dict = {
-                'xlink_type': tag.get('xlink:type'),
-                'xlink_arcrole': tag.get('xlink:arcrole'),
-                'xlink_from': tag.get('xlink:from'),
-                'xlink_to': tag.get('xlink:to'),
+                "xlink_type": tag.get("xlink:type"),
+                "xlink_arcrole": tag.get("xlink:arcrole"),
+                "xlink_from": tag.get("xlink:from"),
+                "xlink_to": tag.get("xlink:to"),
             }
             lists.append(dict)
 
@@ -170,15 +187,19 @@ class LabelParser(BaseXBRLParser):
         link_locs = self.link_label_locs().to_DataFrame()
 
         # self._link_label_arcs(xlink_from)にlink_locs(xlink_label)のxlink_schemaカラムを追加
-        df = df.merge(link_locs[['xlink_label', 'xlink_schema']],
-                                left_on='xlink_from', right_on='xlink_label', how='left').drop(columns='xlink_label')
+        df = df.merge(
+            link_locs[["xlink_label", "xlink_schema"]],
+            left_on="xlink_from",
+            right_on="xlink_label",
+            how="left",
+        ).drop(columns="xlink_label")
 
-        self.data = df.to_dict(orient='records')
+        self.data = df.to_dict(orient="records")
 
         return self
 
     def role_refs(self):
-        """ roleRef要素を取得するメソッド。
+        """roleRef要素を取得するメソッド。
 
         returns:
             self: LabelParser
@@ -194,13 +215,21 @@ class LabelParser(BaseXBRLParser):
             xlink_href (str): rol_std_altLabel
         """
         lists = []
-        tags = self.soup.find_all(name=['link:roleRef', 'roleRef'])
+        tags = self.soup.find_all(name=["link:roleRef", "roleRef"])
         for tag in tags:
             dict = {
-                'Role_URI': tag.get('roleURI'),
-                'xlink_type': tag.get('xlink:type'),
-                'xlink_schema': tag.get('xlink:href').split('#')[0] if tag.get('xlink:href') else None,
-                'xlink_href': tag.get('xlink:href').split('#')[-1:][0] if tag.get('xlink:href') else None,
+                "Role_URI": tag.get("roleURI"),
+                "xlink_type": tag.get("xlink:type"),
+                "xlink_schema": (
+                    tag.get("xlink:href").split("#")[0]
+                    if tag.get("xlink:href")
+                    else None
+                ),
+                "xlink_href": (
+                    tag.get("xlink:href").split("#")[-1:][0]
+                    if tag.get("xlink:href")
+                    else None
+                ),
             }
             lists.append(dict)
 

@@ -1,7 +1,10 @@
 from pathlib import Path
+
 import pytest
-from PyXBRLTools.xbrl_manager.qualitative_manager import QualitativeManager
+
 from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlDirectoryNotFoundError
+from PyXBRLTools.xbrl_manager.qualitative_manager import QualitativeManager
+
 
 @pytest.fixture
 def qualitative_manager(get_current_path):
@@ -9,9 +12,17 @@ def qualitative_manager(get_current_path):
     manager = QualitativeManager(test_dir)
     return manager
 
+
 def test_qualitative_manager_init(qualitative_manager, get_current_path):
-    assert qualitative_manager.directory_path == get_current_path / "data" / "xbrl" / "edjp"
-    assert qualitative_manager.files["xlink_href"].iloc[0].split("/")[-1] == "qualitative.htm"
+    assert (
+        qualitative_manager.directory_path
+        == get_current_path / "data" / "xbrl" / "edjp"
+    )
+    assert (
+        qualitative_manager.files["xlink_href"].iloc[0].split("/")[-1]
+        == "qualitative.htm"
+    )
+
 
 # ディレクトリ内にファイルが存在しない場合
 def test_qualitative_manager_init_empty_files():

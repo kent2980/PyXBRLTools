@@ -1,5 +1,7 @@
 from PyXBRLTools.xbrl_exception.xbrl_parser_exception import TypeOfXBRLIsDifferent
+
 from .base_xbrl_parser import BaseXBRLParser
+
 
 class QualitativeParser(BaseXBRLParser):
     """
@@ -30,13 +32,15 @@ class QualitativeParser(BaseXBRLParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
         if self.basename() != "qualitative.htm":
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はqualitative.htmではありません。")
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename()} はqualitative.htmではありません。"
+            )
 
     def qualitative_info(self):
         lists = []
         tags = self.soup.find_all(True)
         head2, head3, head4, content = "", "", "", ""
-        class_names = ['smt_head2', 'smt_head3', 'smt_text3']
+        class_names = ["smt_head2", "smt_head3", "smt_text3"]
 
         for tag in tags:
             if len(tag.get_text(strip=True)) == 0:
@@ -48,14 +52,21 @@ class QualitativeParser(BaseXBRLParser):
             if tag_class in class_names:
                 if head2 != text or head3 != text:
                     if head2 != "":
-                        lists.append({"head2": head2, "head3": head3, "head4":head4, "content": content})
+                        lists.append(
+                            {
+                                "head2": head2,
+                                "head3": head3,
+                                "head4": head4,
+                                "content": content,
+                            }
+                        )
                     content = ""
-                if tag_class == 'smt_head2':
+                if tag_class == "smt_head2":
                     head2 = text
                     head4 = ""
-                elif tag_class == 'smt_head3':
+                elif tag_class == "smt_head3":
                     head3 = text
-                elif tag_class == 'smt_text3':
+                elif tag_class == "smt_text3":
                     head4 = text
             else:
                 content += text

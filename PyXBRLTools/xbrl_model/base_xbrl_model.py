@@ -1,10 +1,15 @@
-from pathlib import Path
 import shutil
 import zipfile
-from PyXBRLTools.xbrl_exception.xbrl_model_exception import (NotXbrlDirectoryException,
-    NotXbrlTypeException)
+from pathlib import Path
 from uuid import uuid4
+
 import pandas as pd
+
+from PyXBRLTools.xbrl_exception.xbrl_model_exception import (
+    NotXbrlDirectoryException,
+    NotXbrlTypeException,
+)
+
 
 class BaseXbrlModel:
     def __init__(self, xbrl_zip_path, output_path) -> None:
@@ -59,7 +64,7 @@ class BaseXbrlModel:
     # zipファイルを解凍するメソッドを追加して解凍したファイルのパスを返す
     def __unzip_xbrl(self) -> str:
         zip_path = Path(self.xbrl_zip_path)
-        with zipfile.ZipFile(zip_path.as_posix(), 'r') as z:
+        with zipfile.ZipFile(zip_path.as_posix(), "r") as z:
             # zipファイルを解凍するパスを指定
             unzip_path = zip_path.parent / zip_path.stem
             z.extractall(unzip_path.as_posix())
@@ -95,22 +100,24 @@ class BaseXbrlModel:
         if self.__check_xbrl_files_in_dir(*keywords):
             raise NotXbrlTypeException(f"XBRLファイルの構成が異なります。")
 
-    def _get_doc_output_path(self, doc_type:str):
+    def _get_doc_output_path(self, doc_type: str):
         output_path = self.__output_path / doc_type
         return output_path.as_posix()
 
     def _create_manager(self, manager_class, doc_type):
         """共通のマネージャー生成ロジック"""
-        return manager_class(self.directory_path).set_output_path(self._get_doc_output_path(doc_type))
+        return manager_class(self.directory_path).set_output_path(
+            self._get_doc_output_path(doc_type)
+        )
 
     def _get_data_frames(self, manager, *methods):
         """指定されたマネージャーとメソッドからDataFrameを取得する"""
         return tuple(getattr(manager, method)().to_DataFrame() for method in methods)
 
     def _get_xbrl_id(self, tuple):
-        """ tuple内のDataFrameにxbrl_idを追加する"""
+        """tuple内のDataFrameにxbrl_idを追加する"""
         for df in tuple:
             if isinstance(df, pd.DataFrame):
-                df['xbrl_id'] = self.xbrl_id
+                df["xbrl_id"] = self.xbrl_id
 
         return tuple

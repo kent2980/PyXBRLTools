@@ -1,12 +1,14 @@
-import re
-from datetime import datetime, date
-import zipfile
 import os
-from datetimejp import JDate
+import re
 import shutil
-import requests
-from urllib.parse import urlparse
 import unicodedata
+import zipfile
+from datetime import date, datetime
+from urllib.parse import urlparse
+
+import requests
+from datetimejp import JDate
+
 
 class Utils:
 
@@ -29,7 +31,7 @@ class Utils:
             extract_to = os.path.dirname(zip_path)
 
         try:
-            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
                 zip_ref.extractall(extract_to)
         except Exception as e:
             raise Exception(f"ZIPファイル {zip_path} の展開に失敗しました: {e}")
@@ -58,23 +60,23 @@ class Utils:
 
         # "元号yy年MM月DD日"のフォーマット
         try:
-            jd = JDate.strptime(date_str, '%g%e年%m月%d日')
-            result = jd.strftime('%Y-%m-%d')
+            jd = JDate.strptime(date_str, "%g%e年%m月%d日")
+            result = jd.strftime("%Y-%m-%d")
             date_obj = result
 
         except ValueError:
             try:
                 # "YYYY年MM月DD日"のフォーマット
-                date_obj = datetime.strptime(
-                    date_str, '%Y年%m月%d日').strftime('%Y-%m-%d')
+                date_obj = datetime.strptime(date_str, "%Y年%m月%d日").strftime(
+                    "%Y-%m-%d"
+                )
             except ValueError:
                 # "YYYY-MM-DD"のフォーマット
-                date_obj = datetime.strptime(
-                    date_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d").strftime("%Y-%m-%d")
 
         return date_obj
 
-    def initialize_directory(directory_path:str):
+    def initialize_directory(directory_path: str):
         """
         指定されたディレクトリ内のすべてのファイルとサブディレクトリを削除します。
 
@@ -93,7 +95,7 @@ class Utils:
                     elif os.path.isdir(file_path):
                         shutil.rmtree(file_path)  # ディレクトリを削除
                 except Exception as e:
-                    print(f'Failed to delete {file_path}. Reason: {e}')
+                    print(f"Failed to delete {file_path}. Reason: {e}")
 
     def find_filename_with_keyword(directory_path, keyword):
         """
@@ -158,7 +160,7 @@ class Utils:
         # ファイルをダウンロードして保存
         with requests.get(url, stream=True) as response:
             response.raise_for_status()
-            with open(file_path, 'wb') as file:
+            with open(file_path, "wb") as file:
                 for chunk in response.iter_content(chunk_size=8192):
                     file.write(chunk)
 
@@ -169,12 +171,11 @@ class Utils:
             return element.text
         return None
 
-    def zenkaku_space_trim(str:str):
-        return str.replace('　', '')
+    def zenkaku_space_trim(str: str):
+        return str.replace("　", "")
 
     def normalize_text(text: str) -> str:
         """
         テキストを正規化します。
         """
-        return re.sub(" ", "", unicodedata.normalize('NFKC', text))
-
+        return re.sub(" ", "", unicodedata.normalize("NFKC", text))

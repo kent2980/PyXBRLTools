@@ -1,4 +1,5 @@
 import zipfile
+
 from PyXBRLTools.xbrl_model.edif_model import EdifModel
 from PyXBRLTools.xbrl_model.edit_model import EditModel
 from PyXBRLTools.xbrl_model.edjp_model import EdjpModel
@@ -7,8 +8,9 @@ from PyXBRLTools.xbrl_model.efjp_model import EfjpModel
 from PyXBRLTools.xbrl_model.rejp_model import RejpModel
 from PyXBRLTools.xbrl_model.rrdf_model import RrdfModel
 from PyXBRLTools.xbrl_model.rrfc_model import RrfcModel
-from PyXBRLTools.xbrl_model.rvfc_model import RvfcModel
 from PyXBRLTools.xbrl_model.rvdf_model import RvdfModel
+from PyXBRLTools.xbrl_model.rvfc_model import RvfcModel
+
 
 class XbrlReader:
     def __init__(self, xbrl_zip_path, output_path) -> None:

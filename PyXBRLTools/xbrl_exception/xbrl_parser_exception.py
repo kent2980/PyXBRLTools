@@ -1,5 +1,6 @@
 class TypeOfXBRLIsDifferent(Exception):
-    """ XBRLの種類が異なる場合に発生するエラー"""
+    """XBRLの種類が異なる場合に発生するエラー"""
+
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)

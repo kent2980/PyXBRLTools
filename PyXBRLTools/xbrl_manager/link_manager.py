@@ -1,8 +1,14 @@
-from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
-from PyXBRLTools.xbrl_parser.link_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-    PreLinkParser)
 import pandas
+
 from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
+from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
+from PyXBRLTools.xbrl_parser.link_parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
+
 
 class BaseLinkManager(BaseXbrlManager):
     def __init__(self, directory_path) -> None:
@@ -34,7 +40,7 @@ class BaseLinkManager(BaseXbrlManager):
     def get_role(self):
         raise NotImplementedError
 
-    def set_link_roles(self, document_type = None):
+    def set_link_roles(self, document_type=None):
         output_path = self.output_path
         df = None
         files = self.files
@@ -42,16 +48,28 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if df is None:
-                df = self.parser.create(row["xlink_href"], output_path).link_roles().to_DataFrame()
+                df = (
+                    self.parser.create(row["xlink_href"], output_path)
+                    .link_roles()
+                    .to_DataFrame()
+                )
             else:
-                df = pandas.concat([df, self.parser.create(row["xlink_href"], output_path).link_roles().to_DataFrame()], ignore_index=True)
+                df = pandas.concat(
+                    [
+                        df,
+                        self.parser.create(row["xlink_href"], output_path)
+                        .link_roles()
+                        .to_DataFrame(),
+                    ],
+                    ignore_index=True,
+                )
 
         self.label = df
         self.data = self.label
 
         return self
 
-    def set_link_locs(self, document_type = None):
+    def set_link_locs(self, document_type=None):
         output_path = self.output_path
         df = None
         files = self.files
@@ -59,11 +77,19 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if df is None:
-                df = self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
-                df['document_type'] = row['document_type']
+                df = (
+                    self.parser.create(row["xlink_href"], output_path)
+                    .link_locs()
+                    .to_DataFrame()
+                )
+                df["document_type"] = row["document_type"]
             else:
-                new_df = self.parser.create(row["xlink_href"], output_path).link_locs().to_DataFrame()
-                new_df['document_type'] = row['document_type']
+                new_df = (
+                    self.parser.create(row["xlink_href"], output_path)
+                    .link_locs()
+                    .to_DataFrame()
+                )
+                new_df["document_type"] = row["document_type"]
                 df = pandas.concat([df, new_df], ignore_index=True)
         print(df)
         self.label = df
@@ -71,7 +97,7 @@ class BaseLinkManager(BaseXbrlManager):
 
         return self
 
-    def set_link_arcs(self, document_type = None):
+    def set_link_arcs(self, document_type=None):
         output_path = self.output_path
         df = None
         files = self.files
@@ -79,11 +105,19 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if df is None:
-                df = self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()
-                df['document_type'] = row['document_type']
+                df = (
+                    self.parser.create(row["xlink_href"], output_path)
+                    .link_arcs()
+                    .to_DataFrame()
+                )
+                df["document_type"] = row["document_type"]
             else:
-                new_df = self.parser.create(row["xlink_href"], output_path).link_arcs().to_DataFrame()
-                new_df['document_type'] = row['document_type']
+                new_df = (
+                    self.parser.create(row["xlink_href"], output_path)
+                    .link_arcs()
+                    .to_DataFrame()
+                )
+                new_df["document_type"] = row["document_type"]
                 df = pandas.concat([df, new_df], ignore_index=True)
 
         print(df)
@@ -91,6 +125,7 @@ class BaseLinkManager(BaseXbrlManager):
         self.data = self.label
 
         return self
+
 
 class CalLinkManager(BaseLinkManager):
     def get_parser(self) -> BaseLinkParser:
@@ -100,6 +135,7 @@ class CalLinkManager(BaseLinkManager):
         role = "calculationLinkbaseRef"
         return role
 
+
 class DefLinkManager(BaseLinkManager):
     def get_parser(self) -> BaseLinkParser:
         return DefLinkParser
@@ -107,6 +143,7 @@ class DefLinkManager(BaseLinkManager):
     def get_role(self):
         role = "definitionLinkbaseRef"
         return role
+
 
 class PreLinkManager(BaseLinkManager):
     def get_parser(self) -> BaseLinkParser:

@@ -1,10 +1,12 @@
+import pandas as pd
+
+from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
 from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
 from PyXBRLTools.xbrl_parser.label_parser import LabelParser
-import pandas as pd
-from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
+
 
 class LabelManager(BaseXbrlManager):
-    def __init__(self, directory_path, lang = "jp") -> None:
+    def __init__(self, directory_path, lang="jp") -> None:
         """
         LabelManagerクラスのコンストラクタです。
 
@@ -51,10 +53,14 @@ class LabelManager(BaseXbrlManager):
         if len(self.files) > 0:
             if lang == "jp":
                 # self.filesのxlink_hrefの末尾が"lab.xml"であるものを抽出
-                self.files = self.files[self.files["xlink_href"].str.endswith("lab.xml")]
+                self.files = self.files[
+                    self.files["xlink_href"].str.endswith("lab.xml")
+                ]
             elif lang == "en":
                 # self.filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
-                self.files = self.files[self.files["xlink_href"].str.endswith("lab-en.xml")]
+                self.files = self.files[
+                    self.files["xlink_href"].str.endswith("lab-en.xml")
+                ]
             else:
                 raise ValueError("言語の設定が不正です。[jp, en]を指定してください。")
 
@@ -75,9 +81,21 @@ class LabelManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if df is None:
-                df = LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()
+                df = (
+                    LabelParser.create(row["xlink_href"], output_path)
+                    .link_labels()
+                    .to_DataFrame()
+                )
             else:
-                df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_labels().to_DataFrame()], ignore_index=True)
+                df = pd.concat(
+                    [
+                        df,
+                        LabelParser.create(row["xlink_href"], output_path)
+                        .link_labels()
+                        .to_DataFrame(),
+                    ],
+                    ignore_index=True,
+                )
 
         self.label = df
         self.data = self.label
@@ -100,9 +118,21 @@ class LabelManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith("lab.xml"):
                 if df is None:
-                    df = LabelParser.create(row["xlink_href"], output_path).link_label_locs().to_DataFrame()
+                    df = (
+                        LabelParser.create(row["xlink_href"], output_path)
+                        .link_label_locs()
+                        .to_DataFrame()
+                    )
                 else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_label_locs().to_DataFrame()], ignore_index=True)
+                    df = pd.concat(
+                        [
+                            df,
+                            LabelParser.create(row["xlink_href"], output_path)
+                            .link_label_locs()
+                            .to_DataFrame(),
+                        ],
+                        ignore_index=True,
+                    )
 
         self.loc = df
         self.data = self.loc
@@ -125,9 +155,21 @@ class LabelManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith("lab.xml"):
                 if df is None:
-                    df = LabelParser.create(row["xlink_href"], output_path).link_label_arcs().to_DataFrame()
+                    df = (
+                        LabelParser.create(row["xlink_href"], output_path)
+                        .link_label_arcs()
+                        .to_DataFrame()
+                    )
                 else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).link_label_arcs().to_DataFrame()], ignore_index=True)
+                    df = pd.concat(
+                        [
+                            df,
+                            LabelParser.create(row["xlink_href"], output_path)
+                            .link_label_arcs()
+                            .to_DataFrame(),
+                        ],
+                        ignore_index=True,
+                    )
 
         self.label_arc = df
         self.data = self.label_arc
@@ -150,9 +192,21 @@ class LabelManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith("lab.xml"):
                 if df is None:
-                    df = LabelParser.create(row["xlink_href"], output_path).role_refs().to_DataFrame()
+                    df = (
+                        LabelParser.create(row["xlink_href"], output_path)
+                        .role_refs()
+                        .to_DataFrame()
+                    )
                 else:
-                    df = pd.concat([df, LabelParser.create(row["xlink_href"], output_path).role_refs().to_DataFrame()], ignore_index=True)
+                    df = pd.concat(
+                        [
+                            df,
+                            LabelParser.create(row["xlink_href"], output_path)
+                            .role_refs()
+                            .to_DataFrame(),
+                        ],
+                        ignore_index=True,
+                    )
 
         self.role_ref = df
         self.data = self.role_ref

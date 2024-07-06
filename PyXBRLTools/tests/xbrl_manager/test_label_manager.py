@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pytest
 from pandas import DataFrame
+
 from PyXBRLTools.xbrl_manager.label_manager import LabelManager
-from pathlib import Path
+
 
 @pytest.fixture
 def get_output_dir(get_current_path):
@@ -9,11 +12,13 @@ def get_output_dir(get_current_path):
     output_dir = get_current_path / "data" / "label"
     return output_dir.as_posix()
 
+
 @pytest.fixture
-def label_manager(get_current_path, get_output_dir) ->  LabelManager:
+def label_manager(get_current_path, get_output_dir) -> LabelManager:
     # Get the test directory path
     test_dir = get_current_path / "data" / "xbrl" / "edjp"
     return LabelManager(test_dir.as_posix()).set_output_path(get_output_dir)
+
 
 def test_set_link_labels(label_manager, get_current_path):
     result = label_manager.set_link_labels()
@@ -31,17 +36,20 @@ def test_set_link_labels(label_manager, get_current_path):
     #         "xlink_schema": "tse-acedjpfr-58200-2024-03-31-01-2024-05-14.xsd"
     #     }
 
+
 def test_set_label_with_document_type(label_manager):
     result = label_manager.set_link_labels(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
 
+
 def test_set_label_with_invalid_document_type(label_manager):
     result = label_manager.set_link_labels(document_type="bs")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) == 0
+
 
 def test_set_link_locs(label_manager):
     result = label_manager.set_link_locs()
@@ -56,11 +64,13 @@ def test_set_link_locs(label_manager):
     #     'xlink_label': 'CostForTheMeetingOfShareholdersEL'
     #     }
 
+
 def test_set_link_locs_with_document_type(label_manager):
     result = label_manager.set_link_locs(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
+
 
 def test_set_link_label_arcs(label_manager):
     result = label_manager.set_link_label_arcs()
@@ -75,11 +85,13 @@ def test_set_link_label_arcs(label_manager):
     #     'xlink_schema': 'tse-acedjpfr-58200-2024-03-31-01-2024-05-14.xsd'
     #             }
 
+
 def test_set_link_label_arcs_with_document_type(label_manager):
     result = label_manager.set_link_label_arcs(document_type="sm")
     assert isinstance(result, LabelManager)
     assert isinstance(result.to_DataFrame(), DataFrame)
     assert len(result.to_DataFrame()) > 0
+
 
 def test_set_role_refs(label_manager):
     result = label_manager.set_role_refs()

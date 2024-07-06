@@ -1,7 +1,9 @@
+import pandas as pd
+
+from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
 from PyXBRLTools.xbrl_manager.base_xbrl_manager import BaseXbrlManager
 from PyXBRLTools.xbrl_parser.ixbrl_parser import IxbrlParser
-import pandas as pd
-from PyXBRLTools.xbrl_exception.xbrl_manager_exception import XbrlListEmptyError
+
 
 class IxbrlManager(BaseXbrlManager):
     def __init__(self, directory_path) -> None:
@@ -38,11 +40,23 @@ class IxbrlManager(BaseXbrlManager):
         for index, row in files.iterrows():
             if row["xlink_href"].endswith(".htm"):
                 if df is None:
-                    df = IxbrlParser.create(row["xlink_href"]).ix_non_fractions().to_DataFrame()
+                    df = (
+                        IxbrlParser.create(row["xlink_href"])
+                        .ix_non_fractions()
+                        .to_DataFrame()
+                    )
                 else:
-                    df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_fractions().to_DataFrame()], ignore_index=True)
+                    df = pd.concat(
+                        [
+                            df,
+                            IxbrlParser.create(row["xlink_href"])
+                            .ix_non_fractions()
+                            .to_DataFrame(),
+                        ],
+                        ignore_index=True,
+                    )
 
-        df['xbrl_id'] = self.xbrl_id
+        df["xbrl_id"] = self.xbrl_id
         self.ix_non_fraction = df.to_dict(orient="records")
         self.data = self.ix_non_fraction
 
@@ -57,16 +71,28 @@ class IxbrlManager(BaseXbrlManager):
             self (IxbrlManager): 自身のインスタンス
         """
         df = None
-        files:pd.DataFrame = self.files
+        files: pd.DataFrame = self.files
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for index, row in files.iterrows():
             if df is None:
-                df = IxbrlParser.create(row["xlink_href"]).ix_non_numeric().to_DataFrame()
+                df = (
+                    IxbrlParser.create(row["xlink_href"])
+                    .ix_non_numeric()
+                    .to_DataFrame()
+                )
             else:
-                df = pd.concat([df, IxbrlParser.create(row["xlink_href"]).ix_non_numeric().to_DataFrame()], ignore_index=True)
+                df = pd.concat(
+                    [
+                        df,
+                        IxbrlParser.create(row["xlink_href"])
+                        .ix_non_numeric()
+                        .to_DataFrame(),
+                    ],
+                    ignore_index=True,
+                )
 
-        df['xbrl_id'] = self.xbrl_id
+        df["xbrl_id"] = self.xbrl_id
         self.ix_non_numeric = df.to_dict(orient="records")
         self.data = self.ix_non_numeric
 
@@ -86,18 +112,35 @@ class IxbrlManager(BaseXbrlManager):
             df = df.query(f"document_type == '{document_type}'")
 
         def extract_fields(group):
-            return pd.Series({
-                'company_name': group.loc[group['name'].str.contains('CompanyName|AssetManagerREIT'), 'text'].iloc[0],
-                'securities_code': group.loc[group['name'].str.contains('SecuritiesCode'), 'text'].iloc[0],
-                'document_name': group.loc[group['name'].str.contains('DocumentName'), 'text'].iloc[0],
-                'reporting_date': group.loc[group['name'].str.contains('FilingDate|ReportingDateOfFinancialForecastCorrection|ReportingDateOfDividendForecastCorrection|ReportingDateOfDistributionForecastCorrectionREIT'), 'text'].iloc[0]
-            })
+            return pd.Series(
+                {
+                    "company_name": group.loc[
+                        group["name"].str.contains("CompanyName|AssetManagerREIT"),
+                        "text",
+                    ].iloc[0],
+                    "securities_code": group.loc[
+                        group["name"].str.contains("SecuritiesCode"), "text"
+                    ].iloc[0],
+                    "document_name": group.loc[
+                        group["name"].str.contains("DocumentName"), "text"
+                    ].iloc[0],
+                    "reporting_date": group.loc[
+                        group["name"].str.contains(
+                            "FilingDate|ReportingDateOfFinancialForecastCorrection|ReportingDateOfDividendForecastCorrection|ReportingDateOfDistributionForecastCorrectionREIT"
+                        ),
+                        "text",
+                    ].iloc[0],
+                }
+            )
 
-        result_df = df.groupby(['xbrl_id', 'report_type']).apply(extract_fields).reset_index()
+        result_df = (
+            df.groupby(["xbrl_id", "report_type"]).apply(extract_fields).reset_index()
+        )
 
         self.data = result_df
 
         return self
+
 
 def set_ix_summary(self):
     def get_filtered_df(df, column_name, filter_value):
@@ -106,12 +149,12 @@ def set_ix_summary(self):
     # 非分数のIXBRLデータを取得
     df = self.set_ix_non_fraction().to_DataFrame()
 
-    jpy_df = get_filtered_df(df, 'unit_ref', 'JPY')
-    pure_df = get_filtered_df(df, 'unit_ref', 'Pure')
-    jps_df = get_filtered_df(df, 'unit_ref', 'JPYPerShares')
+    jpy_df = get_filtered_df(df, "unit_ref", "JPY")
+    pure_df = get_filtered_df(df, "unit_ref", "Pure")
+    jps_df = get_filtered_df(df, "unit_ref", "JPYPerShares")
 
     # dfからreport_typeの最初の値を取得
-    report_type = df['report_type'].iloc[0]
+    report_type = df["report_type"].iloc[0]
 
     # 各指標名と対応するデータフレームを定義
     metrics = {
@@ -131,13 +174,13 @@ def set_ix_summary(self):
         "interest_bearing_debt": ["InterestBearingDebt", jpy_df, None],
         "interest_bearing_debt_ratio": ["InterestBearingDebtRatio", pure_df, None],
         "interest_bearing_debt_rate": ["InterestBearingDebtRate", pure_df, None],
-        "interest_bearing_debt_period": ["InterestBearingDebtPeriod", pure_df, None]
+        "interest_bearing_debt_period": ["InterestBearingDebtPeriod", pure_df, None],
     }
 
     results = {}
     for key, (name, df1, df2) in metrics.items():
-        results[key] = get_filtered_df(df1, 'name', name)
+        results[key] = get_filtered_df(df1, "name", name)
         if df2 is not None:
-            results[f"{key}_change"] = get_filtered_df(df2, 'name', name)
+            results[f"{key}_change"] = get_filtered_df(df2, "name", name)
 
     return results

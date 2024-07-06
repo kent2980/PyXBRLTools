@@ -1,13 +1,17 @@
+import os
+
 import pytest
 from bs4 import BeautifulSoup as bs
+
 from PyXBRLTools.xbrl_parser.label_parser import LabelParser
-import os
+
 
 @pytest.fixture
 def label_parser():
     xbrl_url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2022-11-01/jpcrp_cor_2022-11-01_lab.xml"
     output_path = "/Users/user/Vscode/python/PyXBRLTools/doc/extract_to_dir/TEST"
     return LabelParser(xbrl_url, output_path)
+
 
 def test_link_labels(label_parser):
     # ダミーのXMLを作成
@@ -34,26 +38,27 @@ def test_link_labels(label_parser):
     result_dict = result.to_dict()
     assert result_dict == [
         {
-            'xlink_type': 'resource',
-            'xlink_label': 'label_AssetsAbstract',
-            'xlink_role': 'http://www.xbrl.org/2003/role/label',
-            'xml_lang': 'ja',
-            'id': 'label_AssetsAbstract',
-            'label': '資産の部',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd'
+            "xlink_type": "resource",
+            "xlink_label": "label_AssetsAbstract",
+            "xlink_role": "http://www.xbrl.org/2003/role/label",
+            "xml_lang": "ja",
+            "id": "label_AssetsAbstract",
+            "label": "資産の部",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
         },
         {
-            'xlink_type': 'resource',
-            'xlink_label': 'label_CurrentAssetsAbstract',
-            'xlink_role': 'http://www.xbrl.org/2003/role/label',
-            'xml_lang': 'ja',
-            'id': 'label_CurrentAssetsAbstract',
-            'label': '流動資産',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd'
-        }
+            "xlink_type": "resource",
+            "xlink_label": "label_CurrentAssetsAbstract",
+            "xlink_role": "http://www.xbrl.org/2003/role/label",
+            "xml_lang": "ja",
+            "id": "label_CurrentAssetsAbstract",
+            "label": "流動資産",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
+        },
     ]
     # Remove the XML file
     # os.remove(xml_path)
+
 
 def test_link_locs(label_parser):
     # Create a dummy XML with link:loc elements
@@ -79,18 +84,19 @@ def test_link_locs(label_parser):
     # Check if the data attribute is populated with the expected values
     assert result.data == [
         {
-            'xlink_type': 'locator',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd',
-            'xlink_href': 'jppfs_cor_AssetsAbstract',
-            'xlink_label': 'AssetsAbstract'
+            "xlink_type": "locator",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
+            "xlink_href": "jppfs_cor_AssetsAbstract",
+            "xlink_label": "AssetsAbstract",
         },
         {
-            'xlink_type': 'locator',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd',
-            'xlink_href': 'jppfs_cor_CurrentAssetsAbstract',
-            'xlink_label': 'CurrentAssetsAbstract'
-        }
+            "xlink_type": "locator",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
+            "xlink_href": "jppfs_cor_CurrentAssetsAbstract",
+            "xlink_label": "CurrentAssetsAbstract",
+        },
     ]
+
 
 def test_link_label_arcs(label_parser):
     # Create a dummy XML with link:labelArc elements
@@ -116,20 +122,21 @@ def test_link_label_arcs(label_parser):
     # Check if the data attribute is populated with the expected values
     assert result.data == [
         {
-            'xlink_type': 'arc',
-            'xlink_arcrole': 'http://www.xbrl.org/2003/arcrole/concept-label',
-            'xlink_from': 'AssetsAbstract',
-            'xlink_to': 'label_AssetsAbstract',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd',
+            "xlink_type": "arc",
+            "xlink_arcrole": "http://www.xbrl.org/2003/arcrole/concept-label",
+            "xlink_from": "AssetsAbstract",
+            "xlink_to": "label_AssetsAbstract",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
         },
         {
-            'xlink_type': 'arc',
-            'xlink_arcrole': 'http://www.xbrl.org/2003/arcrole/concept-label',
-            'xlink_from': 'CurrentAssetsAbstract',
-            'xlink_to': 'label_CurrentAssetsAbstract',
-            'xlink_schema': '../jppfs_cor_2022-11-01.xsd',
-        }
+            "xlink_type": "arc",
+            "xlink_arcrole": "http://www.xbrl.org/2003/arcrole/concept-label",
+            "xlink_from": "CurrentAssetsAbstract",
+            "xlink_to": "label_CurrentAssetsAbstract",
+            "xlink_schema": "../jppfs_cor_2022-11-01.xsd",
+        },
     ]
+
 
 def test_role_refs(label_parser):
     # Create a dummy XML with roleRef elements
@@ -149,15 +156,15 @@ def test_role_refs(label_parser):
     result_dict = result.to_dict()
     assert result.data == [
         {
-            'Role_URI': 'http://disclosure.edinet-fsa.go.jp/jpcrp/std/alt/role/label',
-            'xlink_type': 'simple',
-            'xlink_schema': '../../../jpcrp/2022-11-01/jpcrp_rt_2022-11-01.xsd',
-            'xlink_href': 'rol_std_altLabel'
+            "Role_URI": "http://disclosure.edinet-fsa.go.jp/jpcrp/std/alt/role/label",
+            "xlink_type": "simple",
+            "xlink_schema": "../../../jpcrp/2022-11-01/jpcrp_rt_2022-11-01.xsd",
+            "xlink_href": "rol_std_altLabel",
         },
         {
-            'Role_URI': 'http://disclosure.edinet-fsa.go.jp/jppfs/Consolidated/role/label',
-            'xlink_type': 'simple',
-            'xlink_schema': '../jppfs_rt_2022-11-01.xsd',
-            'xlink_href': 'rol_ConsolidatedLabel'
-        }
+            "Role_URI": "http://disclosure.edinet-fsa.go.jp/jppfs/Consolidated/role/label",
+            "xlink_type": "simple",
+            "xlink_schema": "../jppfs_rt_2022-11-01.xsd",
+            "xlink_href": "rol_ConsolidatedLabel",
+        },
     ]
