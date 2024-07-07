@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from datetimejp import JDate
 
 from app.exception import TypeOfXBRLIsDifferent
+from app.utils import Utils
 
 from . import BaseXBRLParser
 
@@ -47,13 +48,10 @@ class IxbrlParser(BaseXBRLParser):
                 f"{self.basename()} はixbrl.htmではありません。"
             )
         # ドキュメントの種類を設定
-        self.document = self.__set_document(xbrl_url)
-        self.report_type = self.__set_report_type(xbrl_url)
+        self.document = self._set_document(xbrl_url)
+        self.report_type = self._set_report_type(xbrl_url)
 
-        self.__ix_non_fraction = None
-        self.__ix_non_numeric = None
-
-    def __set_document(self, xbrl_url):
+    def _set_document(self, xbrl_url):
         """ドキュメントの種類を設定する"""
         if xbrl_url.startswith("http"):
             parse_url = urlparse(xbrl_url)
@@ -65,7 +63,7 @@ class IxbrlParser(BaseXBRLParser):
         else:
             return "sm"
 
-    def __set_report_type(self, xbrl_url):
+    def _set_report_type(self, xbrl_url):
         """レポートの種類を設定する"""
         if xbrl_url.startswith("http"):
             parse_url = urlparse(xbrl_url)
@@ -126,27 +124,11 @@ class IxbrlParser(BaseXBRLParser):
 
             # 銘柄コードの場合は4文字まで取得
             if "SecuritiesCode" in tag.get("name"):
-                text = text[0:4]
+                text = text[0:4]    # pragma: no cover
 
             # textが日付文字列の場合はフォーマットを統一
             if format_str:
-                if "dateyearmonthdaycjk" in format_str:
-                    # textの「yyyy年mm月dd日」を「yyyy-mm-dd」に変換
-                    text = text.replace("年", "-").replace("月", "-").replace("日", "")
-                    # textの数字部分を0埋め
-                    text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
-                    format_str = "dateyearmonthday"
-                elif "dateerayearmonthdayjp" in format_str:
-                    jd = JDate.strptime(text, "%g%e年%m月%d日")
-                    text = jd.strftime("%Y-%m-%d")
-                    # textの数字部分を0埋め
-                    text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
-                    format_str = "dateyearmonthday"
-
-            if text:
-                # textが「yyyy-mm-dd」の場合
-                if re.match(r"^\d{4}-\d{2}-\d{2}$", text):
-                    format_str = "dateyearmonthday"
+                text, format_str = Utils.date_str_to_format(text, format_str)   # pragma: no cover
 
             # name_spaceを取得
             name_spaces = self.name_spaces()

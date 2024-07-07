@@ -3,7 +3,7 @@ import re
 import shutil
 import unicodedata
 import zipfile
-from datetime import date, datetime
+from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
@@ -11,6 +11,7 @@ from datetimejp import JDate
 
 
 class Utils:
+    """ ユーティリティクラス"""
 
     def extract_zip(zip_path, extract_to=None):
         """
@@ -179,3 +180,24 @@ class Utils:
         テキストを正規化します。
         """
         return re.sub(" ", "", unicodedata.normalize("NFKC", text))
+
+    def date_str_to_format(text,format_str):
+        if "dateyearmonthdaycjk" in format_str:
+            # textの「yyyy年mm月dd日」を「yyyy-mm-dd」に変換
+            text = text.replace("年", "-").replace("月", "-").replace("日", "")
+            # textの数字部分を0埋め
+            text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
+            format_str = "dateyearmonthday"
+            return text, format_str
+        elif "dateerayearmonthdayjp" in format_str:
+            jd = JDate.strptime(text, "%g%e年%m月%d日")
+            text = jd.strftime("%Y-%m-%d")
+            # textの数字部分を0埋め
+            text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
+            format_str = "dateyearmonthday"
+            return text, format_str
+        if text:
+            # textが「yyyy-mm-dd」の場合
+            if re.match(r"^\d{4}-\d{2}-\d{2}$", text):
+                format_str = "dateyearmonthday"
+        return text, format_str

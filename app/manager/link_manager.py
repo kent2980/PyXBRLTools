@@ -1,23 +1,30 @@
 import pandas
 
-from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                                PreLinkParser)
+                        PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
     """ labelLinkbaseデータの解析を行うクラス"""
-    def __init__(self, directory_path) -> None:
+    def __init__(self, directory_path, output_path, document_type = None) -> None:
         super().__init__(directory_path)
-        self.set_linkbase_files(self.get_role())
+        self._output_path = output_path
+        self._document_type = document_type
         self.label = None
+        self.set_linkbase_files(self.get_role())
         self.parser = self.get_parser()
 
-        if len(self.files) == 0:
-            raise XbrlListEmptyError(f"{self.get_role()}ファイルが見つかりません。")
+    @property
+    def output_path(self):
+        return self._output_path
 
-    def set_output_path(self, output_path):
+    @property
+    def document_type(self):
+        return self._document_type
+
+    @output_path.setter
+    def output_path(self, output_path):
         """
         出力先のパスを設定します。
 
@@ -27,22 +34,52 @@ class BaseLinkManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
-        self.output_path = output_path
+        self._output_path = output_path
+
+        return self
+
+    @document_type.setter
+    def document_type(self, document_type):
+        """
+        document_typeを設定します。
+
+        Parameters:
+            document_type (str): document_typeの設定
+
+        Returns:
+            self (BaseLinkManager): 自身のインスタンス
+        """
+        self._document_type = document_type
 
         return self
 
     def get_parser(self) -> BaseLinkParser:
-        raise NotImplementedError
+        raise NotImplementedError   # pragma: no cover
 
     def get_role(self):
-        raise NotImplementedError
+        raise NotImplementedError   # pragma: no cover
 
-    def set_link_roles(self, document_type=None):
+    def set_document_type(self, document_type):
+        """
+        document_typeを設定します。
+
+        Parameters:
+            document_type (str): document_typeの設定
+
+        Returns:
+            self (BaseLinkManager): 自身のインスタンス
+        """
+        self.document_type = document_type
+
+        return self
+
+    def set_link_roles(self):
+        """ link_rolesを設定します。"""
         output_path = self.output_path
         df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
+        if self.document_type is not None:
+            files = files.query(f"document_type == '{self.document_type}'")
         for index, row in files.iterrows():
             if df is None:
                 df = (
@@ -66,12 +103,12 @@ class BaseLinkManager(BaseXbrlManager):
 
         return self
 
-    def set_link_locs(self, document_type=None):
+    def set_link_locs(self):
         output_path = self.output_path
         df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
+        if self.document_type is not None:
+            files = files.query(f"document_type == '{self.document_type}'")
         for index, row in files.iterrows():
             if df is None:
                 df = (
@@ -94,12 +131,12 @@ class BaseLinkManager(BaseXbrlManager):
 
         return self
 
-    def set_link_arcs(self, document_type=None):
+    def set_link_arcs(self):
         output_path = self.output_path
         df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
+        if self.document_type is not None:
+            files = files.query(f"document_type == '{self.document_type}'")
         for index, row in files.iterrows():
             if df is None:
                 df = (
@@ -126,6 +163,7 @@ class BaseLinkManager(BaseXbrlManager):
 
 class CalLinkManager(BaseLinkManager):
     """ calculationLinkbaseデータの解析を行うクラス"""
+
     def get_parser(self) -> BaseLinkParser:
         return CalLinkParser
 
@@ -136,6 +174,7 @@ class CalLinkManager(BaseLinkManager):
 
 class DefLinkManager(BaseLinkManager):
     """ definitionLinkbaseデータの解析を行うクラス"""
+
     def get_parser(self) -> BaseLinkParser:
         return DefLinkParser
 
@@ -146,6 +185,7 @@ class DefLinkManager(BaseLinkManager):
 
 class PreLinkManager(BaseLinkManager):
     """ presentationLinkbaseデータの解析を行うクラス"""
+
     def get_parser(self) -> BaseLinkParser:
         return PreLinkParser
 

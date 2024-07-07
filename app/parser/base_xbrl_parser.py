@@ -21,11 +21,27 @@ class BaseXBRLParser:
 
         file_name = os.path.basename(xbrl_url)
         self.__document_type = "fr" if "fr" in file_name else "sm"
-        self.xbrl_url = xbrl_url
-        self.output_path = output_path
+        self.__xbrl_url = xbrl_url
+        self.__output_path = output_path
         self.soup: bs | None = None
-        self.data = []
+        self.data = [{}]
         self.__xbrl_id = str(uuid4())
+
+    @property
+    def xbrl_url(self):
+        return self.__xbrl_url
+
+    @xbrl_url.setter
+    def xbrl_url(self, xbrl_url: str):
+        self.__xbrl_url = xbrl_url
+
+    @property
+    def output_path(self):
+        return self.__output_path
+
+    @output_path.setter
+    def output_path(self, output_path: str):
+        self.__output_path = output_path
 
     @property
     def xbrl_id(self):
@@ -89,19 +105,9 @@ class BaseXBRLParser:
         instance._read_xbrl(file_path)
         return instance
 
-    def to_csv(self, file_path):
-        """CSV形式で出力する"""
-        df = self.to_DataFrame()
-        df.to_csv(file_path, index=False)
-
     def to_DataFrame(self):
         """DataFrame形式で出力する"""
         return DataFrame(self.data)
-
-    def to_json(self, file_path):
-        """JSON形式で出力する"""
-        df = self.to_DataFrame()
-        df.to_json(file_path, orient="records")
 
     def to_dict(self):
         """辞書形式で出力する"""

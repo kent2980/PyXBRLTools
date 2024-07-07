@@ -1,15 +1,14 @@
-import re
 from pathlib import Path
 from uuid import UUID, uuid4
 
 import pandas as pd
 from pandas import DataFrame
 
-from app.exception import XbrlDirectoryNotFoundError
+from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.parser import SchemaParser
 
 
-class BaseXbrlManager:
+class BaseXbrlManager():
     """XBRLディレクトリの解析を行う基底クラス"""
 
     REPORT_TYPE = {
@@ -126,6 +125,10 @@ class BaseXbrlManager:
             query = f"xlink_role == '{xlink_role}'"
             df = df.query(query)
 
+        # ファイルが見つからない場合はエラーを発生させる
+        if len(df) == 0 and xlink_role:
+            raise XbrlListEmptyError(f"{xlink_role}ファイルが見つかりません。")
+
         self.files = df
         return self
 
@@ -158,6 +161,10 @@ class BaseXbrlManager:
         if xlink_role:
             query = f"xlink_role == '{xlink_role}'"
             df = df.query(query)
+
+        # ファイルが見つからない場合はエラーを発生させる
+        if len(df) == 0 and xlink_role:
+            raise XbrlListEmptyError(f"{xlink_role}ファイルが見つかりません。")
 
         self.files = df
 
