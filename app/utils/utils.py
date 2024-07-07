@@ -11,7 +11,7 @@ from datetimejp import JDate
 
 
 class Utils:
-    """ ユーティリティクラス"""
+    """ユーティリティクラス"""
 
     def extract_zip(zip_path, extract_to=None):
         """
@@ -181,7 +181,7 @@ class Utils:
         """
         return re.sub(" ", "", unicodedata.normalize("NFKC", text))
 
-    def date_str_to_format(text,format_str):
+    def date_str_to_format(text, format_str):
         if "dateyearmonthdaycjk" in format_str:
             # textの「yyyy年mm月dd日」を「yyyy-mm-dd」に変換
             text = text.replace("年", "-").replace("月", "-").replace("日", "")

@@ -2,9 +2,8 @@ import os
 import re
 from urllib.parse import urlparse
 
-from datetimejp import JDate
-
 from app.exception import TypeOfXBRLIsDifferent
+from app.tag import IxNonFraction, IxNonNumeric
 from app.utils import Utils
 
 from . import BaseXBRLParser
@@ -124,7 +123,7 @@ class IxbrlParser(BaseXBRLParser):
 
             # 銘柄コードの場合は4文字まで取得
             if "SecuritiesCode" in tag.get("name"):
-                text = text[0:4]    # pragma: no cover
+                text = text[0:4]  # pragma: no cover
 
             # textが日付文字列の場合はフォーマットを統一
             if format_str:

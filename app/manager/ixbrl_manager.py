@@ -6,7 +6,8 @@ from app.parser import IxbrlParser
 
 
 class IxbrlManager(BaseXbrlManager):
-    """ iXBRLデータの解析を行うクラス"""
+    """iXBRLデータの解析を行うクラス"""
+
     def __init__(self, directory_path) -> None:
         """
         IxbrlManagerクラスのコンストラクタです。

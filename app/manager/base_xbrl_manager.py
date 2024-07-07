@@ -8,7 +8,7 @@ from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.parser import SchemaParser
 
 
-class BaseXbrlManager():
+class BaseXbrlManager:
     """XBRLディレクトリの解析を行う基底クラス"""
 
     REPORT_TYPE = {

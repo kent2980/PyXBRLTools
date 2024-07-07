@@ -11,15 +11,15 @@ from .rvdf_model import RvdfModel
 from .rvfc_model import RvfcModel
 
 __all__ = [
-        "BaseXbrlModel",
-        "EdifModel",
-        "EditModel",
-        "EdjpModel",
-        "EdusModel",
-        "EfjpModel",
-        "RejpModel",
-        "RrdfModel",
-        "RrfcModel",
-        "RvdfModel",
-        "RvfcModel",
-        ]
+    "BaseXbrlModel",
+    "EdifModel",
+    "EditModel",
+    "EdjpModel",
+    "EdusModel",
+    "EfjpModel",
+    "RejpModel",
+    "RrdfModel",
+    "RrfcModel",
+    "RvdfModel",
+    "RvfcModel",
+]

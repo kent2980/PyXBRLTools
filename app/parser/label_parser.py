@@ -1,6 +1,6 @@
 from pandas import DataFrame
 
-from app.exception import TypeOfXBRLIsDifferent
+from app.exception import TagNotFoundError, TypeOfXBRLIsDifferent
 
 from . import BaseXBRLParser
 
@@ -42,12 +42,8 @@ class LabelParser(BaseXBRLParser):
         super().__init__(xbrl_url, output_path)
 
         # ファイル名がlab.xmlでない場合はエラーを発生
-        if not self.basename().endswith("lab.xml"):
-            # ファイル名がlab-en.xmlでない場合はエラーを発生
-            if not self.basename().endswith("lab-en.xml"):
-                raise TypeOfXBRLIsDifferent(
-                    f"{self.basename()} はlab.xmlではありません。"
-                )
+        if not self.basename().endswith(("lab.xml", "lab-en.xml")):
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はlab.xmlではありません。")
 
     def link_labels(self):
         """link:label要素を取得するメソッド。
@@ -218,7 +214,7 @@ class LabelParser(BaseXBRLParser):
         tags = self.soup.find_all(name=["link:roleRef", "roleRef"])
         for tag in tags:
             dict = {
-                "Role_URI": tag.get("roleURI"),
+                "role_uri": tag.get("roleURI"),
                 "xlink_type": tag.get("xlink:type"),
                 "xlink_schema": (
                     tag.get("xlink:href").split("#")[0]
@@ -232,6 +228,9 @@ class LabelParser(BaseXBRLParser):
                 ),
             }
             lists.append(dict)
+
+        if len(lists) == 0:
+            raise TagNotFoundError("roleRef要素が存在しません。")
 
         self.data = lists
 

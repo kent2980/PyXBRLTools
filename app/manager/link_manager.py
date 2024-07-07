@@ -1,13 +1,13 @@
 import pandas
 
 from app.manager import BaseXbrlManager
-from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                        PreLinkParser)
+from app.parser import BaseLinkParser, CalLinkParser, DefLinkParser, PreLinkParser
 
 
 class BaseLinkManager(BaseXbrlManager):
-    """ labelLinkbaseデータの解析を行うクラス"""
-    def __init__(self, directory_path, output_path, document_type = None) -> None:
+    """labelLinkbaseデータの解析を行うクラス"""
+
+    def __init__(self, directory_path, output_path, document_type=None) -> None:
         super().__init__(directory_path)
         self._output_path = output_path
         self._document_type = document_type
@@ -54,10 +54,10 @@ class BaseLinkManager(BaseXbrlManager):
         return self
 
     def get_parser(self) -> BaseLinkParser:
-        raise NotImplementedError   # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def get_role(self):
-        raise NotImplementedError   # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def set_document_type(self, document_type):
         """
@@ -74,7 +74,7 @@ class BaseLinkManager(BaseXbrlManager):
         return self
 
     def set_link_roles(self):
-        """ link_rolesを設定します。"""
+        """link_rolesを設定します。"""
         output_path = self.output_path
         df = None
         files = self.files
@@ -162,7 +162,7 @@ class BaseLinkManager(BaseXbrlManager):
 
 
 class CalLinkManager(BaseLinkManager):
-    """ calculationLinkbaseデータの解析を行うクラス"""
+    """calculationLinkbaseデータの解析を行うクラス"""
 
     def get_parser(self) -> BaseLinkParser:
         return CalLinkParser
@@ -173,7 +173,7 @@ class CalLinkManager(BaseLinkManager):
 
 
 class DefLinkManager(BaseLinkManager):
-    """ definitionLinkbaseデータの解析を行うクラス"""
+    """definitionLinkbaseデータの解析を行うクラス"""
 
     def get_parser(self) -> BaseLinkParser:
         return DefLinkParser
@@ -184,7 +184,7 @@ class DefLinkManager(BaseLinkManager):
 
 
 class PreLinkManager(BaseLinkManager):
-    """ presentationLinkbaseデータの解析を行うクラス"""
+    """presentationLinkbaseデータの解析を行うクラス"""
 
     def get_parser(self) -> BaseLinkParser:
         return PreLinkParser

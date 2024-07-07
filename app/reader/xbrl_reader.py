@@ -1,11 +1,22 @@
 import zipfile
 
-from app.models import (EdifModel, EditModel, EdjpModel, EdusModel, EfjpModel,
-                        RejpModel, RrdfModel, RrfcModel, RvdfModel, RvfcModel)
+from app.models import (
+    EdifModel,
+    EditModel,
+    EdjpModel,
+    EdusModel,
+    EfjpModel,
+    RejpModel,
+    RrdfModel,
+    RrfcModel,
+    RvdfModel,
+    RvfcModel,
+)
 
 
 class XbrlReader:
-    """ XBRLファイルを読み込むクラス"""
+    """XBRLファイルを読み込むクラス"""
+
     def __init__(self, xbrl_zip_path, output_path) -> None:
         self.xbrl_zip_path = xbrl_zip_path
         self.output_path = output_path

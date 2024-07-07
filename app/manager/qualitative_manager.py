@@ -6,7 +6,8 @@ from app.parser import QualitativeParser
 
 
 class QualitativeManager(BaseXbrlManager):
-    """ qualitativeデータの解析を行うクラス"""
+    """qualitativeデータの解析を行うクラス"""
+
     def __init__(self, directory_path) -> None:
         super().__init__(directory_path)
         self.set_htmlbase_files("qualitative")

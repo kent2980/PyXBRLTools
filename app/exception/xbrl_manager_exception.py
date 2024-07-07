@@ -19,6 +19,7 @@ class XbrlDirectoryNotFoundError(Exception):
     def __str__(self):
         return f"XBRLディレクトリが見つかりません。処理を中断します。[詳細]: {self.message}"
 
+
 class OutputPathNotFoundError(Exception):
     """出力先のパスが見つからない場合に発生するエラー"""
 
@@ -28,6 +29,7 @@ class OutputPathNotFoundError(Exception):
 
     def __str__(self):
         return f"出力先のパスが見つかりません。処理を中断します。[詳細]: {self.message}"
+
 
 class SetLanguageNotError(Exception):
     """言語の設定が不正な場合に発生するエラー"""

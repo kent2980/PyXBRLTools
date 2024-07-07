@@ -4,9 +4,4 @@ from .label_manager import LabelManager
 from .link_manager import *
 from .qualitative_manager import QualitativeManager
 
-__all__ = [
-        "IxbrlManager",
-        "LabelManager",
-        "QualitativeManager",
-        "BaseXbrlManager"
-        ]
+__all__ = ["IxbrlManager", "LabelManager", "QualitativeManager", "BaseXbrlManager"]

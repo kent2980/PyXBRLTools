@@ -9,7 +9,8 @@ from app.exception import NotXbrlDirectoryException, NotXbrlTypeException
 
 
 class BaseXbrlModel:
-    """ XBRLファイルを扱うための基底クラス"""
+    """XBRLファイルを扱うための基底クラス"""
+
     def __init__(self, xbrl_zip_path, output_path) -> None:
         # XBRLファイルのzipファイルのパスを指定
         self.__xbrl_zip_path = Path(xbrl_zip_path)

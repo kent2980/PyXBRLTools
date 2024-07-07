@@ -21,6 +21,7 @@ def get_parser(set_xbrl_test_dir, get_output_dir):
                 break
     return BaseXBRLParser(xbrl_file.as_posix(), output_path.as_posix())
 
+
 @pytest.fixture
 def get_create_parser(set_xbrl_test_dir, get_output_dir):
     test_dir: str = set_xbrl_test_dir
@@ -33,6 +34,7 @@ def get_create_parser(set_xbrl_test_dir, get_output_dir):
                 xbrl_file = Path(root) / file
                 break
     return BaseXBRLParser.create(xbrl_file.as_posix(), output_path.as_posix())
+
 
 def test_xbrl_id(get_parser):
     # パーサーを取得
@@ -48,6 +50,7 @@ def test_xbrl_id(get_parser):
     parser.xbrl_id = xbrl_id
     assert parser.xbrl_id == xbrl_id
 
+
 def test_not_output_path():
     try:
         # パーサーを取得
@@ -56,11 +59,13 @@ def test_not_output_path():
     except Exception:
         assert True
 
+
 def test_output_path(get_create_parser):
     parser = get_create_parser
     output_path = "test"
     parser.output_path = output_path
     assert parser.output_path == output_path
+
 
 def test_dummy_file_path():
     try:
@@ -69,6 +74,7 @@ def test_dummy_file_path():
         BaseXBRLParser(dummy_file)
     except FileNotFoundError:
         assert True
+
 
 def test_fetch_url(get_parser):
     # 有効なURLのテスト
@@ -84,6 +90,7 @@ def test_fetch_url(get_parser):
         parser._fetch_url()
     except Exception:
         assert True
+
 
 def test_is_url_in_local(get_parser, get_output_dir):
     # パーサーを取得
@@ -101,6 +108,7 @@ def test_is_url_in_local(get_parser, get_output_dir):
     assert is_url == False
     assert path is None
 
+
 def test_to_data(get_create_parser):
     parser = get_create_parser
     df = parser.to_DataFrame()
@@ -108,6 +116,7 @@ def test_to_data(get_create_parser):
     dict_data = parser.to_dict()
     assert isinstance(dict_data, list)
     assert isinstance(dict_data[0], dict)
+
 
 def test_create(get_output_dir):
     url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2023-12-01/label/jppfs_2023-12-01_lab.xml"

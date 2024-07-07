@@ -6,7 +6,8 @@ from app.parser import LabelParser
 
 
 class LabelManager(BaseXbrlManager):
-    """ labelLinkbaseデータの解析を行うクラス"""
+    """labelLinkbaseデータの解析を行うクラス"""
+
     def __init__(self, directory_path, output_path, lang="jp") -> None:
         """
         LabelManagerクラスのコンストラクタです。
@@ -36,7 +37,9 @@ class LabelManager(BaseXbrlManager):
         self.lang = lang
 
         if not lang in ["jp", "en"]:
-            raise SetLanguageNotError("言語の設定が不正です。[jp, en]を指定してください。")
+            raise SetLanguageNotError(
+                "言語の設定が不正です。[jp, en]を指定してください。"
+            )
 
         if len(self.files) > 0:
             if lang == "jp":

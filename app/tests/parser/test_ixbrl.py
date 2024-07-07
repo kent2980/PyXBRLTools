@@ -1,10 +1,9 @@
-import re
-
 import pandas as pd
 import pytest
 
 from app.exception import TypeOfXBRLIsDifferent
 from app.parser import IxbrlParser
+from app.tag import IxNonFraction, IxNonNumeric
 
 
 @pytest.fixture
@@ -13,8 +12,10 @@ def get_parser(get_xbrl_test_ixbrl, get_output_dir):
     parser = IxbrlParser.create(get_xbrl_test_ixbrl, output_path.as_posix())
     return parser
 
+
 def test_create_ixbrl_parser(get_parser):
     assert isinstance(get_parser, IxbrlParser)
+
 
 def test_not_file_path():
     url = "http://www.example.com/lab.xml"
@@ -25,11 +26,13 @@ def test_not_file_path():
         assert True
     assert parser is None
 
+
 def test_set_document(get_parser):
     parser = get_parser
     url = "http://www.example.com/sm_lab.xml"
     result = parser._set_document(url)
     assert result == "sm"
+
 
 def test_report_type(get_parser):
     parser = get_parser
@@ -42,12 +45,16 @@ def test_report_type(get_parser):
     result = parser._set_report_type(url)
     assert result == "rrfc"
 
+
 def test_non_numeric(get_parser):
     parser = get_parser
     parser = parser.ix_non_numeric()
     result = parser.to_DataFrame()
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
+    # column check
+    assert sorted(IxNonNumeric.keys()) == sorted(result.columns.tolist())
+
 
 def test_non_fraction(get_parser):
     parser = get_parser
@@ -55,3 +62,8 @@ def test_non_fraction(get_parser):
     result = parser.to_DataFrame()
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
+    # column check
+    columns1 = sorted(IxNonFraction.keys())
+    columns2 = sorted(result.columns.tolist())
+    print(columns1)
+    assert sorted(IxNonFraction.keys()) == sorted(result.columns.tolist())

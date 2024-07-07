@@ -1,5 +1,11 @@
-from app.manager import (CalLinkManager, DefLinkManager, IxbrlManager,
-                         LabelManager, PreLinkManager, QualitativeManager)
+from app.manager import (
+    CalLinkManager,
+    DefLinkManager,
+    IxbrlManager,
+    LabelManager,
+    PreLinkManager,
+    QualitativeManager,
+)
 from app.models import BaseXbrlModel
 
 
