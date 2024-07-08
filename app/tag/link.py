@@ -1,14 +1,21 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional
+
 
 @dataclass
-class SchemaImport:
+class LinkSchemaImport:
+    """
+    リンクスキーマのインポートを表すデータクラスです。
+    """
     schema_location: Optional[str] = field(default=None)
     name_space: Optional[str] = field(default=None)
     document_type: Optional[str] = field(default=None)
 
 @dataclass
 class LinkBaseRef:
+    """
+    リンクベースの参照を表すデータクラスです。
+    """
     xlink_type: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
     xlink_role: Optional[str] = field(default=None)
@@ -16,7 +23,10 @@ class LinkBaseRef:
     document_type: Optional[str] = field(default=None)
 
 @dataclass
-class Element:
+class LinkElement:
+    """
+    リンク要素を表すデータクラスです。
+    """
     id: Optional[str] = field(default=None)
     xbrli_balance: Optional[str] = field(default=None)
     xbrli_period_type: Optional[str] = field(default=None)
@@ -28,14 +38,20 @@ class Element:
     document_type: Optional[str] = field(default=None)
 
 @dataclass
-class RoleTag:
+class LinkRole:
+    """
+    リンクロールを表すデータクラスです。
+    """
     xbrl_id: str
     xlink_type: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
     role_uri: Optional[str] = field(default=None)
 
 @dataclass
-class LocTag:
+class LinkLoc:
+    """
+    リンクロケーションを表すデータクラスです。
+    """
     xbrl_id: str
     attr_value: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
@@ -44,7 +60,10 @@ class LocTag:
     xlink_label: Optional[str] = field(default=None)
 
 @dataclass
-class ArcTag:
+class LinkArc:
+    """
+    リンクアークを表すデータクラスです。
+    """
     xbrl_id: str
     attr_value: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
@@ -55,7 +74,10 @@ class ArcTag:
     xlink_weight: Optional[float] = field(default=None)
 
 @dataclass
-class LinkBaseTag:
+class LinkBase:
+    """
+    リンクベースを表すデータクラスです。
+    """
     xbrl_id: str
     xmlns_xlink: Optional[str] = field(default=None)
     xmlns_xsi: Optional[str] = field(default=None)
@@ -63,6 +85,9 @@ class LinkBaseTag:
 
 @dataclass
 class LinkTag:
+    """
+    リンクタグを表すデータクラスです。
+    """
     xbrl_id: str
     xlink_type: Optional[str] = field(default=None)
     xlink_role: Optional[str] = field(default=None)

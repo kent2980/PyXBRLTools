@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+
 @dataclass
 class IxNonNumeric:
     """ 非数値タグの情報を格納するクラス """
@@ -10,9 +11,9 @@ class IxNonNumeric:
     context_category: Optional[str] = field(default=None)
     name: Optional[str] = field(default=None)
     xsi_nil: Optional[bool] = field(default=None)
-    escape: Optional[str] = field(default=None)
+    escape: Optional[bool] = field(default=None)
     format: Optional[str] = field(default=None)
-    text: Optional[str] = field(default=None)
+    value: Optional[str] = field(default=None)
     document_type: Optional[str] = field(default=None)
     report_type: Optional[str] = field(default=None)
 
@@ -33,7 +34,6 @@ class IxNonFraction:
     decimals: Optional[str] = field(default=None)
     format: Optional[str] = field(default=None)
     scale: Optional[str] = field(default=None)
-    sign: Optional[str] = field(default=None)
     numeric: Optional[str] = field(default=None)
     document_type: Optional[str] = field(default=None)
     report_type: Optional[str] = field(default=None)
