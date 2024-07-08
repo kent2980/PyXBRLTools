@@ -1,30 +1,28 @@
-from dataclasses import dataclass
-from bs4 import BeautifulSoup
-from app.exception import TypeOfXBRLIsDifferent
-from . import BaseXBRLParser
+from dataclasses import dataclass, field
+from typing import Optional
 
 @dataclass
 class SchemaImport:
-    schema_location: str
-    name_space: str
-    document_type: str
+    schema_location: Optional[str] = field(default=None)
+    name_space: Optional[str] = field(default=None)
+    document_type: Optional[str] = field(default=None)
 
 @dataclass
 class LinkBaseRef:
-    xlink_type: str
-    xlink_href: str
-    xlink_role: str
-    xlink_arcrole: str
-    document_type: str
+    xlink_type: Optional[str] = field(default=None)
+    xlink_href: Optional[str] = field(default=None)
+    xlink_role: Optional[str] = field(default=None)
+    xlink_arcrole: Optional[str] = field(default=None)
+    document_type: Optional[str] = field(default=None)
 
 @dataclass
 class Element:
-    id: str
-    xbrli_balance: str
-    xbrli_period_type: str
-    name: str
-    nillable: str
-    substitution_group: str
-    type: str
-    abstract: str
-    document_type: str
+    id: Optional[str] = field(default=None)
+    xbrli_balance: Optional[str] = field(default=None)
+    xbrli_period_type: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
+    nillable: Optional[str] = field(default=None)
+    substitution_group: Optional[str] = field(default=None)
+    type: Optional[str] = field(default=None)
+    abstract: Optional[str] = field(default=None)
+    document_type: Optional[str] = field(default=None)
