@@ -100,10 +100,14 @@ class BaseLinkParser(BaseXBRLParser):
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
                 # _____attr[xlink:order]
-                xlink_order = float(tag.get("order")) if tag.get("order") is not None else None
+                xlink_order = (
+                    float(tag.get("order")) if tag.get("order") is not None else None
+                )
 
                 # _____attr[xlink:weight]
-                xlink_weight = float(tag.get("weight")) if tag.get("weight") is not None else None
+                xlink_weight = (
+                    float(tag.get("weight")) if tag.get("weight") is not None else None
+                )
 
                 la = LinkArc(
                     xbrl_id=self.xbrl_id,
@@ -167,6 +171,7 @@ class BaseLinkParser(BaseXBRLParser):
         self.data = lists
 
         return self
+
 
 class CalLinkParser(BaseLinkParser):
     """CalculationLinkのParserクラス"""

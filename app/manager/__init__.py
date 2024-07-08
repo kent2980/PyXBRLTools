@@ -1,5 +1,5 @@
 from .base_xbrl_manager import BaseXbrlManager
-from .ixbrl_manager import IxbrlManager
+from .ixbrl_manager import IXBRLManager
 from .label_manager import LabelManager
 from .link_manager import *
 from .qualitative_manager import QualitativeManager

@@ -107,7 +107,7 @@ class IxbrlParser(BaseXBRLParser):
             # _____attr[text]
             if escape == False:
                 # text属性が存在する場合は取得
-                text = tag.text.splitlines()[0].replace("　", "").replace(" ", "")
+                text = tag.text.replace("　", "").replace(" ", "")
                 # textの数字を半角に変換
                 text = re.sub(r"[０-９]", lambda x: chr(ord(x.group(0)) - 0xFEE0), text)
             else:
@@ -117,10 +117,12 @@ class IxbrlParser(BaseXBRLParser):
 
             # textが日付文字列の場合はフォーマットを統一
             if format_str:
-                text, format_str = Utils.date_str_to_format(text, format_str)   # pragma: no cover
+                text, format_str = Utils.date_str_to_format(
+                    text, format_str
+                )  # pragma: no cover
 
             # textが証券コードの場合は4文字に統一
-            if "SecuritiesCode" in name:
+            if any(item in name for item in ["SecuritiesCode", "SecurityCode"]):
                 text = text[0:4]  # pragma: no cover
 
             # 辞書に追加
@@ -182,8 +184,8 @@ class IxbrlParser(BaseXBRLParser):
             xsi_nil = True if tag.get("xsi:nil") == "true" else False
 
             # _____attr[numeric]
-            numeric = int(re.sub(",", "", tag.text)) if tag.text else None
-            numeric = numeric * -1 if sign == "-" else numeric
+            numeric = re.sub(",", "", tag.text) if tag.text else None
+            numeric = float(numeric) * -1 if sign == "-" else numeric if numeric else None
 
             inn = IxNonFraction(
                 xbrl_id=self.xbrl_id,

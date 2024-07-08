@@ -46,6 +46,7 @@ def set_xbrl_test_dir(get_current_path, get_test_dir) -> str:
 
     return get_test_dir.as_posix()
 
+
 @pytest.fixture(scope="module")
 def get_xbrl_in_edjp(get_current_path, get_test_dir):
     keyword = "edjp"
@@ -55,6 +56,7 @@ def get_xbrl_in_edjp(get_current_path, get_test_dir):
         z.extractall(get_test_dir.as_posix())
 
     return get_test_dir.as_posix()
+
 
 @pytest.fixture(scope="module")
 def get_xbrl_test_ixbrl(get_xbrl_in_edjp):
@@ -90,6 +92,7 @@ def remove_test_dir(request, get_test_dir, get_output_dir):
         shutil.rmtree(test_create_output_dir.as_posix(), ignore_errors=True)
 
     request.addfinalizer(cleanup)
+
 
 def get_xbrl_zip_in_keyword(get_current_path, keyword):
     dir_path = get_current_path / ".xbrl"
