@@ -1,3 +1,5 @@
+from pandas import DataFrame
+
 from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import IxbrlParser
@@ -133,35 +135,33 @@ class IXBRLManager(BaseXbrlManager):
         return header.__dict__
 
     def get_ix_summary(self):
-        summary_list = []
+        def get_value(value_: dict[str, str], item: list[str]):
+            return (
+            value_["numeric"]
+            if any(value_["name"].endswith(item) for item in item)
+            else None
+            )
+        contexts = []
+        dfs = []
         summary = IxSummary()
         for values in self.get_ix_non_fraction("sm"):
-            for value in values:
-                context_period = value["context_period"]
-                context_entity = value["context_entity"]
-                context_category = value["context_category"]
-                net_sales = (
-                    value["numeric"]
-                    if any(value["name"].endswith(item) for item in ["_NetSales"])
-                    else None
-                )
+            dfs.append(DataFrame(values))
+            # dfをcontext_period, context_entity, context_categoryでグループ化
+            for key, values in DataFrame(values).groupby(["context_period", "context_entity", "context_category"]):
+                context = key
+                contexts.append(context)
+        contexts = list(set(contexts))
 
-                if net_sales:
-                    value_summary = IxSummary(
-                        context_period=context_period,
-                        context_entity=context_entity,
-                        context_category=context_category,
-                        net_sales=net_sales,
-                    )
-                    if not summary.__eq__(value_summary):
-                        summary = value_summary
-                        summary_list.append(summary.__dict__)
-                        context_period = None
-                        context_entity = None
-                        context_category = None
-                        net_sales = None
-
-        # Remove duplicates
-        summary_list = summary_list[1:]
-        for value in summary_list:
-            yield value
+        for context in contexts:
+            for df in dfs:
+                df_query:DataFrame = df.query("context_period == @context[0] & context_entity == @context[1] & context_category == @context[2]")
+                # df_queryからnameが"_NetSales"で終わる行を取得
+                # 売上高
+                net_sales = get_value(df_query.to_dict(orient="records")[0], ["_NetSales"])
+                # 営業利益
+                operating_income = get_value(df_query.to_dict(orient="records")[0], ["OperatingIncome"])
+                # 経常利益
+                ordinary_income = get_value(df_query.to_dict(orient="records")[0], ["_OrdinaryIncome"])
+                # 純利益
+                net_income = get_value(df_query.to_dict(orient="records")[0], ["_NetIncome"])
+                yield net_sales, operating_income, ordinary_income, net_income

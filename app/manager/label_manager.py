@@ -55,7 +55,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def set_link_labels(self, document_type=None):
+    def get_link_labels(self, document_type=None):
         """
         label属性を設定します。
         ラベル情報を取得します。
@@ -63,34 +63,18 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
-        df = None
+        output_path = self.output_path
         files = self.files
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    LabelParser.create(row["xlink_href"], self.output_path)
-                    .link_labels()
-                    .to_DataFrame()
-                )
-            else:
-                df = pd.concat(
-                    [
-                        df,
-                        LabelParser.create(row["xlink_href"], self.output_path)
-                        .link_labels()
-                        .to_DataFrame(),
-                    ],
-                    ignore_index=True,
-                )
+        for _, row in files.iterrows():
+            parser = LabelParser.create(row["xlink_href"], output_path).link_labels()
 
-        self.label = df
-        self.data = self.label
+            df = parser.to_DataFrame()
 
-        return self
+            yield df.to_dict(orient="records")
 
-    def set_link_label_locs(self, document_type=None):
+    def get_link_label_locs(self, document_type=None):
         """
         loc属性を設定します。
         loc情報を取得します。
@@ -99,35 +83,17 @@ class LabelManager(BaseXbrlManager):
             self (LabelManager): 自身のインスタンス
         """
         output_path = self.output_path
-        df = None
         files = self.files
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if row["xlink_href"].endswith("lab.xml"):
-                if df is None:
-                    df = (
-                        LabelParser.create(row["xlink_href"], output_path)
-                        .link_label_locs()
-                        .to_DataFrame()
-                    )
-                else:
-                    df = pd.concat(
-                        [
-                            df,
-                            LabelParser.create(row["xlink_href"], output_path)
-                            .link_label_locs()
-                            .to_DataFrame(),
-                        ],
-                        ignore_index=True,
-                    )
+        for _, row in files.iterrows():
+            parser = LabelParser.create(row["xlink_href"], output_path).link_label_locs()
 
-        self.loc = df
-        self.data = self.loc
+            df = parser.to_DataFrame()
 
-        return self
+            yield df.to_dict(orient="records")
 
-    def set_link_label_arcs(self, document_type=None):
+    def get_link_label_arcs(self, document_type=None):
         """
         labelArc属性を設定します。
         labelArc情報を取得します。
@@ -136,67 +102,12 @@ class LabelManager(BaseXbrlManager):
             self (LabelManager): 自身のインスタンス
         """
         output_path = self.output_path
-        df = None
         files = self.files
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if row["xlink_href"].endswith("lab.xml"):
-                if df is None:
-                    df = (
-                        LabelParser.create(row["xlink_href"], output_path)
-                        .link_label_arcs()
-                        .to_DataFrame()
-                    )
-                else:
-                    df = pd.concat(
-                        [
-                            df,
-                            LabelParser.create(row["xlink_href"], output_path)
-                            .link_label_arcs()
-                            .to_DataFrame(),
-                        ],
-                        ignore_index=True,
-                    )
+        for _, row in files.iterrows():
+            parser = LabelParser.create(row["xlink_href"], output_path).link_label_arcs()
 
-        self.label_arc = df
-        self.data = self.label_arc
+            df = parser.to_DataFrame()
 
-        return self
-
-    def set_role_refs(self, document_type=None):
-        """
-        roleRef属性を設定します。
-        roleRef情報を取得します。
-
-        Returns:
-            self (LabelManager): 自身のインスタンス
-        """
-        output_path = self.output_path
-        df = None
-        files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if row["xlink_href"].endswith("lab.xml"):
-                if df is None:
-                    df = (
-                        LabelParser.create(row["xlink_href"], output_path)
-                        .role_refs()
-                        .to_DataFrame()
-                    )
-                else:
-                    df = pd.concat(
-                        [
-                            df,
-                            LabelParser.create(row["xlink_href"], output_path)
-                            .role_refs()
-                            .to_DataFrame(),
-                        ],
-                        ignore_index=True,
-                    )
-
-        self.role_ref = df
-        self.data = self.role_ref
-
-        return self
+            yield df.to_dict(orient="records")

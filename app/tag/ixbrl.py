@@ -60,4 +60,7 @@ class IxSummary(BaseTag):
     context_entity: Optional[str] = field(default=None)
     context_category: Optional[str] = field(default=None)
     net_sales: Optional[str] = field(default=None)
+    operating_income: Optional[str] = field(default=None)
+    ordinary_income: Optional[str] = field(default=None)
+    net_income: Optional[str] = field(default=None)
 
