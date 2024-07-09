@@ -29,6 +29,13 @@ def get_test_dir(get_current_path) -> Path:
     test_dir = get_current_path / ".data" / "test"
     return test_dir
 
+@pytest.fixture(scope="session")
+def get_xbrl_zip_dir(get_current_path) -> Path:
+    """XBRLファイルのディレクトリを取得"""
+
+    xbrl_dir = get_current_path / ".xbrl"
+    return xbrl_dir
+
 @pytest.fixture(scope="module")
 def get_xbrl_in_edjp(get_test_dir):
     """テスト用のXBRL(edjp)ファイルを取得"""

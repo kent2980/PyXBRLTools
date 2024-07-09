@@ -6,7 +6,10 @@ from app.parser import QualitativeParser
 
 
 class QualitativeManager(BaseXbrlManager):
-    """qualitativeデータの解析を行うクラス"""
+    """qualitativeデータの解析を行うクラス
+
+    raise   - XbrlListEmptyError("qualitative.htmが見つかりません。")
+    """
 
     def __init__(self, directory_path) -> None:
         super().__init__(directory_path)

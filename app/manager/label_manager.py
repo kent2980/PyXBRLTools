@@ -6,7 +6,11 @@ from app.parser import LabelParser
 
 
 class LabelManager(BaseXbrlManager):
-    """labelLinkbaseデータの解析を行うクラス"""
+    """labelLinkbaseデータの解析を行うクラス
+
+    raise   - SetLanguageNotError("言語の設定が不正です。[jp, en]を指定してください。")
+            - XbrlListEmptyError("labelLinkbaseファイルが見つかりません。")
+    """
 
     def __init__(self, directory_path, output_path, lang="jp") -> None:
         """

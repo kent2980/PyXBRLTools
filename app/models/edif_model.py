@@ -1,10 +1,5 @@
-from app.manager import (
-    CalLinkManager,
-    DefLinkManager,
-    IxbrlManager,
-    LabelManager,
-    PreLinkManager,
-)
+from app.manager import (CalLinkManager, DefLinkManager, IXBRLManager,
+                         LabelManager, PreLinkManager)
 from app.models import BaseXbrlModel
 
 
@@ -19,7 +14,7 @@ class EdifModel(BaseXbrlModel):
     def _initialize_managers(self):
         """managerクラスを初期化"""
         directory_path = self.directory_path
-        self.ixbrl_manager = IxbrlManager(directory_path).set_xbrl_id(self.xbrl_id)
+        self.ixbrl_manager = IXBRLManager(directory_path).set_xbrl_id(self.xbrl_id)
         self.label_manager = self._create_manager(LabelManager, "label")
         self.cal_manager = self._create_manager(CalLinkManager, "cal").set_xbrl_id(
             self.xbrl_id

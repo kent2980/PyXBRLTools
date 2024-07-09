@@ -100,7 +100,11 @@ class BaseLinkManager(BaseXbrlManager):
             yield data.to_dict(orient="records")
 
 class CalLinkManager(BaseLinkManager):
-    """calculationLinkbaseデータの解析を行うクラス"""
+    """calculationLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
 
     def get_parser(self) -> BaseLinkParser:
         return CalLinkParser
@@ -111,7 +115,11 @@ class CalLinkManager(BaseLinkManager):
 
 
 class DefLinkManager(BaseLinkManager):
-    """definitionLinkbaseデータの解析を行うクラス"""
+    """definitionLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
 
     def get_parser(self) -> BaseLinkParser:
         return DefLinkParser
@@ -122,7 +130,11 @@ class DefLinkManager(BaseLinkManager):
 
 
 class PreLinkManager(BaseLinkManager):
-    """presentationLinkbaseデータの解析を行うクラス"""
+    """presentationLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
 
     def get_parser(self) -> BaseLinkParser:
         return PreLinkParser

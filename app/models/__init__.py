@@ -9,8 +9,10 @@ from .rrdf_model import RrdfModel
 from .rrfc_model import RrfcModel
 from .rvdf_model import RvdfModel
 from .rvfc_model import RvfcModel
+from .xbrl_model import XBRLModel
 
 __all__ = [
+    "XBRLModel",
     "BaseXbrlModel",
     "EdifModel",
     "EditModel",

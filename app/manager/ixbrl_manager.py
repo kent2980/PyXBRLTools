@@ -7,7 +7,10 @@ from app.tag import IxHeader, IxSummary
 
 
 class IXBRLManager(BaseXbrlManager):
-    """iXBRLデータの解析を行うクラス"""
+    """iXBRLデータの解析を行うクラス
+
+    raise   - XbrlListEmptyError("ixbrlファイルが見つかりません。")
+    """
 
     def __init__(self, directory_path) -> None:
         """

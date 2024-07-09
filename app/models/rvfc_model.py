@@ -1,4 +1,4 @@
-from app.manager import DefLinkManager, IxbrlManager, LabelManager
+from app.manager import DefLinkManager, IXBRLManager, LabelManager
 from app.models import BaseXbrlModel
 
 
@@ -11,7 +11,7 @@ class RvfcModel(BaseXbrlModel):
         output_path (str): 出力先のパス
 
     Attributes:
-        ixbrl_manager (IxbrlManager): iXBRLデータを管理するマネージャークラス
+        ixbrl_manager (IXBRLManager): iXBRLデータを管理するマネージャークラス
         label_manager (LabelManager): ラベルデータを管理するマネージャークラス
         def_manager (DefLinkManager): 定義リンクベースデータを管理するマネージャークラス
 
@@ -37,7 +37,7 @@ class RvfcModel(BaseXbrlModel):
     def _initialize_managers(self):
         """managerクラスを初期化"""
         directory_path = self.directory_path
-        self.ixbrl_manager = IxbrlManager(directory_path).set_xbrl_id(self.xbrl_id)
+        self.ixbrl_manager = IXBRLManager(directory_path).set_xbrl_id(self.xbrl_id)
         self.label_manager = self._create_manager(LabelManager, "label")
         self.def_manager = self._create_manager(DefLinkManager, "def").set_xbrl_id(
             self.xbrl_id
