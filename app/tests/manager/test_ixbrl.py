@@ -2,7 +2,7 @@
 import pytest
 
 from app.manager import IXBRLManager
-from app.tag import IxHeader, IxNonFraction, IxNonNumeric, IxSummary
+from app.tag import IxHeader, IxNonFraction, IxNonNumeric
 
 
 @pytest.fixture

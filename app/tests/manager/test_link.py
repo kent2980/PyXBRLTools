@@ -1,92 +1,70 @@
+import pprint
+
 import pytest
 
-from app.manager import BaseLinkManager, CalLinkManager, DefLinkManager, PreLinkManager
+from app.manager import CalLinkManager, DefLinkManager, PreLinkManager
+from app.tag import LinkArc, LinkLoc, LinkRole
 
 
 @pytest.fixture
-def link_manager(set_xbrl_test_dir, get_output_dir):
-    try:
-        test_dir = set_xbrl_test_dir
-        output_dir = get_output_dir / "link"
-        return BaseLinkManager(test_dir, output_dir.as_posix())
-    except NotImplementedError:
-        return None
-
-
-@pytest.fixture
-def cal_link_manager(set_xbrl_test_dir, get_output_dir):
-    test_dir = set_xbrl_test_dir
+def cal_link_manager(get_xbrl_in_edjp, get_output_dir):
     output_dir = get_output_dir / "link"
-    return CalLinkManager(test_dir, output_dir.as_posix())
-
-
-@pytest.fixture
-def def_link_manager(set_xbrl_test_dir, get_output_dir):
-    test_dir = set_xbrl_test_dir
-    output_dir = get_output_dir / "link"
-    return DefLinkManager(test_dir, output_dir.as_posix())
-
+    return CalLinkManager(get_xbrl_in_edjp, output_dir.as_posix())
 
 @pytest.fixture
-def pre_link_manager(set_xbrl_test_dir, get_output_dir):
-    test_dir = set_xbrl_test_dir
+def def_link_manager(get_xbrl_in_edjp, get_output_dir):
     output_dir = get_output_dir / "link"
-    return PreLinkManager(test_dir, output_dir.as_posix())
+    return DefLinkManager(get_xbrl_in_edjp, output_dir.as_posix())
 
+@pytest.fixture
+def pre_link_manager(get_xbrl_in_edjp, get_output_dir):
+    output_dir = get_output_dir / "link"
+    return PreLinkManager(get_xbrl_in_edjp, output_dir.as_posix())
 
-def test_base_manager_not_instance(link_manager):
-    # マネージャーを取得
-    manager = link_manager
-    assert manager is None
+def test_cal_link_manager_is_instance(cal_link_manager):
+    assert isinstance(cal_link_manager, CalLinkManager)
 
+def test_def_link_manager_is_instance(def_link_manager):
+    assert isinstance(def_link_manager, DefLinkManager)
 
-def test_cal_manager_instance(cal_link_manager):
-    # マネージャーを取得
+def test_pre_link_manager_is_instance(pre_link_manager):
+    assert isinstance(pre_link_manager, PreLinkManager)
+
+def test_get_link_roles(cal_link_manager):
+    for values in cal_link_manager.get_link_roles():
+        assert isinstance(values, list)
+        print("[test_get_link_roles]" + "*"*80 + "\n")
+        pprint.pprint(values)
+        for value in values:
+            assert isinstance(value, dict)
+            assert sorted(value.keys()) == sorted(LinkRole.keys())
+
+def test_get_link_locs(cal_link_manager):
+    for values in cal_link_manager.get_link_locs():
+        assert isinstance(values, list)
+        print("[test_get_link_locs]" + "*"*80 + "\n")
+        pprint.pprint(values)
+        for value in values:
+            assert isinstance(value, dict)
+            assert sorted(value.keys()) == sorted(LinkLoc.keys())
+
+def test_get_link_arcs(cal_link_manager):
+    for values in cal_link_manager.get_link_arcs():
+        assert isinstance(values, list)
+        print("[test_get_link_arcs]" + "*"*80 + "\n")
+        pprint.pprint(values)
+        for value in values:
+            assert isinstance(value, dict)
+            assert sorted(value.keys()) == sorted(LinkArc.keys())
+
+def test_change_output_path(cal_link_manager):
+    output_path = "test"
     manager = cal_link_manager
-    assert isinstance(manager, CalLinkManager)
-    manager.set_link_roles()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
-    manager.set_link_locs()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
-    manager.set_link_arcs()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
+    manager.output_path = output_path
+    assert manager.output_path.__eq__(output_path)
 
-
-def test_def_manager_instance(def_link_manager):
-    # マネージャーを取得
-    manager = def_link_manager
-    assert isinstance(manager, DefLinkManager)
-
-
-def test_pre_manager_instance(pre_link_manager):
-    # マネージャーを取得
-    manager = pre_link_manager
-    assert isinstance(manager, PreLinkManager)
-
-
-def test_set_document_type(cal_link_manager):
-    # マネージャーを取得
-    manager: CalLinkManager = cal_link_manager
-    manager.set_document_type("fr")
-    assert manager.document_type == "fr"
-
-    manager.set_link_roles()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
-    manager.set_link_locs()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
-    manager.set_link_arcs()
-    df = manager.to_DataFrame()
-    assert len(df) > 0
-
-
-def test_output_path(cal_link_manager, get_output_dir):
-    # マネージャーを取得
-    manager: CalLinkManager = cal_link_manager
-    output_path = get_output_dir / "link"
-    manager.output_path = output_path.as_posix()
-    assert manager.output_path == output_path.as_posix()
+def test_change_document_type(cal_link_manager):
+    document_type = "test"
+    manager = cal_link_manager
+    manager.document_type = document_type
+    assert manager.document_type.__eq__(document_type)

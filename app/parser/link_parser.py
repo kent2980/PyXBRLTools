@@ -19,10 +19,10 @@ class BaseLinkParser(BaseXBRLParser):
         self.set_arc_tag_name()
 
     def set_link_tag_name(self):
-        raise NotImplementedError
+        raise NotImplementedError   # pragma: no cover
 
     def set_arc_tag_name(self):
-        raise NotImplementedError
+        raise NotImplementedError   # pragma: no cover
 
     def link_roles(self):
         """link:role要素を取得するメソッド。
@@ -35,10 +35,13 @@ class BaseLinkParser(BaseXBRLParser):
 
         tags = self.soup.find_all(name=["link:role", "roleRef"])
         for tag in tags:
+            xlink_schema = tag.get("xlink:href").split("#")[0]
+            xlink_href = tag.get("xlink:href").split("#")[1]
             lrr = LinkRole(
                 xbrl_id=self.xbrl_id,
                 xlink_type=tag.get("xlink:type"),
-                xlink_href=tag.get("xlink:href"),
+                xlink_schema=xlink_schema,
+                xlink_href=xlink_href,
                 role_uri=tag.get("roleURI"),
             )
             lists.append(lrr.__dict__)
@@ -57,10 +60,9 @@ class BaseLinkParser(BaseXBRLParser):
 
         lists = []
 
-        arcs = self.link_arcs().to_DataFrame()
         for link_tag in link_tags:
 
-            attr_value = link_tag.get("xlink:role")
+            attr_value = link_tag.get("xlink:role").split("_")[-1]
 
             tags = link_tag.find_all(["link:loc", "loc"])
             for tag in tags:
@@ -95,7 +97,7 @@ class BaseLinkParser(BaseXBRLParser):
         lists = []
         for link_tag in link_tags:
 
-            attr_value = link_tag.get("xlink:role")
+            attr_value = link_tag.get("xlink:role").split("_")[-1]
 
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
@@ -149,7 +151,7 @@ class BaseLinkParser(BaseXBRLParser):
 
         return self
 
-    def link(self):
+    def link_tags(self):
         """link要素を取得するメソッド。
 
         returns:
@@ -198,7 +200,7 @@ class DefLinkParser(BaseLinkParser):
 
         # def.xmlでない場合はエラーを出力
         if not self.basename().endswith("def.xml"):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")     # pragma: no cover
 
     def set_link_tag_name(self):
         self.link_tag_name = ["link:definitionLink", "definitionLink"]
@@ -215,7 +217,7 @@ class PreLinkParser(BaseLinkParser):
 
         # pre.xmlでない場合はエラーを出力
         if not self.basename().endswith("pre.xml"):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はpre.xmlではありません。")
+            raise TypeOfXBRLIsDifferent(f"{self.basename()} はpre.xmlではありません。")     # pragma: no cover
 
     def set_link_tag_name(self):
         self.link_tag_name = "link:presentationLink"

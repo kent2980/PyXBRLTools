@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -16,7 +17,7 @@ class BaseXBRLParser:
         if xbrl_url.startswith("http"):
             if output_path is None:
                 raise Exception("Please specify the output path")
-        if not xbrl_url.startswith("http") and not os.path.exists(xbrl_url):
+        if (not xbrl_url.startswith("http")) and (not os.path.exists(xbrl_url)):
             raise FileNotFoundError(f"ファイルが見つかりません。[{xbrl_url}]")
 
         file_name = os.path.basename(xbrl_url)
@@ -66,6 +67,7 @@ class BaseXBRLParser:
         if self.xbrl_url.startswith("http"):
             response = requests.get(self.xbrl_url)
             if response.status_code == 200:
+                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {self.xbrl_url} からXBRLを取得しました。")
                 # エンコーディングを自動検出
                 response.encoding = response.apparent_encoding
                 file_path = os.path.join(

@@ -6,7 +6,7 @@ class NotXbrlDirectoryException(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"無効なXBRLファイルです。{self.message}"
+        return f"無効なXBRLファイルです。[詳細]:{self.message}"
 
 
 class NotXbrlTypeException(Exception):
@@ -17,4 +17,4 @@ class NotXbrlTypeException(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message}"
+        return f"XBRLファイルの種類が不正です。[詳細]:{self.message}"

@@ -1,7 +1,8 @@
 import pandas
 
 from app.manager import BaseXbrlManager
-from app.parser import BaseLinkParser, CalLinkParser, DefLinkParser, PreLinkParser
+from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                        PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -11,7 +12,6 @@ class BaseLinkManager(BaseXbrlManager):
         super().__init__(directory_path)
         self._output_path = output_path
         self._document_type = document_type
-        self.label = None
         self.set_linkbase_files(self.get_role())
         self.parser = self.get_parser()
 
@@ -36,8 +36,6 @@ class BaseLinkManager(BaseXbrlManager):
         """
         self._output_path = output_path
 
-        return self
-
     @document_type.setter
     def document_type(self, document_type):
         """
@@ -51,115 +49,55 @@ class BaseLinkManager(BaseXbrlManager):
         """
         self._document_type = document_type
 
-        return self
-
     def get_parser(self) -> BaseLinkParser:
         raise NotImplementedError  # pragma: no cover
 
     def get_role(self):
         raise NotImplementedError  # pragma: no cover
 
-    def set_document_type(self, document_type):
-        """
-        document_typeを設定します。
-
-        Parameters:
-            document_type (str): document_typeの設定
-
-        Returns:
-            self (BaseLinkManager): 自身のインスタンス
-        """
-        self.document_type = document_type
-
-        return self
-
-    def set_link_roles(self):
+    def get_link_roles(self):
         """link_rolesを設定します。"""
         output_path = self.output_path
-        df = None
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_roles()
-                    .to_DataFrame()
-                )
-            else:
-                df = pandas.concat(
-                    [
-                        df,
-                        self.parser.create(row["xlink_href"], output_path)
-                        .link_roles()
-                        .to_DataFrame(),
-                    ],
-                    ignore_index=True,
-                )
+        for _, row in files.iterrows():
 
-        self.label = df
-        self.data = self.label
+            parser = self.parser.create(row["xlink_href"], output_path).link_roles()
 
-        return self
+            data = parser.to_DataFrame()
 
-    def set_link_locs(self):
+            data["xbrl_id"] = self.xbrl_id
+
+            yield data.to_dict(orient="records")
+
+    def get_link_locs(self):
         output_path = self.output_path
-        df = None
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_locs()
-                    .to_DataFrame()
-                )
-                df["document_type"] = row["document_type"]
-            else:
-                new_df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_locs()
-                    .to_DataFrame()
-                )
-                new_df["document_type"] = row["document_type"]
-                df = pandas.concat([df, new_df], ignore_index=True)
-        print(df)
-        self.label = df
-        self.data = self.label
+        for _, row in files.iterrows():
+            parser = self.parser.create(row["xlink_href"], output_path).link_locs()
 
-        return self
+            data = parser.to_DataFrame()
 
-    def set_link_arcs(self):
+            data["xbrl_id"] = self.xbrl_id
+
+            yield data.to_dict(orient="records")
+
+    def get_link_arcs(self):
         output_path = self.output_path
-        df = None
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_arcs()
-                    .to_DataFrame()
-                )
-                df["document_type"] = row["document_type"]
-            else:
-                new_df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_arcs()
-                    .to_DataFrame()
-                )
-                new_df["document_type"] = row["document_type"]
-                df = pandas.concat([df, new_df], ignore_index=True)
+        for _, row in files.iterrows():
+            parser = self.parser.create(row["xlink_href"], output_path).link_arcs()
 
-        print(df)
-        self.label = df
-        self.data = self.label
+            data = parser.to_DataFrame()
 
-        return self
+            data["xbrl_id"] = self.xbrl_id
 
+            yield data.to_dict(orient="records")
 
 class CalLinkManager(BaseLinkManager):
     """calculationLinkbaseデータの解析を行うクラス"""

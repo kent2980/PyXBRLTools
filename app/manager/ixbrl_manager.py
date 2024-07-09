@@ -90,8 +90,6 @@ class IXBRLManager(BaseXbrlManager):
         report_type = None
         for values in self.get_ix_non_numeric():
             for value in values:
-                if value["value"]:
-                    print(f"{value['name']} : {value['value']}")
                 company_name = (
                     value["value"]
                     if any(item in value["name"] for item in ["CompanyName", "AssetManagerREIT"])

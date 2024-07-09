@@ -163,7 +163,7 @@ class IxbrlParser(BaseXBRLParser):
             context_category = context_parts[2] if len(context_parts) > 2 else None
 
             # _____attr[decimals]
-            decimals = int(tag.get("decimals")) if tag.get("decimals") else None
+            decimals = float(tag.get("decimals")) if tag.get("decimals") else None
 
             # _____attr[format]
             format_str = tag.get("format").split(":")[-1] if tag.get("format") else None

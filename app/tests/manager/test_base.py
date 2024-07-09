@@ -8,9 +8,8 @@ from app.manager import BaseXbrlManager
 
 
 @pytest.fixture
-def base_xbrl_manager(set_xbrl_test_dir):
-    test_dir = set_xbrl_test_dir
-    return BaseXbrlManager(test_dir)
+def base_xbrl_manager(get_xbrl_in_edjp):
+    return BaseXbrlManager(get_xbrl_in_edjp)
 
 
 def test_xbrl_type(base_xbrl_manager):

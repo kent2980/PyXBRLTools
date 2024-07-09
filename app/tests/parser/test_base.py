@@ -1,4 +1,6 @@
 import os
+import random
+import shutil
 import uuid
 from pathlib import Path
 
@@ -9,12 +11,11 @@ from app.parser import BaseXBRLParser
 
 
 @pytest.fixture
-def get_parser(set_xbrl_test_dir, get_output_dir):
-    test_dir: str = set_xbrl_test_dir
+def get_parser(get_xbrl_in_edjp, get_output_dir):
     output_path = get_output_dir / "test"
     xbrl_file: Path = None
     # test_dirからXBRLファイルパスを再起的にfor文で取得
-    for root, _, files in os.walk(test_dir):
+    for root, _, files in os.walk(get_xbrl_in_edjp):
         for file in files:
             if file.endswith("ixbrl.htm"):
                 xbrl_file = Path(root) / file
@@ -23,12 +24,11 @@ def get_parser(set_xbrl_test_dir, get_output_dir):
 
 
 @pytest.fixture
-def get_create_parser(set_xbrl_test_dir, get_output_dir):
-    test_dir: str = set_xbrl_test_dir
+def get_create_parser(get_xbrl_in_edjp, get_output_dir):
     output_path = get_output_dir / "test"
     xbrl_file: Path = None
     # test_dirからXBRLファイルパスを再起的にfor文で取得
-    for root, _, files in os.walk(test_dir):
+    for root, _, files in os.walk(get_xbrl_in_edjp):
         for file in files:
             if file.endswith("ixbrl.htm"):
                 xbrl_file = Path(root) / file
@@ -76,11 +76,14 @@ def test_dummy_file_path():
         assert True
 
 
-def test_fetch_url(get_parser):
+def test_fetch_url(get_parser, get_output_dir):
     # 有効なURLのテスト
     url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jpcrp/2023-12-01/label/jpcrp_2023-12-01_lab.xml"
     parser = get_parser
+    output_path = get_output_dir / str(random.randint(0, 1000))
+    os.mkdir(output_path)
     parser.xbrl_url = url
+    parser.output_path = output_path.as_posix()
     file_path = parser._fetch_url()
     assert os.path.exists(file_path)
     # 無効なURLのテスト
@@ -90,6 +93,8 @@ def test_fetch_url(get_parser):
         parser._fetch_url()
     except Exception:
         assert True
+    # ディレクトリとファイルを再起的に削除
+    shutil.rmtree(output_path)
 
 
 def test_is_url_in_local(get_parser, get_output_dir):
@@ -120,6 +125,7 @@ def test_to_data(get_create_parser):
 
 def test_create(get_output_dir):
     url = "http://disclosure.edinet-fsa.go.jp/taxonomy/jppfs/2023-12-01/label/jppfs_2023-12-01_lab.xml"
-    output_path = get_output_dir / "test"
+    output_path = get_output_dir / str(random.randint(0, 1000))
     parser = BaseXBRLParser.create(url, output_path.as_posix())
     assert isinstance(parser, BaseXBRLParser)
+    shutil.rmtree(output_path)

@@ -70,9 +70,9 @@ class LabelManager(BaseXbrlManager):
         for _, row in files.iterrows():
             parser = LabelParser.create(row["xlink_href"], output_path).link_labels()
 
-            df = parser.to_DataFrame()
+            data = parser.to_dict()
 
-            yield df.to_dict(orient="records")
+            yield data
 
     def get_link_label_locs(self, document_type=None):
         """
@@ -89,9 +89,9 @@ class LabelManager(BaseXbrlManager):
         for _, row in files.iterrows():
             parser = LabelParser.create(row["xlink_href"], output_path).link_label_locs()
 
-            df = parser.to_DataFrame()
+            data = parser.to_dict()
 
-            yield df.to_dict(orient="records")
+            yield data
 
     def get_link_label_arcs(self, document_type=None):
         """
@@ -108,6 +108,6 @@ class LabelManager(BaseXbrlManager):
         for _, row in files.iterrows():
             parser = LabelParser.create(row["xlink_href"], output_path).link_label_arcs()
 
-            df = parser.to_DataFrame()
+            data = parser.to_dict()
 
-            yield df.to_dict(orient="records")
+            yield data

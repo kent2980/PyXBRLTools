@@ -6,7 +6,7 @@ class TypeOfXBRLIsDifferent(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"XBRLの種類が異なります。処理を中断します。 [詳細]: {self.message}"
+        return f"XBRLの種類が異なります。処理を中断します。[詳細]: {self.message}"
 
 
 class TagNotFoundError(Exception):
@@ -17,4 +17,4 @@ class TagNotFoundError(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"タグが見つかりません。処理を中断します。 [詳細]: {self.message}"
+        return f"タグが見つかりません。処理を中断します。[詳細]: {self.message}"
