@@ -1,4 +1,3 @@
-import random
 from pathlib import Path
 
 import pytest
@@ -54,8 +53,8 @@ def get_xbrl_edjp_zip(get_xbrl_zip_dir):
 def get_xbrl_test_ixbrl(get_xbrl_in_edjp):
     """テスト用のixbrlファイルを取得"""
 
-    xbrl_files = list(Path(get_xbrl_in_edjp).rglob("*ixbrl.htm"))
-    xbrl_file = random.choice(xbrl_files)
+    xbrl_files = Path(get_xbrl_in_edjp).rglob("*ixbrl.htm")
+    xbrl_file = next(xbrl_files)
     return xbrl_file.as_posix()
 
 
@@ -64,6 +63,6 @@ def get_xbrl_test_label(get_xbrl_in_edjp):
     """テスト用のラベルファイルを取得"""
 
     # lab.xml or lab-en.xmlを取得
-    label_files = list(Path(get_xbrl_in_edjp).rglob("*lab.xml"))
-    label_file = random.choice(label_files)
+    label_files = Path(get_xbrl_in_edjp).rglob("*lab.xml")
+    label_file = next(label_files)
     return label_file.as_posix()
