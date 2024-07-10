@@ -8,12 +8,13 @@ from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
 class BaseLinkManager(BaseXbrlManager):
     """labelLinkbaseデータの解析を行うクラス"""
 
-    def __init__(self, directory_path, output_path, document_type=None) -> None:
+    def __init__(self, directory_path, output_path, document_type=None, is_child=False) -> None:
         super().__init__(directory_path)
         self._output_path = output_path
         self._document_type = document_type
-        self.set_linkbase_files(self.get_role())
-        self.parser = self.get_parser()
+        if is_child:
+            self.set_linkbase_files(self.get_role())
+            self.parser = self.get_parser()
 
     @property
     def output_path(self):
