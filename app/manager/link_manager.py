@@ -107,8 +107,11 @@ class CalLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
+    def __init__(self, directory_path, output_path, document_type=None) -> None:
+        super().__init__(directory_path, output_path, document_type, is_child=True)
+
     def get_parser(self) -> BaseLinkParser:
-        return CalLinkParser
+        return CalLinkParser()
 
     def get_role(self):
         role = "calculationLinkbaseRef"
@@ -122,8 +125,11 @@ class DefLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
+    def __init__(self, directory_path, output_path, document_type=None) -> None:
+        super().__init__(directory_path, output_path, document_type, is_child=True)
+
     def get_parser(self) -> BaseLinkParser:
-        return DefLinkParser
+        return DefLinkParser()
 
     def get_role(self):
         role = "definitionLinkbaseRef"
@@ -137,8 +143,11 @@ class PreLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
+    def __init__(self, directory_path, output_path, document_type=None) -> None:
+        super().__init__(directory_path, output_path, document_type, is_child=True)
+
     def get_parser(self) -> BaseLinkParser:
-        return PreLinkParser
+        return PreLinkParser()
 
     def get_role(self):
         role = "presentationLinkbaseRef"
