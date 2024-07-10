@@ -1,4 +1,4 @@
-from app.manager import (CalLinkManager, DefLinkManager, IxbrlManager,
+from app.manager import (CalLinkManager, DefLinkManager, IXBRLManager,
                          LabelManager, PreLinkManager)
 from app.models import BaseXbrlModel
 
@@ -8,23 +8,29 @@ class RejpModel(BaseXbrlModel):
 
     def __init__(self, xbrl_zip_path, output_path) -> None:
         super().__init__(xbrl_zip_path, output_path)
-        self._xbrl_type_check("rejp", ("ixbrl.htm", "lab", "pre", "cal", "def"))
+        self._xbrl_type_check(
+            "rejp", ("ixbrl.htm", "lab", "pre", "cal", "def")
+        )
         self._initialize_managers()
 
     def _initialize_managers(self):
         """managerクラスを初期化"""
         directory_path = self.directory_path
-        self.ixbrl_manager = IxbrlManager(directory_path).set_xbrl_id(self.xbrl_id)
-        self.label_manager = self._create_manager(LabelManager, "label")
-        self.cal_manager = self._create_manager(CalLinkManager, "cal").set_xbrl_id(
+        self.ixbrl_manager = IXBRLManager(directory_path).set_xbrl_id(
             self.xbrl_id
         )
-        self.pre_manager = self._create_manager(PreLinkManager, "pre").set_xbrl_id(
-            self.xbrl_id
+        self.label_manager = self._create_manager(
+            LabelManager, "label"
         )
-        self.def_manager = self._create_manager(DefLinkManager, "def").set_xbrl_id(
-            self.xbrl_id
-        )
+        self.cal_manager = self._create_manager(
+            CalLinkManager, "cal"
+        ).set_xbrl_id(self.xbrl_id)
+        self.pre_manager = self._create_manager(
+            PreLinkManager, "pre"
+        ).set_xbrl_id(self.xbrl_id)
+        self.def_manager = self._create_manager(
+            DefLinkManager, "def"
+        ).set_xbrl_id(self.xbrl_id)
 
     def get_ixbrl(self):
         """iXBRLデータを取得するメソッド"""

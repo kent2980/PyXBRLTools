@@ -1,23 +1,35 @@
-import pandas
-
-from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                                PreLinkParser)
+                        PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
-    """ labelLinkbaseデータの解析を行うクラス"""
-    def __init__(self, directory_path) -> None:
+    """labelLinkbaseデータの解析を行うクラス"""
+
+    def __init__(
+        self,
+        directory_path,
+        output_path,
+        document_type=None,
+        is_child=False,
+    ) -> None:
         super().__init__(directory_path)
-        self.set_linkbase_files(self.get_role())
-        self.label = None
-        self.parser = self.get_parser()
+        self._output_path = output_path
+        self._document_type = document_type
+        if is_child:
+            self.set_linkbase_files(self.get_role())
+            self.parser = self.get_parser()
 
-        if len(self.files) == 0:
-            raise XbrlListEmptyError(f"{self.get_role()}ファイルが見つかりません。")
+    @property
+    def output_path(self):
+        return self._output_path
 
-    def set_output_path(self, output_path):
+    @property
+    def document_type(self):
+        return self._document_type
+
+    @output_path.setter
+    def output_path(self, output_path):
         """
         出力先のパスを設定します。
 
@@ -27,9 +39,20 @@ class BaseLinkManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
-        self.output_path = output_path
+        self._output_path = output_path
 
-        return self
+    @document_type.setter
+    def document_type(self, document_type):
+        """
+        document_typeを設定します。
+
+        Parameters:
+            document_type (str): document_typeの設定
+
+        Returns:
+            self (BaseLinkManager): 自身のインスタンス
+        """
+        self._document_type = document_type
 
     def get_parser(self) -> BaseLinkParser:
         raise NotImplementedError
@@ -37,95 +60,77 @@ class BaseLinkManager(BaseXbrlManager):
     def get_role(self):
         raise NotImplementedError
 
-    def set_link_roles(self, document_type=None):
+    def get_link_roles(self):
+        """link_rolesを設定します。"""
         output_path = self.output_path
-        df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_roles()
-                    .to_DataFrame()
-                )
-            else:
-                df = pandas.concat(
-                    [
-                        df,
-                        self.parser.create(row["xlink_href"], output_path)
-                        .link_roles()
-                        .to_DataFrame(),
-                    ],
-                    ignore_index=True,
-                )
+        if self.document_type is not None:
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
+        for _, row in files.iterrows():
 
-        self.label = df
-        self.data = self.label
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_roles()
 
-        return self
+            data = parser.to_DataFrame()
 
-    def set_link_locs(self, document_type=None):
+            data["xbrl_id"] = self.xbrl_id
+
+            yield data.to_dict(orient="records")
+
+    def get_link_locs(self):
         output_path = self.output_path
-        df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_locs()
-                    .to_DataFrame()
-                )
-                df["document_type"] = row["document_type"]
-            else:
-                new_df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_locs()
-                    .to_DataFrame()
-                )
-                new_df["document_type"] = row["document_type"]
-                df = pandas.concat([df, new_df], ignore_index=True)
-        print(df)
-        self.label = df
-        self.data = self.label
+        if self.document_type is not None:
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
+        for _, row in files.iterrows():
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_locs()
 
-        return self
+            data = parser.to_DataFrame()
 
-    def set_link_arcs(self, document_type=None):
+            data["xbrl_id"] = self.xbrl_id
+
+            yield data.to_dict(orient="records")
+
+    def get_link_arcs(self):
         output_path = self.output_path
-        df = None
         files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for index, row in files.iterrows():
-            if df is None:
-                df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_arcs()
-                    .to_DataFrame()
-                )
-                df["document_type"] = row["document_type"]
-            else:
-                new_df = (
-                    self.parser.create(row["xlink_href"], output_path)
-                    .link_arcs()
-                    .to_DataFrame()
-                )
-                new_df["document_type"] = row["document_type"]
-                df = pandas.concat([df, new_df], ignore_index=True)
+        if self.document_type is not None:
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
+        for _, row in files.iterrows():
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_arcs()
 
-        print(df)
-        self.label = df
-        self.data = self.label
+            data = parser.to_DataFrame()
 
-        return self
+            data["xbrl_id"] = self.xbrl_id
+
+            yield data.to_dict(orient="records")
 
 
 class CalLinkManager(BaseLinkManager):
-    """ calculationLinkbaseデータの解析を行うクラス"""
+    """calculationLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
+
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
+
     def get_parser(self) -> BaseLinkParser:
         return CalLinkParser
 
@@ -135,7 +140,19 @@ class CalLinkManager(BaseLinkManager):
 
 
 class DefLinkManager(BaseLinkManager):
-    """ definitionLinkbaseデータの解析を行うクラス"""
+    """definitionLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
+
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
+
     def get_parser(self) -> BaseLinkParser:
         return DefLinkParser
 
@@ -145,7 +162,19 @@ class DefLinkManager(BaseLinkManager):
 
 
 class PreLinkManager(BaseLinkManager):
-    """ presentationLinkbaseデータの解析を行うクラス"""
+    """presentationLinkbaseデータの解析を行うクラス
+
+    raise   - NotImplementedError: [description]
+            - XbrlListEmptyError: [description]
+    """
+
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
+
     def get_parser(self) -> BaseLinkParser:
         return PreLinkParser
 

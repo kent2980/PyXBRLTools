@@ -1,13 +1,18 @@
-from .xbrl_manager_exception import (XbrlDirectoryNotFoundError,
+from .xbrl_manager_exception import (OutputPathNotFoundError,
+                                     SetLanguageNotError,
+                                     XbrlDirectoryNotFoundError,
                                      XbrlListEmptyError)
 from .xbrl_model_exception import (NotXbrlDirectoryException,
                                    NotXbrlTypeException)
-from .xbrl_parser_exception import TypeOfXBRLIsDifferent
+from .xbrl_parser_exception import TagNotFoundError, TypeOfXBRLIsDifferent
 
 __all__ = [
-        "XbrlDirectoryNotFoundError",
-        "XbrlListEmptyError",
-        "NotXbrlDirectoryException",
-        "NotXbrlTypeException",
-        "TypeOfXBRLIsDifferent"
-        ]
+    "OutputPathNotFoundError",
+    "SetLanguageNotError",
+    "XbrlDirectoryNotFoundError",
+    "XbrlListEmptyError",
+    "NotXbrlDirectoryException",
+    "NotXbrlTypeException",
+    "TagNotFoundError",
+    "TypeOfXBRLIsDifferent",
+]

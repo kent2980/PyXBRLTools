@@ -7,13 +7,13 @@ from .qualitative_parser import QualitativeParser
 from .schema_parser import SchemaParser
 
 __all__ = [
-        "BaseXBRLParser",
-        "IxbrlParser",
-        "LabelParser",
-        "BaseLinkParser",
-        "CalLinkParser",
-        "DefLinkParser",
-        "PreLinkParser",
-        "QualitativeParser",
-        "SchemaParser",
-        ]
+    "BaseXBRLParser",
+    "IxbrlParser",
+    "LabelParser",
+    "BaseLinkParser",
+    "CalLinkParser",
+    "DefLinkParser",
+    "PreLinkParser",
+    "QualitativeParser",
+    "SchemaParser",
+]

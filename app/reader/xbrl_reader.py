@@ -5,7 +5,8 @@ from app.models import (EdifModel, EditModel, EdjpModel, EdusModel, EfjpModel,
 
 
 class XbrlReader:
-    """ XBRLファイルを読み込むクラス"""
+    """XBRLファイルを読み込むクラス"""
+
     def __init__(self, xbrl_zip_path, output_path) -> None:
         self.xbrl_zip_path = xbrl_zip_path
         self.output_path = output_path
@@ -17,7 +18,9 @@ class XbrlReader:
         with zipfile.ZipFile(self.xbrl_zip_path, "r") as z:
             file_list = z.infolist()
         # file_listからixbrl.htmを再起的に取得
-        ixbrl_files = [file for file in file_list if "ixbrl.htm" in file.filename]
+        ixbrl_files = [
+            file for file in file_list if "ixbrl.htm" in file.filename
+        ]
         if len(ixbrl_files) == 1:
             return ixbrl_files[0].filename.split("-")[1]
         elif len(ixbrl_files) > 1:

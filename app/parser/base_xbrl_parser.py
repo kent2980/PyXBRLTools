@@ -1,8 +1,9 @@
 import os
 import time
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import requests
 from bs4 import BeautifulSoup as bs
@@ -16,16 +17,36 @@ class BaseXBRLParser:
         if xbrl_url.startswith("http"):
             if output_path is None:
                 raise Exception("Please specify the output path")
-        if not xbrl_url.startswith("http") and not os.path.exists(xbrl_url):
-            raise FileNotFoundError(f"ファイルが見つかりません。[{xbrl_url}]")
+        if (not xbrl_url.startswith("http")) and (
+            not os.path.exists(xbrl_url)
+        ):
+            raise FileNotFoundError(
+                f"ファイルが見つかりません。[{xbrl_url}]"
+            )
 
         file_name = os.path.basename(xbrl_url)
         self.__document_type = "fr" if "fr" in file_name else "sm"
-        self.xbrl_url = xbrl_url
-        self.output_path = output_path
+        self.__xbrl_url = xbrl_url
+        self.__output_path = output_path
         self.soup: bs | None = None
-        self.data = []
+        self.data = [{}]
         self.__xbrl_id = str(uuid4())
+
+    @property
+    def xbrl_url(self):
+        return self.__xbrl_url
+
+    @xbrl_url.setter
+    def xbrl_url(self, xbrl_url: str):
+        self.__xbrl_url = xbrl_url
+
+    @property
+    def output_path(self):
+        return self.__output_path
+
+    @output_path.setter
+    def output_path(self, output_path: str):
+        self.__output_path = output_path
 
     @property
     def xbrl_id(self):
@@ -50,14 +71,21 @@ class BaseXBRLParser:
         if self.xbrl_url.startswith("http"):
             response = requests.get(self.xbrl_url)
             if response.status_code == 200:
+                print(
+                    f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\
+                    {self.xbrl_url} からXBRLを取得しました。"
+                )
                 # エンコーディングを自動検出
                 response.encoding = response.apparent_encoding
                 file_path = os.path.join(
-                    self.output_path, urlparse(self.xbrl_url).path.lstrip("/")
+                    self.output_path,
+                    urlparse(self.xbrl_url).path.lstrip("/"),
                 )
                 if not os.path.exists(file_path.rsplit("/", 1)[0]):
                     os.makedirs(file_path.rsplit("/", 1)[0])
-                with open(file_path, "w", encoding=response.encoding) as f:
+                with open(
+                    file_path, "w", encoding=response.encoding
+                ) as f:
                     f.write(response.text)
                 time.sleep(2)
                 return file_path
@@ -89,19 +117,9 @@ class BaseXBRLParser:
         instance._read_xbrl(file_path)
         return instance
 
-    def to_csv(self, file_path):
-        """CSV形式で出力する"""
-        df = self.to_DataFrame()
-        df.to_csv(file_path, index=False)
-
     def to_DataFrame(self):
         """DataFrame形式で出力する"""
         return DataFrame(self.data)
-
-    def to_json(self, file_path):
-        """JSON形式で出力する"""
-        df = self.to_DataFrame()
-        df.to_json(file_path, orient="records")
 
     def to_dict(self):
         """辞書形式で出力する"""

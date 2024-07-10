@@ -1,11 +1,10 @@
-import re
 from pathlib import Path
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import pandas as pd
 from pandas import DataFrame
 
-from app.exception import XbrlDirectoryNotFoundError
+from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.parser import SchemaParser
 
 
@@ -47,7 +46,9 @@ class BaseXbrlManager:
     def directory_path(self, directory_path):
         directory_path = Path(directory_path)
         if not directory_path.exists():
-            raise XbrlDirectoryNotFoundError(f"無効なパス[{directory_path} ]")
+            raise XbrlDirectoryNotFoundError(
+                f"無効なパス[{directory_path} ]"
+            )
         self.__directory_path = directory_path
 
     def __to_filelist(self):
@@ -82,7 +83,11 @@ class BaseXbrlManager:
             file = Path(file_str)
             if file.suffix == ".xsd" and "fr" not in file.name:
                 type_str = file.name.split("-")[1]
-                code = type_str[:4] if len(type_str) == 4 else type_str[2:6]
+                code = (
+                    type_str[:4]
+                    if len(type_str) == 4
+                    else type_str[2:6]
+                )
                 return code, self.REPORT_TYPE.get(code)
 
     def set_linkbase_files(self, xlink_role=None):
@@ -92,7 +97,9 @@ class BaseXbrlManager:
             pd.DataFrame: 関係ファイルのデータフレーム
         """
         files = self.__to_filelist()
-        xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
+        xsd_files = [
+            file for file in files if Path(file).suffix == ".xsd"
+        ]
 
         data_frames = [
             SchemaParser.create(file).link_base_refs().to_DataFrame()
@@ -104,27 +111,40 @@ class BaseXbrlManager:
             row["xlink_href"]: file
             for file in files
             for index, row in df.iterrows()
-            if not row["xlink_href"].startswith("http") and row["xlink_href"] in file
+            if not row["xlink_href"].startswith("http")
+            and row["xlink_href"] in file
         }
 
         df["xlink_href"] = (
-            df["xlink_href"].astype(str).apply(lambda href: href_map.get(href, href))
+            df["xlink_href"]
+            .astype(str)
+            .apply(lambda href: href_map.get(href, href))
         )
 
         # dfのxlink_roleカラムを整形
         df["xlink_role"] = df["xlink_role"].apply(
-            lambda role: role.split("/")[-1] if isinstance(role, str) else role
+            lambda role: (
+                role.split("/")[-1] if isinstance(role, str) else role
+            )
         )
         # dfのxlink_arcroleカラムを整形
         df["xlink_arcrole"] = df["xlink_arcrole"].apply(
             lambda arcrole: (
-                arcrole.split("/")[-1] if isinstance(arcrole, str) else arcrole
+                arcrole.split("/")[-1]
+                if isinstance(arcrole, str)
+                else arcrole
             )
         )
 
         if xlink_role:
             query = f"xlink_role == '{xlink_role}'"
             df = df.query(query)
+
+        # ファイルが見つからない場合はエラーを発生させる
+        if len(df) == 0 and xlink_role:
+            raise XbrlListEmptyError(
+                f"{xlink_role}ファイルが見つかりません。"
+            )
 
         self.files = df
         return self
@@ -141,13 +161,19 @@ class BaseXbrlManager:
             file = Path(file_str)
             if file.suffix == ".htm" or file.suffix == ".html":
                 document_type = (
-                    file.name.split("-")[1][2:4] if "fr" in file.name else "sm"
+                    file.name.split("-")[1][2:4]
+                    if "fr" in file.name
+                    else "sm"
                 )
+
+                xlink_href = file.as_posix()
+                xlink_role = file.name.split("-")[-1].split(".")[0]
+
                 lists.append(
                     {
                         "xlink_type": "simple",
-                        "xlink_href": file.as_posix(),
-                        "xlink_role": f"{file.name.split('-')[-1].split('.')[0]}",
+                        "xlink_href": xlink_href,
+                        "xlink_role": xlink_role,
                         "xlink_arcrole": "htmlbase",
                         "document_type": document_type,
                     }
@@ -158,6 +184,12 @@ class BaseXbrlManager:
         if xlink_role:
             query = f"xlink_role == '{xlink_role}'"
             df = df.query(query)
+
+        # ファイルが見つからない場合はエラーを発生させる
+        if len(df) == 0 and xlink_role:
+            raise XbrlListEmptyError(
+                f"{xlink_role}ファイルが見つかりません。"
+            )
 
         self.files = df
 

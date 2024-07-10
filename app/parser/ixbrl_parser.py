@@ -2,9 +2,9 @@ import os
 import re
 from urllib.parse import urlparse
 
-from datetimejp import JDate
-
 from app.exception import TypeOfXBRLIsDifferent
+from app.tag import IxNonFraction, IxNonNumeric
+from app.utils import Utils
 
 from . import BaseXBRLParser
 
@@ -47,13 +47,10 @@ class IxbrlParser(BaseXBRLParser):
                 f"{self.basename()} はixbrl.htmではありません。"
             )
         # ドキュメントの種類を設定
-        self.document = self.__set_document(xbrl_url)
-        self.report_type = self.__set_report_type(xbrl_url)
+        self.document = self._set_document(xbrl_url)
+        self.report_type = self._set_report_type(xbrl_url)
 
-        self.__ix_non_fraction = None
-        self.__ix_non_numeric = None
-
-    def __set_document(self, xbrl_url):
+    def _set_document(self, xbrl_url):
         """ドキュメントの種類を設定する"""
         if xbrl_url.startswith("http"):
             parse_url = urlparse(xbrl_url)
@@ -65,7 +62,7 @@ class IxbrlParser(BaseXBRLParser):
         else:
             return "sm"
 
-    def __set_report_type(self, xbrl_url):
+    def _set_report_type(self, xbrl_url):
         """レポートの種類を設定する"""
         if xbrl_url.startswith("http"):
             parse_url = urlparse(xbrl_url)
@@ -84,99 +81,80 @@ class IxbrlParser(BaseXBRLParser):
 
         Returns:
             self: IxbrlParser
-
-        Examples:
-            >>> parser = IxbrlParser.create(file_path)
-            >>> print(parser.ix_non_numeric().to_DataFrame())
-            [output]:
-            context_period: CurrentYearDuration
-            context_entity: ConsolidatedMember
-            context_category: ResultMember
-            name: tse-ed-t_FilingDate
-            xsi_nil: False
-            escape: False
-            format: dateyearmonthdaycjk
-            text: 2024年6月13日
         """
-        # ix_non_numericが存在する場合はそのまま返す
 
         lists = []
+
         tags = self.soup.find_all(name="ix:nonNumeric")
+
         for tag in tags:
 
-            # xsi:nil属性が存在する場合はTrueに設定
+            # _____attr[contextRef]
+            context_parts = tag.get("contextRef").split("_")
+            context_period = context_parts[0]
+            context_entity = (
+                context_parts[1] if len(context_parts) > 1 else None
+            )
+            context_category = (
+                context_parts[2] if len(context_parts) > 2 else None
+            )
+
+            # _____attr[xsi:nil]
             xsi_nil = True if tag.get("xsi:nil") == "true" else False
-            # escape属性が存在する場合はTrueに設定
+
+            # _____attr[escape]
             escape = True if tag.get("escape") == "true" else False
 
-            # text属性が存在する場合は取得
-            text = (
-                tag.text.splitlines()[0].replace("　", "").replace(" ", "")
-                if tag.text
+            # _____attr[name]
+            name = tag.get("name").replace(":", "_")
+
+            # _____attr[text]
+            if escape is False:
+                # text属性が存在する場合は取得
+                text = tag.text.replace("　", "").replace(" ", "")
+                # textの数字を半角に変換
+                text = re.sub(
+                    r"[０-９]",
+                    lambda x: chr(ord(x.group(0)) - 0xFEE0),
+                    text,
+                )
+            else:
+                text = None
+
+            format_str = (
+                tag.get("format").split(":")[-1]
+                if tag.get("format")
                 else None
             )
-            # textの数字を半角に変換
-            text = (
-                re.sub(r"[０-９]", lambda x: chr(ord(x.group(0)) - 0xFEE0), text)
-                if text
-                else None
-            )
-
-            format_str = tag.get("format").split(":")[-1] if tag.get("format") else None
-
-            # 銘柄コードの場合は4文字まで取得
-            if "SecuritiesCode" in tag.get("name"):
-                text = text[0:4]
 
             # textが日付文字列の場合はフォーマットを統一
             if format_str:
-                if "dateyearmonthdaycjk" in format_str:
-                    # textの「yyyy年mm月dd日」を「yyyy-mm-dd」に変換
-                    text = text.replace("年", "-").replace("月", "-").replace("日", "")
-                    # textの数字部分を0埋め
-                    text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
-                    format_str = "dateyearmonthday"
-                elif "dateerayearmonthdayjp" in format_str:
-                    jd = JDate.strptime(text, "%g%e年%m月%d日")
-                    text = jd.strftime("%Y-%m-%d")
-                    # textの数字部分を0埋め
-                    text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
-                    format_str = "dateyearmonthday"
+                text, format_str = Utils.date_str_to_format(
+                    text, format_str
+                )  # pragma: no cover
 
-            if text:
-                # textが「yyyy-mm-dd」の場合
-                if re.match(r"^\d{4}-\d{2}-\d{2}$", text):
-                    format_str = "dateyearmonthday"
-
-            # name_spaceを取得
-            name_spaces = self.name_spaces()
-            name_apace = name_spaces[tag.get("name").split(":")[0]]
+            # textが証券コードの場合は4文字に統一
+            if any(
+                item in name
+                for item in ["SecuritiesCode", "SecurityCode"]
+            ):
+                text = text[0:4]  # pragma: no cover
 
             # 辞書に追加
-            lists.append(
-                {
-                    "xbrl_id": self.xbrl_id,
-                    "context_period": tag.get("contextRef").split("_")[0],
-                    "context_entity": (
-                        tag.get("contextRef").split("_")[1]
-                        if len(tag.get("contextRef").split("_")) > 1
-                        else None
-                    ),
-                    "context_category": (
-                        tag.get("contextRef").split("_")[2]
-                        if len(tag.get("contextRef").split("_")) > 2
-                        else None
-                    ),
-                    "name": tag.get("name").replace(":", "_"),
-                    "xsi_nil": xsi_nil,
-                    "escape": escape,
-                    "format": format_str,
-                    "text": text if escape == False else None,
-                    "document_type": self.document,
-                    "report_type": self.report_type,
-                    # 'name_space': name_apace
-                }
+            inn = IxNonNumeric(
+                xbrl_id=self.xbrl_id,
+                context_period=context_period,
+                context_entity=context_entity,
+                context_category=context_category,
+                name=name,
+                xsi_nil=xsi_nil,
+                escape=escape,
+                format=format_str,
+                value=text,
+                document_type=self.document,
+                report_type=self.report_type,
             )
+            lists.append(inn.__dict__)
 
         self.data = lists
 
@@ -187,81 +165,78 @@ class IxbrlParser(BaseXBRLParser):
 
         Returns:
             self: IxbrlParser
-
-        Examples:
-            >>> parser = IxbrlParser.create(file_path)
-            >>> print(parser.ix_non_fractions().to_DataFrame())
-            [output]:
-            context_period: CurrentYearDuration
-            context_entity: ConsolidatedMember
-            context_category: ResultMember
-            decimals: 0
-            format: numdotdecimal
-            name: tse-ed-t_NumberOfSharesIssued
-            scale: 3
-            sign: -
-            unit_ref: JPN
-            xsi_nil: False
-            numeric: 1234
         """
         # ix_non_fractionが存在する場合はそのまま返す
 
         lists = []
         tags = self.soup.find_all(name="ix:nonFraction")
         for tag in tags:
-            numeric = re.sub(",", "", tag.text) if tag.text else None
+            # _____attr[contextRef]
+            context_parts = tag.get("contextRef").split("_")
+            context_period = context_parts[0]
+            context_entity = (
+                context_parts[1] if len(context_parts) > 1 else None
+            )
+            context_category = (
+                context_parts[2] if len(context_parts) > 2 else None
+            )
 
-            # name_spaceを取得
-            name_spaces = self.name_spaces()
-            name_apace = name_spaces[tag.get("name").split(":")[0]]
-            tag_dict = {
-                "xbrl_id": self.xbrl_id,
-                "context_period": tag.get("contextRef").split("_")[0],
-                "context_entity": (
-                    tag.get("contextRef").split("_")[1]
-                    if len(tag.get("contextRef").split("_")) > 1
-                    else None
-                ),
-                "context_category": (
-                    tag.get("contextRef").split("_")[2]
-                    if len(tag.get("contextRef").split("_")) > 2
-                    else None
-                ),
-                "decimals": int(tag.get("decimals")) if tag.get("decimals") else None,
-                "format": tag.get("format"),
-                "name": tag.get("name").replace(":", "_"),
-                "scale": int(tag.get("scale")) if tag.get("scale") else None,
-                "sign": tag.get("sign"),
-                "unit_ref": tag.get("unitRef"),
-                "xsi_nil": True if tag.get("xsi:nil") == "true" else False,
-                "numeric": numeric,
-                "document_type": self.document,
-                "report_type": self.report_type,
-                # 'name_space': name_apace
-            }
-            lists.append(tag_dict)
+            # _____attr[decimals]
+            decimals = (
+                float(tag.get("decimals"))
+                if tag.get("decimals")
+                else None
+            )
+
+            # _____attr[format]
+            format_str = (
+                tag.get("format").split(":")[-1]
+                if tag.get("format")
+                else None
+            )
+
+            # _____attr[name]
+            name = tag.get("name").replace(":", "_")
+
+            # _____attr[scale]
+            scale = (
+                int(tag.get("scale")) if tag.get("scale") else None
+            )
+
+            # _____attr[sign]
+            sign = tag.get("sign")
+
+            # _____attr[unitRef]
+            unit_ref = tag.get("unitRef")
+
+            # _____attr[xsi:nil]
+            xsi_nil = True if tag.get("xsi:nil") == "true" else False
+
+            # _____attr[numeric]
+            numeric = re.sub(",", "", tag.text) if tag.text else None
+            numeric = (
+                float(numeric) * -1
+                if sign == "-"
+                else numeric if numeric else None
+            )
+
+            inn = IxNonFraction(
+                xbrl_id=self.xbrl_id,
+                context_period=context_period,
+                context_entity=context_entity,
+                context_category=context_category,
+                decimals=decimals,
+                format=format_str,
+                name=name,
+                scale=scale,
+                unit_ref=unit_ref,
+                xsi_nil=xsi_nil,
+                numeric=numeric,
+                document_type=self.document,
+                report_type=self.report_type,
+            )
+            lists.append(inn.__dict__)
 
         self.data = lists
 
         return self
-
-    def name_spaces(self):
-        """名前空間を取得する
-
-        Returns:
-            str: 名前空間
-
-        Examples:
-            >>> parser = IxbrlParser.create(file_path)
-            >>> print(parser.name_space())
-            [output]:
-            http://www.xbrl.org/2003/instance
-        """
-        # htmlタグのxmlns:から始まる属性を全て取得
-        name_spaces = {}
-        tags = self.soup.find_all("html")
-        for tag in tags:
-            for key, value in tag.attrs.items():
-                if key.startswith("xmlns:"):
-                    name_spaces[key.split(":")[-1]] = value
-        return name_spaces

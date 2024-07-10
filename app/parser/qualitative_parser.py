@@ -22,11 +22,6 @@ class QualitativeParser(BaseXBRLParser):
 
     Raises:
         ValueError: ドキュメントが定性データでない場合に発生します。
-
-    Examples:
-        >>> parser = QualitativeParser.create("https://www.example.com/xbrl/qualitative.htm")
-        >>> parser.smt_head()
-        >>> print(parser.data)
     """
 
     def __init__(self, xbrl_url, output_path=None):

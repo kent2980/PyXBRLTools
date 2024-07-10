@@ -8,9 +8,8 @@ from app.manager import BaseXbrlManager
 
 
 @pytest.fixture
-def base_xbrl_manager(set_xbrl_test_dir):
-    test_dir = set_xbrl_test_dir
-    return BaseXbrlManager(test_dir)
+def base_xbrl_manager(get_xbrl_in_edjp):
+    return BaseXbrlManager(get_xbrl_in_edjp)
 
 
 def test_xbrl_type(base_xbrl_manager):
@@ -22,6 +21,7 @@ def test_xbrl_type(base_xbrl_manager):
     # テスト結果のアサーション
     assert isinstance(result, tuple)
     assert len(result) == 2
+
 
 def test_Report_Type_const(base_xbrl_manager):
 
@@ -35,6 +35,7 @@ def test_Report_Type_const(base_xbrl_manager):
     for key, value in result.items():
         assert isinstance(key, str)
         assert isinstance(value, str)
+
 
 def test_xbrl_id(base_xbrl_manager):
 
@@ -53,6 +54,7 @@ def test_xbrl_id(base_xbrl_manager):
     except ValueError:
         assert False
 
+
 def test_set_xbrl_id(base_xbrl_manager):
 
     # マネージャーを取得
@@ -64,6 +66,7 @@ def test_set_xbrl_id(base_xbrl_manager):
     # テスト結果のアサーション
     assert result == xbrl_id
 
+
 def test_not_directory_path(base_xbrl_manager):
 
     # マネージャーを取得
@@ -73,6 +76,7 @@ def test_not_directory_path(base_xbrl_manager):
         assert False
     except XbrlDirectoryNotFoundError:
         assert True
+
 
 def test_set_linkbase_files(base_xbrl_manager):
 
@@ -86,18 +90,20 @@ def test_set_linkbase_files(base_xbrl_manager):
     for index, row in files.iterrows():
         assert row["xlink_arcrole"] == "linkbase"
 
+
 def test_set_linkbase_files_with_xlink_role(base_xbrl_manager):
 
-        # マネージャーを取得
-        manager = base_xbrl_manager
-        manager.set_linkbase_files("definitionLinkbaseRef")
-        files: DataFrame = manager.files
+    # マネージャーを取得
+    manager = base_xbrl_manager
+    manager.set_linkbase_files("definitionLinkbaseRef")
+    files: DataFrame = manager.files
 
-        assert isinstance(files, DataFrame)
-        assert len(files) > 0
-        for index, row in files.iterrows():
-            assert row["xlink_arcrole"] == "linkbase"
-            assert row["xlink_role"] == "definitionLinkbaseRef"
+    assert isinstance(files, DataFrame)
+    assert len(files) > 0
+    for index, row in files.iterrows():
+        assert row["xlink_arcrole"] == "linkbase"
+        assert row["xlink_role"] == "definitionLinkbaseRef"
+
 
 def test_set_htmlbase_files(base_xbrl_manager):
 
@@ -111,18 +117,20 @@ def test_set_htmlbase_files(base_xbrl_manager):
     for index, row in files.iterrows():
         assert row["xlink_arcrole"] == "htmlbase"
 
+
 def test_set_htmlbase_files_with_xlink_role(base_xbrl_manager):
 
-        # マネージャーを取得
-        manager = base_xbrl_manager
-        manager.set_htmlbase_files("ixbrl")
-        files = manager.files
+    # マネージャーを取得
+    manager = base_xbrl_manager
+    manager.set_htmlbase_files("ixbrl")
+    files = manager.files
 
-        assert isinstance(files, DataFrame)
-        assert len(files) > 0
-        for index, row in files.iterrows():
-            assert row["xlink_arcrole"] == "htmlbase"
-            assert row["xlink_role"] == "ixbrl"
+    assert isinstance(files, DataFrame)
+    assert len(files) > 0
+    for index, row in files.iterrows():
+        assert row["xlink_arcrole"] == "htmlbase"
+        assert row["xlink_role"] == "ixbrl"
+
 
 def test_to_output_type(base_xbrl_manager):
 

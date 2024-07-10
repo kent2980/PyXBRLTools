@@ -9,7 +9,8 @@ from app.exception import NotXbrlDirectoryException, NotXbrlTypeException
 
 
 class BaseXbrlModel:
-    """ XBRLファイルを扱うための基底クラス"""
+    """XBRLファイルを扱うための基底クラス"""
+
     def __init__(self, xbrl_zip_path, output_path) -> None:
         # XBRLファイルのzipファイルのパスを指定
         self.__xbrl_zip_path = Path(xbrl_zip_path)
@@ -78,9 +79,13 @@ class BaseXbrlModel:
             for ixbrl_file in ixbrl_files:
                 if "sm" in ixbrl_file.as_posix():
                     return ixbrl_file.as_posix().split("-")[1][2:6]
-            raise NotXbrlDirectoryException("ixbrlファイルが複数存在します。")
+            raise NotXbrlDirectoryException(
+                "ixbrlファイルが複数存在します。"
+            )
         else:
-            raise NotXbrlDirectoryException("ixbrlファイルが存在しません。")
+            raise NotXbrlDirectoryException(
+                "ixbrlファイルが存在しません。"
+            )
 
     # ディレクトリ内を再帰的に検索して指定したキーワードがファイル末尾と一致するファイルが存在するかチェックするメソッド
     def __check_xbrl_files_in_dir(self, *keywords):
@@ -94,9 +99,13 @@ class BaseXbrlModel:
 
     def _xbrl_type_check(self, xbrl_type, *keywords):
         if self.xbrl_type != xbrl_type:
-            raise NotXbrlTypeException(f"XBRLファイルの種類が異なります。")
+            raise NotXbrlTypeException(
+                "XBRLファイルの種類が異なります。"
+            )
         if self.__check_xbrl_files_in_dir(*keywords):
-            raise NotXbrlTypeException(f"XBRLファイルの構成が異なります。")
+            raise NotXbrlTypeException(
+                "XBRLファイルの構成が異なります。"
+            )
 
     def _get_doc_output_path(self, doc_type: str):
         output_path = self.__output_path / doc_type
@@ -110,7 +119,10 @@ class BaseXbrlModel:
 
     def _get_data_frames(self, manager, *methods):
         """指定されたマネージャーとメソッドからDataFrameを取得する"""
-        return tuple(getattr(manager, method)().to_DataFrame() for method in methods)
+        return tuple(
+            getattr(manager, method)().to_DataFrame()
+            for method in methods
+        )
 
     def _get_xbrl_id(self, tuple):
         """tuple内のDataFrameにxbrl_idを追加する"""
