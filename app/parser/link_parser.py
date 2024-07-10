@@ -180,7 +180,7 @@ class CalLinkParser(BaseLinkParser):
     """CalculationLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+        super().__init__(xbrl_url, output_path, is_child=Ture)
 
         # cal.xmlでない場合はエラーを出力
         if not self.basename().endswith("cal.xml"):
@@ -197,7 +197,7 @@ class DefLinkParser(BaseLinkParser):
     """DefinitionLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+        super().__init__(xbrl_url, output_path, is_child=Ture)
 
         # def.xmlでない場合はエラーを出力
         if not self.basename().endswith("def.xml"):
@@ -214,7 +214,7 @@ class PreLinkParser(BaseLinkParser):
     """PresentationLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+        super().__init__(xbrl_url, output_path, is_child=Ture)
 
         # pre.xmlでない場合はエラーを出力
         if not self.basename().endswith("pre.xml"):
