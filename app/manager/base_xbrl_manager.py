@@ -166,14 +166,14 @@ class BaseXbrlManager:
                     else "sm"
                 )
 
-                xlink_href = file.as_posix()
-                xlink_role = file.name.split("-")[-1].split(".")[0]
+                href = file.as_posix()
+                role = file.name.split("-")[-1].split(".")[0]
 
                 lists.append(
                     {
                         "xlink_type": "simple",
-                        "xlink_href": xlink_href,
-                        "xlink_role": xlink_role,
+                        "xlink_href": href,
+                        "xlink_role": role,
                         "xlink_arcrole": "htmlbase",
                         "document_type": document_type,
                     }

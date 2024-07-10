@@ -127,7 +127,7 @@ def test_set_htmlbase_files_with_xlink_role(base_xbrl_manager):
 
     assert isinstance(files, DataFrame)
     assert len(files) > 0
-    for index, row in files.iterrows():
+    for _, row in files.iterrows():
         assert row["xlink_arcrole"] == "htmlbase"
         assert row["xlink_role"] == "ixbrl"
 
