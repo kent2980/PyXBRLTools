@@ -20,5 +20,3 @@ jaconv = "^0.3.4"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-line-length = 70
