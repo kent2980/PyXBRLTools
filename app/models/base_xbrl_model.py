@@ -20,6 +20,12 @@ class BaseXbrlModel:
         self.__xbrl_type = self.__xbrl_type()
         self.__xbrl_id = str(uuid4())
 
+    @classmethod
+    def xbrl_models(cls, xbrl_zip_dirs, output_path):
+        zip_files = Path(xbrl_zip_dirs).rglob("*.zip")
+        for zip_file in zip_files:
+            yield cls(zip_file.as_posix(), output_path)
+
     @property
     def xbrl_id(self):
         return self.__xbrl_id
