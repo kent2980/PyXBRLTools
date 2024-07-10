@@ -15,5 +15,6 @@ def base_xbrl_model(get_xbrl_zip_dir, get_output_dir):
 
     return BaseXbrlModel(zip_file, output_path)
 
+
 def test_base_xbrl_model_instance(base_xbrl_model):
     assert isinstance(base_xbrl_model, BaseXbrlModel)

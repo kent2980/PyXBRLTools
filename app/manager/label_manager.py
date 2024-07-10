@@ -1,5 +1,3 @@
-import pandas as pd
-
 from app.exception import SetLanguageNotError
 from app.manager import BaseXbrlManager
 from app.parser import LabelParser
@@ -12,7 +10,9 @@ class LabelManager(BaseXbrlManager):
             - XbrlListEmptyError("labelLinkbaseファイルが見つかりません。")
     """
 
-    def __init__(self, directory_path, output_path, lang="jp") -> None:
+    def __init__(
+        self, directory_path, output_path, lang="jp"
+    ) -> None:
         """
         LabelManagerクラスのコンストラクタです。
 
@@ -40,7 +40,7 @@ class LabelManager(BaseXbrlManager):
         """
         self.lang = lang
 
-        if not lang in ["jp", "en"]:
+        if lang not in ["jp", "en"]:
             raise SetLanguageNotError(
                 "言語の設定が不正です。[jp, en]を指定してください。"
             )
@@ -54,7 +54,9 @@ class LabelManager(BaseXbrlManager):
             elif lang == "en":
                 # self.filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
                 self.files = self.files[
-                    self.files["xlink_href"].str.endswith("lab-en.xml")
+                    self.files["xlink_href"].str.endswith(
+                        "lab-en.xml"
+                    )
                 ]
 
         return self
@@ -72,7 +74,9 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(row["xlink_href"], output_path).link_labels()
+            parser = LabelParser.create(
+                row["xlink_href"], output_path
+            ).link_labels()
 
             data = parser.to_dict()
 
@@ -91,7 +95,9 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(row["xlink_href"], output_path).link_label_locs()
+            parser = LabelParser.create(
+                row["xlink_href"], output_path
+            ).link_label_locs()
 
             data = parser.to_dict()
 
@@ -110,7 +116,9 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(row["xlink_href"], output_path).link_label_arcs()
+            parser = LabelParser.create(
+                row["xlink_href"], output_path
+            ).link_label_arcs()
 
             data = parser.to_dict()
 

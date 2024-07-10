@@ -1,5 +1,3 @@
-import pandas
-
 from app.manager import BaseXbrlManager
 from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
                         PreLinkParser)
@@ -8,7 +6,13 @@ from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
 class BaseLinkManager(BaseXbrlManager):
     """labelLinkbaseデータの解析を行うクラス"""
 
-    def __init__(self, directory_path, output_path, document_type=None, is_child=False) -> None:
+    def __init__(
+        self,
+        directory_path,
+        output_path,
+        document_type=None,
+        is_child=False,
+    ) -> None:
         super().__init__(directory_path)
         self._output_path = output_path
         self._document_type = document_type
@@ -51,20 +55,24 @@ class BaseLinkManager(BaseXbrlManager):
         self._document_type = document_type
 
     def get_parser(self) -> BaseLinkParser:
-        raise NotImplementedError  
+        raise NotImplementedError
 
     def get_role(self):
-        raise NotImplementedError  
+        raise NotImplementedError
 
     def get_link_roles(self):
         """link_rolesを設定します。"""
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(f"document_type == '{self.document_type}'")
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
         for _, row in files.iterrows():
 
-            parser = self.parser.create(row["xlink_href"], output_path).link_roles()
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_roles()
 
             data = parser.to_DataFrame()
 
@@ -76,9 +84,13 @@ class BaseLinkManager(BaseXbrlManager):
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(f"document_type == '{self.document_type}'")
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
         for _, row in files.iterrows():
-            parser = self.parser.create(row["xlink_href"], output_path).link_locs()
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_locs()
 
             data = parser.to_DataFrame()
 
@@ -90,15 +102,20 @@ class BaseLinkManager(BaseXbrlManager):
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(f"document_type == '{self.document_type}'")
+            files = files.query(
+                f"document_type == '{self.document_type}'"
+            )
         for _, row in files.iterrows():
-            parser = self.parser.create(row["xlink_href"], output_path).link_arcs()
+            parser = self.parser.create(
+                row["xlink_href"], output_path
+            ).link_arcs()
 
             data = parser.to_DataFrame()
 
             data["xbrl_id"] = self.xbrl_id
 
             yield data.to_dict(orient="records")
+
 
 class CalLinkManager(BaseLinkManager):
     """calculationLinkbaseデータの解析を行うクラス
@@ -107,11 +124,15 @@ class CalLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
-    def __init__(self, directory_path, output_path, document_type=None) -> None:
-        super().__init__(directory_path, output_path, document_type, is_child=True)
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
 
     def get_parser(self) -> BaseLinkParser:
-        return CalLinkParser()
+        return CalLinkParser
 
     def get_role(self):
         role = "calculationLinkbaseRef"
@@ -125,11 +146,15 @@ class DefLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
-    def __init__(self, directory_path, output_path, document_type=None) -> None:
-        super().__init__(directory_path, output_path, document_type, is_child=True)
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
 
     def get_parser(self) -> BaseLinkParser:
-        return DefLinkParser()
+        return DefLinkParser
 
     def get_role(self):
         role = "definitionLinkbaseRef"
@@ -143,11 +168,15 @@ class PreLinkManager(BaseLinkManager):
             - XbrlListEmptyError: [description]
     """
 
-    def __init__(self, directory_path, output_path, document_type=None) -> None:
-        super().__init__(directory_path, output_path, document_type, is_child=True)
+    def __init__(
+        self, directory_path, output_path, document_type=None
+    ) -> None:
+        super().__init__(
+            directory_path, output_path, document_type, is_child=True
+        )
 
     def get_parser(self) -> BaseLinkParser:
-        return PreLinkParser()
+        return PreLinkParser
 
     def get_role(self):
         role = "presentationLinkbaseRef"

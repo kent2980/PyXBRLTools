@@ -20,10 +20,10 @@ class BaseLinkParser(BaseXBRLParser):
             self.set_arc_tag_name()
 
     def set_link_tag_name(self):
-        raise NotImplementedError   
+        raise NotImplementedError
 
     def set_arc_tag_name(self):
-        raise NotImplementedError   
+        raise NotImplementedError
 
     def link_roles(self):
         """link:role要素を取得するメソッド。
@@ -104,12 +104,16 @@ class BaseLinkParser(BaseXBRLParser):
             for tag in tags:
                 # _____attr[xlink:order]
                 xlink_order = (
-                    float(tag.get("order")) if tag.get("order") is not None else None
+                    float(tag.get("order"))
+                    if tag.get("order") is not None
+                    else None
                 )
 
                 # _____attr[xlink:weight]
                 xlink_weight = (
-                    float(tag.get("weight")) if tag.get("weight") is not None else None
+                    float(tag.get("weight"))
+                    if tag.get("weight") is not None
+                    else None
                 )
 
                 la = LinkArc(
@@ -180,11 +184,13 @@ class CalLinkParser(BaseLinkParser):
     """CalculationLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=Ture)
+        super().__init__(xbrl_url, output_path, is_child=True)
 
         # cal.xmlでない場合はエラーを出力
         if not self.basename().endswith("cal.xml"):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はcal.xmlではありません。")
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename()} はcal.xmlではありません。"
+            )
 
     def set_link_tag_name(self):
         self.link_tag_name = "link:calculationLink"
@@ -197,11 +203,13 @@ class DefLinkParser(BaseLinkParser):
     """DefinitionLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=Ture)
+        super().__init__(xbrl_url, output_path, is_child=True)
 
         # def.xmlでない場合はエラーを出力
         if not self.basename().endswith("def.xml"):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はdef.xmlではありません。")     # pragma: no cover
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename()} はdef.xmlではありません。"
+            )  # pragma: no cover
 
     def set_link_tag_name(self):
         self.link_tag_name = ["link:definitionLink", "definitionLink"]
@@ -214,11 +222,13 @@ class PreLinkParser(BaseLinkParser):
     """PresentationLinkのParserクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=Ture)
+        super().__init__(xbrl_url, output_path, is_child=True)
 
         # pre.xmlでない場合はエラーを出力
         if not self.basename().endswith("pre.xml"):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はpre.xmlではありません。")     # pragma: no cover
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename()} はpre.xmlではありません。"
+            )  # pragma: no cover
 
     def set_link_tag_name(self):
         self.link_tag_name = "link:presentationLink"

@@ -1,17 +1,7 @@
 import zipfile
 
-from app.models import (
-    EdifModel,
-    EditModel,
-    EdjpModel,
-    EdusModel,
-    EfjpModel,
-    RejpModel,
-    RrdfModel,
-    RrfcModel,
-    RvdfModel,
-    RvfcModel,
-)
+from app.models import (EdifModel, EditModel, EdjpModel, EdusModel, EfjpModel,
+                        RejpModel, RrdfModel, RrfcModel, RvdfModel, RvfcModel)
 
 
 class XbrlReader:
@@ -28,7 +18,9 @@ class XbrlReader:
         with zipfile.ZipFile(self.xbrl_zip_path, "r") as z:
             file_list = z.infolist()
         # file_listからixbrl.htmを再起的に取得
-        ixbrl_files = [file for file in file_list if "ixbrl.htm" in file.filename]
+        ixbrl_files = [
+            file for file in file_list if "ixbrl.htm" in file.filename
+        ]
         if len(ixbrl_files) == 1:
             return ixbrl_files[0].filename.split("-")[1]
         elif len(ixbrl_files) > 1:

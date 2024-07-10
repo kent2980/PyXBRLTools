@@ -92,8 +92,12 @@ class IxbrlParser(BaseXBRLParser):
             # _____attr[contextRef]
             context_parts = tag.get("contextRef").split("_")
             context_period = context_parts[0]
-            context_entity = context_parts[1] if len(context_parts) > 1 else None
-            context_category = context_parts[2] if len(context_parts) > 2 else None
+            context_entity = (
+                context_parts[1] if len(context_parts) > 1 else None
+            )
+            context_category = (
+                context_parts[2] if len(context_parts) > 2 else None
+            )
 
             # _____attr[xsi:nil]
             xsi_nil = True if tag.get("xsi:nil") == "true" else False
@@ -105,15 +109,23 @@ class IxbrlParser(BaseXBRLParser):
             name = tag.get("name").replace(":", "_")
 
             # _____attr[text]
-            if escape == False:
+            if escape is False:
                 # text属性が存在する場合は取得
                 text = tag.text.replace("　", "").replace(" ", "")
                 # textの数字を半角に変換
-                text = re.sub(r"[０-９]", lambda x: chr(ord(x.group(0)) - 0xFEE0), text)
+                text = re.sub(
+                    r"[０-９]",
+                    lambda x: chr(ord(x.group(0)) - 0xFEE0),
+                    text,
+                )
             else:
                 text = None
 
-            format_str = tag.get("format").split(":")[-1] if tag.get("format") else None
+            format_str = (
+                tag.get("format").split(":")[-1]
+                if tag.get("format")
+                else None
+            )
 
             # textが日付文字列の場合はフォーマットを統一
             if format_str:
@@ -122,7 +134,10 @@ class IxbrlParser(BaseXBRLParser):
                 )  # pragma: no cover
 
             # textが証券コードの場合は4文字に統一
-            if any(item in name for item in ["SecuritiesCode", "SecurityCode"]):
+            if any(
+                item in name
+                for item in ["SecuritiesCode", "SecurityCode"]
+            ):
                 text = text[0:4]  # pragma: no cover
 
             # 辞書に追加
@@ -159,20 +174,34 @@ class IxbrlParser(BaseXBRLParser):
             # _____attr[contextRef]
             context_parts = tag.get("contextRef").split("_")
             context_period = context_parts[0]
-            context_entity = context_parts[1] if len(context_parts) > 1 else None
-            context_category = context_parts[2] if len(context_parts) > 2 else None
+            context_entity = (
+                context_parts[1] if len(context_parts) > 1 else None
+            )
+            context_category = (
+                context_parts[2] if len(context_parts) > 2 else None
+            )
 
             # _____attr[decimals]
-            decimals = float(tag.get("decimals")) if tag.get("decimals") else None
+            decimals = (
+                float(tag.get("decimals"))
+                if tag.get("decimals")
+                else None
+            )
 
             # _____attr[format]
-            format_str = tag.get("format").split(":")[-1] if tag.get("format") else None
+            format_str = (
+                tag.get("format").split(":")[-1]
+                if tag.get("format")
+                else None
+            )
 
             # _____attr[name]
             name = tag.get("name").replace(":", "_")
 
             # _____attr[scale]
-            scale = int(tag.get("scale")) if tag.get("scale") else None
+            scale = (
+                int(tag.get("scale")) if tag.get("scale") else None
+            )
 
             # _____attr[sign]
             sign = tag.get("sign")
@@ -185,7 +214,11 @@ class IxbrlParser(BaseXBRLParser):
 
             # _____attr[numeric]
             numeric = re.sub(",", "", tag.text) if tag.text else None
-            numeric = float(numeric) * -1 if sign == "-" else numeric if numeric else None
+            numeric = (
+                float(numeric) * -1
+                if sign == "-"
+                else numeric if numeric else None
+            )
 
             inn = IxNonFraction(
                 xbrl_id=self.xbrl_id,

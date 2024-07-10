@@ -3,7 +3,7 @@ from pandas import DataFrame
 from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import IxbrlParser
-from app.tag import IxHeader, IxSummary
+from app.tag import IxHeader
 
 
 class IXBRLManager(BaseXbrlManager):
@@ -26,7 +26,9 @@ class IXBRLManager(BaseXbrlManager):
         self.set_htmlbase_files("ixbrl")
 
         if len(self.files) == 0:
-            raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
+            raise XbrlListEmptyError(
+                "ixbrlファイルが見つかりません。"
+            )
 
     def get_ix_non_fraction(self, document_type=None):
         """
@@ -44,7 +46,9 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser.create(row["xlink_href"]).ix_non_fractions()
+                parser = IxbrlParser.create(
+                    row["xlink_href"]
+                ).ix_non_fractions()
 
                 df = parser.to_DataFrame()
 
@@ -68,7 +72,9 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser.create(row["xlink_href"]).ix_non_numeric()
+                parser = IxbrlParser.create(
+                    row["xlink_href"]
+                ).ix_non_numeric()
 
                 df = parser.to_DataFrame()
 
@@ -95,29 +101,50 @@ class IXBRLManager(BaseXbrlManager):
             for value in values:
                 company_name = (
                     value["value"]
-                    if any(item in value["name"] for item in ["CompanyName", "AssetManagerREIT"])
+                    if any(
+                        item in value["name"]
+                        for item in [
+                            "CompanyName",
+                            "AssetManagerREIT",
+                        ]
+                    )
                     else company_name
                 )
                 securities_code = (
                     value["value"]
-                    if any(item in value["name"] for item in ["SecuritiesCode", "SecurityCode"])
+                    if any(
+                        item in value["name"]
+                        for item in ["SecuritiesCode", "SecurityCode"]
+                    )
                     else securities_code
                 )
                 document_name = (
                     value["value"]
-                    if any(value["name"].endswith(item) for item in ["DocumentName"])
+                    if any(
+                        value["name"].endswith(item)
+                        for item in ["DocumentName"]
+                    )
                     else document_name
                 )
+                items = [
+                    "FilingDate",
+                    "ReportingDateOfFinancialForecastCorrection",
+                    "ReportingDateOfDividendForecastCorrection",
+                    "ReportingDateOfDistributionForecastCorrectionREIT",
+                ]
                 reporting_date = (
                     value["value"]
-                    if any(value["name"].endswith(item) for item in [
-                        "FilingDate","ReportingDateOfFinancialForecastCorrection","ReportingDateOfDividendForecastCorrection","ReportingDateOfDistributionForecastCorrectionREIT"
-                    ])
+                    if any(
+                        value["name"].endswith(item) for item in items
+                    )
                     else reporting_date
                 )
                 current_period = (
                     value["value"]
-                    if any(item in value["name"] for item in ["TypeOfCurrentPeriod"])
+                    if any(
+                        item in value["name"]
+                        for item in ["TypeOfCurrentPeriod"]
+                    )
                     else current_period
                 )
                 xbrl_id = value["xbrl_id"]
@@ -138,31 +165,53 @@ class IXBRLManager(BaseXbrlManager):
     def get_ix_summary(self):
         def get_value(value_: dict[str, str], item: list[str]):
             return (
-            value_["numeric"]
-            if any(value_["name"].endswith(item) for item in item)
-            else None
+                value_["numeric"]
+                if any(value_["name"].endswith(item) for item in item)
+                else None
             )
+
         contexts = []
         dfs = []
-        summary = IxSummary()
         for values in self.get_ix_non_fraction("sm"):
             dfs.append(DataFrame(values))
             # dfをcontext_period, context_entity, context_categoryでグループ化
-            for key, values in DataFrame(values).groupby(["context_period", "context_entity", "context_category"]):
+            for key, values in DataFrame(values).groupby(
+                [
+                    "context_period",
+                    "context_entity",
+                    "context_category",
+                ]
+            ):
                 context = key
                 contexts.append(context)
         contexts = list(set(contexts))
 
         for context in contexts:
             for df in dfs:
-                df_query:DataFrame = df.query("context_period == @context[0] & context_entity == @context[1] & context_category == @context[2]")
+                df_query: DataFrame = df.query(
+                    "context_period == @context[0] & \
+                    context_entity == @context[1] & \
+                    context_category == @context[2]"
+                )
                 # df_queryからnameが"_NetSales"で終わる行を取得
                 # 売上高
-                net_sales = get_value(df_query.to_dict(orient="records")[0], ["_NetSales"])
+                net_sales = get_value(
+                    df_query.to_dict(orient="records")[0],
+                    ["_NetSales"],
+                )
                 # 営業利益
-                operating_income = get_value(df_query.to_dict(orient="records")[0], ["OperatingIncome"])
+                operating_income = get_value(
+                    df_query.to_dict(orient="records")[0],
+                    ["OperatingIncome"],
+                )
                 # 経常利益
-                ordinary_income = get_value(df_query.to_dict(orient="records")[0], ["_OrdinaryIncome"])
+                ordinary_income = get_value(
+                    df_query.to_dict(orient="records")[0],
+                    ["_OrdinaryIncome"],
+                )
                 # 純利益
-                net_income = get_value(df_query.to_dict(orient="records")[0], ["_NetIncome"])
+                net_income = get_value(
+                    df_query.to_dict(orient="records")[0],
+                    ["_NetIncome"],
+                )
                 yield net_sales, operating_income, ordinary_income, net_income

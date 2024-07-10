@@ -9,7 +9,9 @@ from app.tag import IxNonFraction, IxNonNumeric
 @pytest.fixture
 def get_parser(get_xbrl_test_ixbrl, get_output_dir):
     output_path = get_output_dir / "test"
-    parser = IxbrlParser.create(get_xbrl_test_ixbrl, output_path.as_posix())
+    parser = IxbrlParser.create(
+        get_xbrl_test_ixbrl, output_path.as_posix()
+    )
     return parser
 
 
@@ -53,7 +55,9 @@ def test_non_numeric(get_parser):
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
     # column check
-    assert sorted(IxNonNumeric.keys()) == sorted(result.columns.tolist())
+    assert sorted(IxNonNumeric.keys()) == sorted(
+        result.columns.tolist()
+    )
 
 
 def test_non_fraction(get_parser):
@@ -63,7 +67,6 @@ def test_non_fraction(get_parser):
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
     # column check
-    columns1 = sorted(IxNonFraction.keys())
-    columns2 = sorted(result.columns.tolist())
-    print(columns1)
-    assert sorted(IxNonFraction.keys()) == sorted(result.columns.tolist())
+    assert sorted(IxNonFraction.keys()) == sorted(
+        result.columns.tolist()
+    )

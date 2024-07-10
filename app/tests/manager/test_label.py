@@ -32,11 +32,13 @@ def test_get_link_labels(label_manager):
             assert isinstance(value, dict)
             assert LabelValue.is_valid(value)
 
+
 def test_get_link_label_locs(label_manager):
     for values in label_manager.get_link_label_locs():
         for value in values:
             assert isinstance(value, dict)
             assert LabelLoc.is_valid(value)
+
 
 def test_get_link_label_arcs(label_manager):
     for values in label_manager.get_link_label_arcs():

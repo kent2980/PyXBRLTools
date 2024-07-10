@@ -10,7 +10,7 @@ class LinkSchemaImport(BaseTag):
     リンクスキーマのインポートを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     schema_location: Optional[str] = field(default=None)
     name_space: Optional[str] = field(default=None)
     document_type: Optional[str] = field(default=None)
@@ -22,7 +22,7 @@ class LinkBaseRef(BaseTag):
     リンクベースの参照を表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
     xlink_role: Optional[str] = field(default=None)
@@ -36,7 +36,7 @@ class LinkElement(BaseTag):
     リンク要素を表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     id: Optional[str] = field(default=None)
     xbrli_balance: Optional[str] = field(default=None)
     xbrli_period_type: Optional[str] = field(default=None)
@@ -54,7 +54,7 @@ class LinkRole(BaseTag):
     リンクロールを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
     xlink_schema: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
@@ -67,7 +67,7 @@ class LinkLoc(BaseTag):
     リンクロケーションを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     attr_value: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
     xlink_schema: Optional[str] = field(default=None)
@@ -81,7 +81,7 @@ class LinkArc(BaseTag):
     リンクアークを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     attr_value: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
     xlink_from: Optional[str] = field(default=None)
@@ -97,7 +97,7 @@ class LinkBase(BaseTag):
     リンクベースを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     xmlns_xlink: Optional[str] = field(default=None)
     xmlns_xsi: Optional[str] = field(default=None)
     xmlns_link: Optional[str] = field(default=None)
@@ -109,6 +109,6 @@ class LinkTag(BaseTag):
     リンクタグを表すデータクラスです。
     """
 
-    xbrl_id : Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
     xlink_type: Optional[str] = field(default=None)
     xlink_role: Optional[str] = field(default=None)

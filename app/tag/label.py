@@ -43,4 +43,3 @@ class LabelRoleRefs(BaseTag):
     xlink_type: Optional[str] = field(default=None)
     xlink_schema: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
-

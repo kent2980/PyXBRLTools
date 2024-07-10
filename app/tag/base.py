@@ -9,7 +9,7 @@ class BaseTag:
     def is_valid(cls, data: dict):
         # インスタンス化
         try:
-            instance = cls(**data)
+            cls(**data)
             return True
         except TypeError:
             return False

@@ -3,8 +3,12 @@ import pytest
 from app.tag import BaseTag
 
 
-def test_base_tag_instance():
-    base_tag = BaseTag()
+@pytest.fixture
+def base_tag():
+    return BaseTag()
+
+
+def test_base_tag_instance(base_tag):
     assert isinstance(base_tag, BaseTag)
 
     try:

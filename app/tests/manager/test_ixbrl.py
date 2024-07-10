@@ -1,4 +1,3 @@
-
 import pytest
 
 from app.manager import IXBRLManager
@@ -9,8 +8,10 @@ from app.tag import IxHeader, IxNonFraction, IxNonNumeric
 def ixbrl_manager(get_xbrl_in_edjp):
     return IXBRLManager(get_xbrl_in_edjp)
 
+
 def test_def_manager_instance(ixbrl_manager):
     assert isinstance(ixbrl_manager, IXBRLManager)
+
 
 def test_get_non_fraction(ixbrl_manager):
     print("非分数のIXBRLデータを取得します。")
@@ -20,6 +21,7 @@ def test_get_non_fraction(ixbrl_manager):
             # IxNonFractionに格納可能なデータか確認
             assert IxNonFraction.is_valid(value)
 
+
 def test_get_non_numeric(ixbrl_manager):
     print("非数値のIXBRLデータを取得します。")
     for values in ixbrl_manager.get_ix_non_numeric():
@@ -28,6 +30,7 @@ def test_get_non_numeric(ixbrl_manager):
             # IxNonNumericに格納可能なデータか確認
             assert IxNonNumeric.is_valid(value)
 
+
 def test_get_header(ixbrl_manager):
     print("ヘッダー情報を取得します。")
     value = ixbrl_manager.get_ix_header()
@@ -35,6 +38,7 @@ def test_get_header(ixbrl_manager):
     # IxHeaderに格納可能なデータか確認
     assert IxHeader.is_valid(value)
     print(value)
+
 
 def test_get_summary(ixbrl_manager):
     print("サマリー情報を取得します。")

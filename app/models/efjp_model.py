@@ -1,4 +1,3 @@
-from app.exception import NotXbrlTypeException
 from app.models import BaseXbrlModel
 
 

@@ -16,13 +16,17 @@ class QualitativeManager(BaseXbrlManager):
         self.set_htmlbase_files("qualitative")
 
         if len(self.files) == 0:
-            raise XbrlListEmptyError("qualitative.htmが見つかりません。")
+            raise XbrlListEmptyError(
+                "qualitative.htmが見つかりません。"
+            )
 
     def qualitative_infos(self, document_type=None):
         df = None
 
         if document_type is not None:
-            files = self.files.query(f"document_type == '{document_type}'")
+            files = self.files.query(
+                f"document_type == '{document_type}'"
+            )
 
         for index, row in files.iterrows():
             parser = QualitativeParser.create(row["xlink_href"])
@@ -30,7 +34,8 @@ class QualitativeManager(BaseXbrlManager):
                 df = parser.qualitative_info().to_DataFrame()
             else:
                 df = pandas.concat(
-                    [df, parser.qualitative_info().to_DataFrame()], ignore_index=True
+                    [df, parser.qualitative_info().to_DataFrame()],
+                    ignore_index=True,
                 )
 
         self.data = df.to_dict(orient="records")

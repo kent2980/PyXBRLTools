@@ -1,6 +1,4 @@
-import os
 import random
-import shutil
 from pathlib import Path
 
 import pytest
@@ -29,12 +27,14 @@ def get_test_dir(get_current_path) -> Path:
     test_dir = get_current_path / ".data" / "test"
     return test_dir
 
+
 @pytest.fixture(scope="session")
 def get_xbrl_zip_dir(get_current_path) -> Path:
     """XBRLファイルのディレクトリを取得"""
 
     xbrl_dir = get_current_path / ".xbrl"
     return xbrl_dir
+
 
 @pytest.fixture(scope="module")
 def get_xbrl_in_edjp(get_test_dir):
@@ -60,4 +60,3 @@ def get_xbrl_test_label(get_xbrl_in_edjp):
     label_files = list(Path(get_xbrl_in_edjp).rglob("*lab.xml"))
     label_file = random.choice(label_files)
     return label_file.as_posix()
-

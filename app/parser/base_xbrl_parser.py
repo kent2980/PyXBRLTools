@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import requests
 from bs4 import BeautifulSoup as bs
@@ -17,8 +17,12 @@ class BaseXBRLParser:
         if xbrl_url.startswith("http"):
             if output_path is None:
                 raise Exception("Please specify the output path")
-        if (not xbrl_url.startswith("http")) and (not os.path.exists(xbrl_url)):
-            raise FileNotFoundError(f"ファイルが見つかりません。[{xbrl_url}]")
+        if (not xbrl_url.startswith("http")) and (
+            not os.path.exists(xbrl_url)
+        ):
+            raise FileNotFoundError(
+                f"ファイルが見つかりません。[{xbrl_url}]"
+            )
 
         file_name = os.path.basename(xbrl_url)
         self.__document_type = "fr" if "fr" in file_name else "sm"
@@ -67,15 +71,21 @@ class BaseXBRLParser:
         if self.xbrl_url.startswith("http"):
             response = requests.get(self.xbrl_url)
             if response.status_code == 200:
-                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {self.xbrl_url} からXBRLを取得しました。")
+                print(
+                    f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\
+                    {self.xbrl_url} からXBRLを取得しました。"
+                )
                 # エンコーディングを自動検出
                 response.encoding = response.apparent_encoding
                 file_path = os.path.join(
-                    self.output_path, urlparse(self.xbrl_url).path.lstrip("/")
+                    self.output_path,
+                    urlparse(self.xbrl_url).path.lstrip("/"),
                 )
                 if not os.path.exists(file_path.rsplit("/", 1)[0]):
                     os.makedirs(file_path.rsplit("/", 1)[0])
-                with open(file_path, "w", encoding=response.encoding) as f:
+                with open(
+                    file_path, "w", encoding=response.encoding
+                ) as f:
                     f.write(response.text)
                 time.sleep(2)
                 return file_path

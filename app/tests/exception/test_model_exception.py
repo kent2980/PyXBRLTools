@@ -8,6 +8,7 @@ def test_NotXbrlDirectoryException():
         raise NotXbrlDirectoryException("test")
     assert str(e.value) == "無効なXBRLファイルです。[詳細]:test"
 
+
 def test_NotXbrlTypeException():
     with pytest.raises(NotXbrlTypeException) as e:
         raise NotXbrlTypeException("test")

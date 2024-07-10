@@ -1,5 +1,3 @@
-from pandas import DataFrame
-
 from app.exception import TagNotFoundError, TypeOfXBRLIsDifferent
 from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
 
@@ -44,7 +42,9 @@ class LabelParser(BaseXBRLParser):
 
         # ファイル名がlab.xmlでない場合はエラーを発生
         if not self.basename().endswith(("lab.xml", "lab-en.xml")):
-            raise TypeOfXBRLIsDifferent(f"{self.basename()} はlab.xmlではありません。")
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename()} はlab.xmlではありません。"
+            )
 
     def link_labels(self):
         """link:label要素を取得するメソッド。
@@ -83,7 +83,9 @@ class LabelParser(BaseXBRLParser):
 
             # _____attr[xlink:href]
             if tag.get("xlink:href"):
-                xlink_schema = tag.get("xlink:href").split("#")[0].split("/")[-1]
+                xlink_schema = (
+                    tag.get("xlink:href").split("#")[0].split("/")[-1]
+                )
                 xlink_href = tag.get("xlink:href").split("#")[-1:][0]
             else:
                 xlink_schema = None

@@ -20,6 +20,7 @@ class IxNonNumeric(BaseTag):
     document_type: Optional[str] = field(default=None)
     report_type: Optional[str] = field(default=None)
 
+
 @dataclass
 class IxNonFraction(BaseTag):
     """非分数タグの情報を格納するクラス"""
@@ -63,4 +64,3 @@ class IxSummary(BaseTag):
     operating_income: Optional[str] = field(default=None)
     ordinary_income: Optional[str] = field(default=None)
     net_income: Optional[str] = field(default=None)
-
