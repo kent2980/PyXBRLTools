@@ -2,13 +2,8 @@ import pprint
 
 import pytest
 
-from app.manager import (
-    CalLinkManager,
-    DefLinkManager,
-    IXBRLManager,
-    LabelManager,
-    PreLinkManager,
-)
+from app.manager import (CalLinkManager, DefLinkManager, IXBRLManager,
+                         LabelManager, PreLinkManager)
 from app.models import XBRLModel
 from app.tag import IxHeader
 
@@ -104,6 +99,7 @@ def test_all_edjp(xbrl_model_edjp):
 def test_all_rvfc(xbrl_model_rvfc):
     model = xbrl_model_rvfc
     assert isinstance(model, XBRLModel)
+    xbrl_id = model.xbrl_id
     print(
         f"\n*****[test_all_{model.xbrl_type}] model.get_all_manager()"
         + "*" * 50
@@ -119,8 +115,10 @@ def test_all_rvfc(xbrl_model_rvfc):
             pprint.pprint(value.get_ix_header())
             for item in value.get_ix_non_fraction():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_ix_non_fraction():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
 
         # LabelManager
         elif isinstance(value, LabelManager):
@@ -136,28 +134,37 @@ def test_all_rvfc(xbrl_model_rvfc):
         elif isinstance(value, DefLinkManager):
             for item in value.get_link_roles():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_arcs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_locs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             assert isinstance(value, DefLinkManager)
 
         # PreLinkManager
         elif isinstance(value, PreLinkManager):
             for item in value.get_link_roles():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_arcs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_locs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             assert isinstance(value, PreLinkManager)
 
         # CalLinkManager
         elif isinstance(value, CalLinkManager):
             for item in value.get_link_roles():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_arcs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             for item in value.get_link_locs():
                 pprint.pprint(item)
+                assert [xbrl_id == i["xbrl_id"] for i in item]
             assert isinstance(value, CalLinkManager)

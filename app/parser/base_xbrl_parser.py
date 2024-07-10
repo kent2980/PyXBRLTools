@@ -1,3 +1,4 @@
+import fcntl
 import os
 import time
 from datetime import datetime
@@ -63,7 +64,11 @@ class BaseXBRLParser:
     def _read_xbrl(self, xbrl_path):
         """XBRLをBeautifulSoup読み込む"""
         with open(xbrl_path, "r", encoding="utf-8") as f:
+            # 読み取り専用でファイルをロック
+            fcntl.flock(f.fileno(), fcntl.LOCK_SH)
             self.soup = bs(f, features="lxml-xml")
+            # ファイルのロックを解除
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
             return self.soup
 
     def _fetch_url(self):
