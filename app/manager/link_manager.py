@@ -51,10 +51,10 @@ class BaseLinkManager(BaseXbrlManager):
         self._document_type = document_type
 
     def get_parser(self) -> BaseLinkParser:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError  
 
     def get_role(self):
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError  
 
     def get_link_roles(self):
         """link_rolesを設定します。"""
