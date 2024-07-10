@@ -20,10 +20,10 @@ class BaseLinkParser(BaseXBRLParser):
             self.set_arc_tag_name()
 
     def set_link_tag_name(self):
-        raise NotImplementedError   # pragma: no cover
+        raise NotImplementedError   
 
     def set_arc_tag_name(self):
-        raise NotImplementedError   # pragma: no cover
+        raise NotImplementedError   
 
     def link_roles(self):
         """link:role要素を取得するメソッド。
