@@ -1,3 +1,4 @@
+import random
 import shutil
 import zipfile
 from pathlib import Path
@@ -64,8 +65,10 @@ class BaseXbrlModel:
     def __unzip_xbrl(self) -> str:
         zip_path = Path(self.xbrl_zip_path)
         with zipfile.ZipFile(zip_path.as_posix(), "r") as z:
+            # フォルダ名をランダムに生成
+            dir_name = str(uuid4())
             # zipファイルを解凍するパスを指定
-            unzip_path = zip_path.parent / zip_path.stem
+            unzip_path = zip_path.parent / dir_name
             z.extractall(unzip_path.as_posix())
         return unzip_path.as_posix()
 

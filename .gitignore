@@ -8,7 +8,7 @@ Log/
 .pytest_cache/
 # */tests/.data
 # */tests/.output
-*/tests/.xbrl
+# */tests/.xbrl
 */.obsidian
 */tests/output
 .venv

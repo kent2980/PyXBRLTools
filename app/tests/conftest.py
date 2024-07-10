@@ -44,6 +44,13 @@ def get_xbrl_in_edjp(get_test_dir):
 
 
 @pytest.fixture(scope="module")
+def get_xbrl_edjp_zip(get_xbrl_zip_dir):
+    """テスト用のXBRL(edjp)ファイル(zip)を取得"""
+    zip_file = get_xbrl_zip_dir / "edjp.zip"
+    return zip_file.as_posix()
+
+
+@pytest.fixture(scope="module")
 def get_xbrl_test_ixbrl(get_xbrl_in_edjp):
     """テスト用のixbrlファイルを取得"""
 
