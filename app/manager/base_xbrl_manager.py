@@ -84,9 +84,7 @@ class BaseXbrlManager:
             if file.suffix == ".xsd" and "fr" not in file.name:
                 type_str = file.name.split("-")[1]
                 code = (
-                    type_str[:4]
-                    if len(type_str) == 4
-                    else type_str[2:6]
+                    type_str[:4] if len(type_str) == 4 else type_str[2:6]
                 )
                 return code, self.REPORT_TYPE.get(code)
 
@@ -97,9 +95,7 @@ class BaseXbrlManager:
             pd.DataFrame: 関係ファイルのデータフレーム
         """
         files = self.__to_filelist()
-        xsd_files = [
-            file for file in files if Path(file).suffix == ".xsd"
-        ]
+        xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
 
         data_frames = [
             SchemaParser.create(file).link_base_refs().to_DataFrame()

@@ -82,10 +82,8 @@ class BaseXBRLParser:
                     urlparse(self.xbrl_url).path.lstrip("/"),
                 )
                 if not os.path.exists(file_path.rsplit("/", 1)[0]):
-                    os.makedirs(file_path.rsplit("/", 1)[0])
-                with open(
-                    file_path, "w", encoding=response.encoding
-                ) as f:
+                    os.makedirs(file_path.rsplit("/", 1)[0], exist_ok=True)
+                with open(file_path, "w", encoding=response.encoding) as f:
                     f.write(response.text)
                 time.sleep(2)
                 return file_path

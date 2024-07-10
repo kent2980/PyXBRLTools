@@ -2,7 +2,7 @@ import psycopg2
 
 
 class PostgreSqlConnector:
-    """ PostgreSQL database コネクター """
+    """PostgreSQL database コネクター"""
 
     def __init__(self, host, port, database, user, password):
         """コンストラクタ
@@ -55,9 +55,7 @@ class PostgreSqlConnector:
             self.connection.close()
             print("Disconnected from PostgreSQL database.")
 
-    def edit_table(
-        self, table_name, column_name, new_value, condition
-    ):
+    def edit_table(self, table_name, column_name, new_value, condition):
         """テーブルのデータを更新
 
         Args:
@@ -116,7 +114,9 @@ class PostgreSqlConnector:
         """
         try:
             cursor = self.connection.cursor()
-            query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
+            query = (
+                f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
+            )
             cursor.execute(query)
             self.connection.commit()
             print("Data added successfully!")

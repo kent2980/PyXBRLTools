@@ -1,4 +1,3 @@
-import random
 import shutil
 import zipfile
 from pathlib import Path
@@ -77,11 +76,15 @@ class BaseXbrlModel:
         # ファイルの末尾が「ixbrl.htm」のファイルを再起的に取得してリストに追加
         ixbrl_files = list(directory_path.rglob("*ixbrl.htm"))
         if len(ixbrl_files) == 1:
-            return ixbrl_files[0].as_posix().split("-")[1]
+            return ixbrl_files[0].as_posix().split("/")[-1].split("-")[1]
         elif len(ixbrl_files) > 1:
             for ixbrl_file in ixbrl_files:
                 if "sm" in ixbrl_file.as_posix():
-                    return ixbrl_file.as_posix().split("-")[1][2:6]
+                    return (
+                        ixbrl_file.as_posix()
+                        .split("/")[-1]
+                        .split("-")[1][2:6]
+                    )
             raise NotXbrlDirectoryException(
                 "ixbrlファイルが複数存在します。"
             )
@@ -102,13 +105,9 @@ class BaseXbrlModel:
 
     def _xbrl_type_check(self, xbrl_type, *keywords):
         if self.xbrl_type != xbrl_type:
-            raise NotXbrlTypeException(
-                "XBRLファイルの種類が異なります。"
-            )
+            raise NotXbrlTypeException("XBRLファイルの種類が異なります。")
         if self.__check_xbrl_files_in_dir(*keywords):
-            raise NotXbrlTypeException(
-                "XBRLファイルの構成が異なります。"
-            )
+            raise NotXbrlTypeException("XBRLファイルの構成が異なります。")
 
     def _get_doc_output_path(self, doc_type: str):
         output_path = self.__output_path / doc_type
@@ -123,8 +122,7 @@ class BaseXbrlModel:
     def _get_data_frames(self, manager, *methods):
         """指定されたマネージャーとメソッドからDataFrameを取得する"""
         return tuple(
-            getattr(manager, method)().to_DataFrame()
-            for method in methods
+            getattr(manager, method)().to_DataFrame() for method in methods
         )
 
     def _get_xbrl_id(self, tuple):

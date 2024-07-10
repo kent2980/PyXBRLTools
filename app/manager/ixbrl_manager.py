@@ -26,9 +26,7 @@ class IXBRLManager(BaseXbrlManager):
         self.set_htmlbase_files("ixbrl")
 
         if len(self.files) == 0:
-            raise XbrlListEmptyError(
-                "ixbrlファイルが見つかりません。"
-            )
+            raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
 
     def get_ix_non_fraction(self, document_type=None):
         """
@@ -90,16 +88,18 @@ class IXBRLManager(BaseXbrlManager):
         Returns:
             self (IxbrlManager): 自身のインスタンス
         """
-        company_name = None
-        securities_code = None
-        document_name = None
-        reporting_date = None
-        current_period = None
-        xbrl_id = None
-        report_type = None
+        header = {
+            "company_name": None,
+            "securities_code": None,
+            "document_name": None,
+            "reporting_date": None,
+            "current_period": None,
+            "xbrl_id": None,
+            "report_type": None,
+        }
         for values in self.get_ix_non_numeric():
             for value in values:
-                company_name = (
+                header["company_name"] = (
                     value["value"]
                     if any(
                         item in value["name"]
@@ -108,23 +108,23 @@ class IXBRLManager(BaseXbrlManager):
                             "AssetManagerREIT",
                         ]
                     )
-                    else company_name
+                    else header["company_name"]
                 )
-                securities_code = (
+                header["securities_code"] = (
                     value["value"]
                     if any(
                         item in value["name"]
                         for item in ["SecuritiesCode", "SecurityCode"]
                     )
-                    else securities_code
+                    else header["securities_code"]
                 )
-                document_name = (
+                header["document_name"] = (
                     value["value"]
                     if any(
                         value["name"].endswith(item)
                         for item in ["DocumentName"]
                     )
-                    else document_name
+                    else header["document_name"]
                 )
                 items = [
                     "FilingDate",
@@ -132,35 +132,33 @@ class IXBRLManager(BaseXbrlManager):
                     "ReportingDateOfDividendForecastCorrection",
                     "ReportingDateOfDistributionForecastCorrectionREIT",
                 ]
-                reporting_date = (
+                header["reporting_date"] = (
                     value["value"]
-                    if any(
-                        value["name"].endswith(item) for item in items
-                    )
-                    else reporting_date
+                    if any(value["name"].endswith(item) for item in items)
+                    else header["reporting_date"]
                 )
-                current_period = (
+                header["current_period"] = (
                     value["value"]
                     if any(
                         item in value["name"]
                         for item in ["TypeOfCurrentPeriod"]
                     )
-                    else current_period
+                    else header["current_period"]
                 )
-                xbrl_id = value["xbrl_id"]
-                report_type = value["report_type"]
+                header["xbrl_id"] = value["xbrl_id"]
+                header["report_type"] = value["report_type"]
 
-        header = IxHeader(
-            company_name=company_name,
-            securities_code=securities_code,
-            document_name=document_name,
-            reporting_date=reporting_date,
-            current_period=current_period,
-            xbrl_id=xbrl_id,
-            report_type=report_type,
+        ix_header = IxHeader(
+            company_name=header["company_name"],
+            securities_code=header["securities_code"],
+            document_name=header["document_name"],
+            reporting_date=header["reporting_date"],
+            current_period=header["current_period"],
+            xbrl_id=header["xbrl_id"],
+            report_type=header["report_type"],
         )
 
-        return header.__dict__
+        return ix_header.__dict__
 
     def get_ix_summary(self):
         def get_value(value_: dict[str, str], item: list[str]):

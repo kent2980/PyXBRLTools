@@ -135,8 +135,7 @@ class IxbrlParser(BaseXBRLParser):
 
             # textが証券コードの場合は4文字に統一
             if any(
-                item in name
-                for item in ["SecuritiesCode", "SecurityCode"]
+                item in name for item in ["SecuritiesCode", "SecurityCode"]
             ):
                 text = text[0:4]  # pragma: no cover
 
@@ -183,9 +182,7 @@ class IxbrlParser(BaseXBRLParser):
 
             # _____attr[decimals]
             decimals = (
-                float(tag.get("decimals"))
-                if tag.get("decimals")
-                else None
+                float(tag.get("decimals")) if tag.get("decimals") else None
             )
 
             # _____attr[format]
@@ -199,9 +196,7 @@ class IxbrlParser(BaseXBRLParser):
             name = tag.get("name").replace(":", "_")
 
             # _____attr[scale]
-            scale = (
-                int(tag.get("scale")) if tag.get("scale") else None
-            )
+            scale = int(tag.get("scale")) if tag.get("scale") else None
 
             # _____attr[sign]
             sign = tag.get("sign")

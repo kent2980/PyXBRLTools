@@ -1,7 +1,11 @@
 import pytest
 
-from app.exception import (OutputPathNotFoundError, SetLanguageNotError,
-                           XbrlDirectoryNotFoundError, XbrlListEmptyError)
+from app.exception import (
+    OutputPathNotFoundError,
+    SetLanguageNotError,
+    XbrlDirectoryNotFoundError,
+    XbrlListEmptyError,
+)
 
 
 def test_XbrlListEmptyError():

@@ -1,6 +1,10 @@
 from app.manager import BaseXbrlManager
-from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                        PreLinkParser)
+from app.parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -65,9 +69,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(
-                f"document_type == '{self.document_type}'"
-            )
+            files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
 
             parser = self.parser.create(
@@ -84,9 +86,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(
-                f"document_type == '{self.document_type}'"
-            )
+            files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
             parser = self.parser.create(
                 row["xlink_href"], output_path
@@ -102,9 +102,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
-            files = files.query(
-                f"document_type == '{self.document_type}'"
-            )
+            files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
             parser = self.parser.create(
                 row["xlink_href"], output_path

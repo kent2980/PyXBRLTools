@@ -16,9 +16,7 @@ class EdusModel(BaseXbrlModel):
         self.ixbrl_manager = IXBRLManager(directory_path).set_xbrl_id(
             self.xbrl_id
         )
-        self.label_manager = self._create_manager(
-            LabelManager, "label"
-        )
+        self.label_manager = self._create_manager(LabelManager, "label")
         self.def_manager = self._create_manager(
             DefLinkManager, "def"
         ).set_xbrl_id(self.xbrl_id)

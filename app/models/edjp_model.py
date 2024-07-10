@@ -1,5 +1,10 @@
-from app.manager import (CalLinkManager, DefLinkManager, IXBRLManager,
-                         LabelManager, PreLinkManager)
+from app.manager import (
+    CalLinkManager,
+    DefLinkManager,
+    IXBRLManager,
+    LabelManager,
+    PreLinkManager,
+)
 from app.models import BaseXbrlModel
 
 
@@ -39,9 +44,7 @@ class EdjpModel(BaseXbrlModel):
         self.ixbrl_manager = IXBRLManager(directory_path).set_xbrl_id(
             self.xbrl_id
         )
-        self.label_manager = self._create_manager(
-            LabelManager, "label"
-        )
+        self.label_manager = self._create_manager(LabelManager, "label")
         self.cal_manager = self._create_manager(
             CalLinkManager, "cal"
         ).set_xbrl_id(self.xbrl_id)

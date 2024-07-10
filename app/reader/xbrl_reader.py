@@ -1,7 +1,17 @@
 import zipfile
 
-from app.models import (EdifModel, EditModel, EdjpModel, EdusModel, EfjpModel,
-                        RejpModel, RrdfModel, RrfcModel, RvdfModel, RvfcModel)
+from app.models import (
+    EdifModel,
+    EditModel,
+    EdjpModel,
+    EdusModel,
+    EfjpModel,
+    RejpModel,
+    RrdfModel,
+    RrfcModel,
+    RvdfModel,
+    RvfcModel,
+)
 
 
 class XbrlReader:
