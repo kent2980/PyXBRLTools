@@ -36,5 +36,5 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Execute test.sh script
         run: |
-          chmod +x test.sh
+          chmod +x app/scripts/test.sh
           app/scripts/test.sh
