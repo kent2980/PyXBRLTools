@@ -7,7 +7,7 @@ from . import BaseXBRLParser
 class BaseLinkParser(BaseXBRLParser):
     """BaseLinkParserのクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
+    def __init__(self, xbrl_url, output_path=None, is_child=False):
         super().__init__(xbrl_url, output_path)
 
         # プロパティの初期化
@@ -15,8 +15,9 @@ class BaseLinkParser(BaseXBRLParser):
         self.arc_tag_name = None
 
         # link要素とarc要素のタグ名を設定
-        self.set_link_tag_name()
-        self.set_arc_tag_name()
+        if is_child:
+            self.set_link_tag_name()
+            self.set_arc_tag_name()
 
     def set_link_tag_name(self):
         raise NotImplementedError   # pragma: no cover
