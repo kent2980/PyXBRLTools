@@ -16,6 +16,9 @@ coverage run -m pytest $TEST_PATH
 # Step 2: Generate HTML coverage report
 coverage html
 
+# Step 3: Report the coverage summary
+coverage report -m
+
 # Step 3: Open the HTML report in the default web browser
 # The report is generated in the 'htmlcov' directory
 # if [ -f htmlcov/index.html ]; then

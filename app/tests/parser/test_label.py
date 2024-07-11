@@ -34,9 +34,7 @@ def test_link_labels(get_parser):
     assert isinstance(result_dict, list)
     assert len(result_dict) > 0
     # column check
-    assert sorted(LabelValue.keys()) == sorted(
-        result_df.columns.tolist()
-    )
+    assert sorted(LabelValue.keys()) == sorted(result_df.columns.tolist())
 
 
 def test_link_locs(get_parser):
@@ -49,9 +47,7 @@ def test_link_locs(get_parser):
     assert isinstance(result_dict, list)
     assert len(result_dict) > 0
     # column check
-    assert sorted(LabelLoc.keys()) == sorted(
-        result_df.columns.tolist()
-    )
+    assert sorted(LabelLoc.keys()) == sorted(result_df.columns.tolist())
 
 
 def test_link_arcs(get_parser):
@@ -64,9 +60,7 @@ def test_link_arcs(get_parser):
     assert isinstance(result_dict, list)
     assert len(result_dict) > 0
     # column check
-    assert sorted(LabelArc.keys()) == sorted(
-        result_df.columns.tolist()
-    )
+    assert sorted(LabelArc.keys()) == sorted(result_df.columns.tolist())
 
 
 def test_role_refs(get_parser):

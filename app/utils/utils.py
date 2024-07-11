@@ -107,9 +107,7 @@ class Utils:
                     elif os.path.isdir(file_path):
                         shutil.rmtree(file_path)  # ディレクトリを削除
                 except Exception as e:
-                    print(
-                        f"Failed to delete {file_path}. Reason: {e}"
-                    )
+                    print(f"Failed to delete {file_path}. Reason: {e}")
 
     def find_filename_with_keyword(directory_path, keyword):
         """
@@ -203,18 +201,14 @@ class Utils:
                 .replace("日", "")
             )
             # textの数字部分を0埋め
-            text = re.sub(
-                r"(\d+)", lambda x: x.group(0).zfill(2), text
-            )
+            text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
             format_str = "dateyearmonthday"
             return text, format_str
         elif "dateerayearmonthdayjp" in format_str:
             jd = JDate.strptime(text, "%g%e年%m月%d日")
             text = jd.strftime("%Y-%m-%d")
             # textの数字部分を0埋め
-            text = re.sub(
-                r"(\d+)", lambda x: x.group(0).zfill(2), text
-            )
+            text = re.sub(r"(\d+)", lambda x: x.group(0).zfill(2), text)
             format_str = "dateyearmonthday"
             return text, format_str
         if text:

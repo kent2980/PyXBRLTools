@@ -10,9 +10,7 @@ class LabelManager(BaseXbrlManager):
             - XbrlListEmptyError("labelLinkbaseファイルが見つかりません。")
     """
 
-    def __init__(
-        self, directory_path, output_path, lang="jp"
-    ) -> None:
+    def __init__(self, directory_path, output_path, lang="jp") -> None:
         """
         LabelManagerクラスのコンストラクタです。
 
@@ -54,9 +52,7 @@ class LabelManager(BaseXbrlManager):
             elif lang == "en":
                 # self.filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
                 self.files = self.files[
-                    self.files["xlink_href"].str.endswith(
-                        "lab-en.xml"
-                    )
+                    self.files["xlink_href"].str.endswith("lab-en.xml")
                 ]
 
         return self

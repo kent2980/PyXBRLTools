@@ -50,6 +50,13 @@ def get_xbrl_edjp_zip(get_xbrl_zip_dir):
 
 
 @pytest.fixture(scope="module")
+def get_xbrl_rvfc_zip(get_xbrl_zip_dir):
+    """テスト用のXBRL(rvfc)ファイル(zip)を取得"""
+    zip_file = get_xbrl_zip_dir / "rvfc.zip"
+    return zip_file.as_posix()
+
+
+@pytest.fixture(scope="module")
 def get_xbrl_test_ixbrl(get_xbrl_in_edjp):
     """テスト用のixbrlファイルを取得"""
 

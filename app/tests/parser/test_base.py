@@ -20,9 +20,7 @@ def get_parser(get_xbrl_in_edjp, get_output_dir):
             if file.endswith("ixbrl.htm"):
                 xbrl_file = Path(root) / file
                 break
-    return BaseXBRLParser(
-        xbrl_file.as_posix(), output_path.as_posix()
-    )
+    return BaseXBRLParser(xbrl_file.as_posix(), output_path.as_posix())
 
 
 @pytest.fixture

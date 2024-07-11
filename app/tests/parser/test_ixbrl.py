@@ -55,9 +55,7 @@ def test_non_numeric(get_parser):
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
     # column check
-    assert sorted(IxNonNumeric.keys()) == sorted(
-        result.columns.tolist()
-    )
+    assert sorted(IxNonNumeric.keys()) == sorted(result.columns.tolist())
 
 
 def test_non_fraction(get_parser):
@@ -67,6 +65,4 @@ def test_non_fraction(get_parser):
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
     # column check
-    assert sorted(IxNonFraction.keys()) == sorted(
-        result.columns.tolist()
-    )
+    assert sorted(IxNonFraction.keys()) == sorted(result.columns.tolist())
