@@ -28,7 +28,36 @@ class IXBRLManager(BaseXbrlManager):
         if len(self.files) == 0:
             raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
 
-    def get_ix_non_fraction(self, document_type=None):
+        # items
+        self.__ix_non_fraction = None
+        self.__ix_non_numeric = None
+        self.__ix_header = None
+
+        self.set_ix_non_fraction()
+        self.set_ix_non_numeric()
+        self.set_ix_header()
+
+    @property
+    def ix_non_fraction(self):
+        return self.__ix_non_fraction
+
+    @property
+    def ix_non_numeric(self):
+        return self.__ix_non_numeric
+
+    @property
+    def ix_header(self):
+        return self.__ix_header
+
+    def ix_non_fraction_yields(self):
+        for value in self.ix_non_fraction:
+            yield value
+
+    def ix_non_numeric_yields(self):
+        for value in self.ix_non_numeric:
+            yield value
+
+    def set_ix_non_fraction(self, document_type=None):
         """
         ix_non_fraction属性を設定します。
         非分数のIXBRLデータを取得します。
@@ -36,6 +65,9 @@ class IXBRLManager(BaseXbrlManager):
         Yields:
             dict: 非分数のIXBRLデータ
         """
+
+        rows = []
+
         files = self.files
 
         if document_type is not None:
@@ -52,9 +84,13 @@ class IXBRLManager(BaseXbrlManager):
 
                 df["xbrl_id"] = self.xbrl_id
 
-                yield df.to_dict(orient="records")
+                rows.append(df.to_dict(orient="records"))
 
-    def get_ix_non_numeric(self, document_type=None):
+        self.__ix_non_fraction = rows
+
+        self.items["ix_non_fraction"] = rows
+
+    def set_ix_non_numeric(self, document_type=None):
         """
         ix_non_numeric属性を設定します。
         非数値のIXBRLデータを取得します。
@@ -62,6 +98,9 @@ class IXBRLManager(BaseXbrlManager):
         Yields:
             dict: 非数値のIXBRLデータ
         """
+
+        rows = []
+
         files = self.files
 
         if document_type is not None:
@@ -78,9 +117,13 @@ class IXBRLManager(BaseXbrlManager):
 
                 df["xbrl_id"] = self.xbrl_id
 
-                yield df.to_dict(orient="records")
+                rows.append(df.to_dict(orient="records"))
 
-    def get_ix_header(self):
+        self.__ix_non_numeric = rows
+
+        self.items["ix_non_numeric"] = rows
+
+    def set_ix_header(self):
         """
         ix_header属性を設定します。
         iXBRLのヘッダー情報を取得します。
@@ -97,7 +140,7 @@ class IXBRLManager(BaseXbrlManager):
             "xbrl_id": None,
             "report_type": None,
         }
-        for values in self.get_ix_non_numeric():
+        for values in self.ix_non_numeric:
             for value in values:
                 header["company_name"] = (
                     value["value"]
@@ -158,7 +201,9 @@ class IXBRLManager(BaseXbrlManager):
             report_type=header["report_type"],
         )
 
-        return ix_header.__dict__
+        self.__ix_header = ix_header.__dict__
+
+        self.items["ix_header"] = ix_header.__dict__
 
     def get_ix_summary(self):
         def get_value(value_: dict[str, str], item: list[str]):

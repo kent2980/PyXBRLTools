@@ -29,6 +29,11 @@ class BaseXbrlManager:
         self.files = None
         self.data = {}
         self.__xbrl_id = str(uuid4())
+        self.__items = {}
+
+    @property
+    def items(self):
+        return self.__items
 
     @property
     def xbrl_id(self):
