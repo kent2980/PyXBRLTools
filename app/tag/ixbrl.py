@@ -40,6 +40,7 @@ class IxNonFraction(BaseTag):
     report_type: Optional[str] = field(default=None)
 
 
+
 @dataclass
 class IxHeader(BaseTag):
     """iXBRLのヘッダー情報を格納するクラス"""
