@@ -1,5 +1,6 @@
 from app.exception import TypeOfXBRLIsDifferent
 from app.tag import LinkArc, LinkBase, LinkLoc, LinkRole, LinkTag
+from app.tag.base import SourceFile
 
 from . import BaseXBRLParser
 
@@ -79,6 +80,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_schema=xlink_schema,
                     xlink_href=xlink_href,
                     xlink_label=tag.get("xlink:label"),
+                    source_file_id=self.source_file["id"],
                 )
 
                 lists.append(ll.__dict__)
@@ -125,6 +127,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_arcrole=tag.get("arcrole"),
                     xlink_order=xlink_order,
                     xlink_weight=xlink_weight,
+                    source_file_id=self.source_file["id"],
                 )
                 lists.append(la.__dict__)
 

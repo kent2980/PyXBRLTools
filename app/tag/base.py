@@ -1,3 +1,8 @@
+import uuid
+from dataclasses import dataclass, field
+from typing import Optional
+
+
 class BaseTag:
     """Base class for tags"""
 
@@ -16,3 +21,11 @@ class BaseTag:
 
     def __eq__(self, value: object) -> bool:
         return self.__dict__ == value.__dict__
+
+
+@dataclass
+class SourceFile(BaseTag):
+
+    id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
+    xbrl_id : Optional[str] = field(default=None)
+    name: Optional[str]  = field(default=None)

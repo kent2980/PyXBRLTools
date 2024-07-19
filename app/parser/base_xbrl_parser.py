@@ -10,6 +10,8 @@ import requests
 from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 
+from app.tag import SourceFile
+
 
 class BaseXBRLParser:
     """XBRLを解析する基底クラス"""
@@ -32,6 +34,7 @@ class BaseXBRLParser:
         self.soup: bs | None = None
         self.data = [{}]
         self.__xbrl_id = str(uuid4())
+        self.__source_file = self.__set_source_file()
 
     @property
     def xbrl_url(self):
@@ -60,6 +63,10 @@ class BaseXBRLParser:
     @property
     def document_type(self):
         return self.__document_type
+
+    @property
+    def source_file(self):
+        return self.__source_file
 
     def _read_xbrl(self, xbrl_path):
         """XBRLをBeautifulSoup読み込む"""
@@ -135,3 +142,11 @@ class BaseXBRLParser:
             return str(base_name)
         else:
             return str(Path(self.xbrl_url).name)
+
+    def __set_source_file(self):
+        """XBRLのソースファイルを取得する"""
+
+        return SourceFile(
+            name=self.basename(),
+            xbrl_id=self.xbrl_id
+            ).__dict__

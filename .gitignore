@@ -10,7 +10,9 @@ Log/
 # */tests/.output
 # */tests/.xbrl
 */.obsidian
-*/tests/output
+*/tests/.output
+*/tests/.data
+*/tests/.xbrl
 .venv
 
 # files

@@ -1,12 +1,6 @@
 from app.exception import XbrlListEmptyError
-from app.manager import (
-    BaseXbrlManager,
-    CalLinkManager,
-    DefLinkManager,
-    IXBRLManager,
-    LabelManager,
-    PreLinkManager,
-)
+from app.manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
+                         IXBRLManager, LabelManager, PreLinkManager)
 
 from .base_xbrl_model import BaseXbrlModel
 
@@ -73,11 +67,29 @@ class XBRLModel(BaseXbrlModel):
 
     def get_all_manager(self):
         all_data = {
-            "ixbrl": self.get_ixbrl(),
-            "label": self.get_label(),
-            "cal_link": self.get_cal_link(),
-            "def_link": self.get_def_link(),
-            "pre_link": self.get_pre_link(),
+            "ix": self.get_ixbrl(),
+            "lab": self.get_label(),
+            "cal": self.get_cal_link(),
+            "def": self.get_def_link(),
+            "pre": self.get_pre_link(),
         }
         # all_dataから値がNoneのものを削除
         return {k: v for k, v in all_data.items() if v is not None}
+
+    def ixbrl_roles(self):
+        for value in self.ixbrl_manager.ixbrl_roles():
+            yield value
+
+    def get_all_items(self):
+        items = {}
+        for name, manager in self.get_all_manager().items():
+            for key, value in manager.items.items():
+                items[f"{name}_{key}"] = value
+        return items
+
+    def ix_header(self):
+        return self.ixbrl_manager.ix_header
+
+    def __str__(self) -> str:
+        header = self.ix_header()
+        return f" - [{header['securities_code']}] {header['company_name']} <{header['document_name']}>"

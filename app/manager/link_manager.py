@@ -1,10 +1,6 @@
 from app.manager import BaseXbrlManager
-from app.parser import (
-    BaseLinkParser,
-    CalLinkParser,
-    DefLinkParser,
-    PreLinkParser,
-)
+from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                        PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -23,6 +19,15 @@ class BaseLinkManager(BaseXbrlManager):
         if is_child:
             self.set_linkbase_files(self.get_role())
             self.parser = self.get_parser()
+
+        self.link_roles = None
+        self.link_locs = None
+        self.link_arcs = None
+
+        self.set_source_file(self.xbrl_id, output_path=output_path)
+        self.set_link_roles()
+        self.set_link_locs()
+        self.set_link_arcs()
 
     @property
     def output_path(self):
@@ -64,8 +69,13 @@ class BaseLinkManager(BaseXbrlManager):
     def get_role(self):
         raise NotImplementedError
 
-    def get_link_roles(self):
+    def set_link_roles(self):
         """link_rolesを設定します。"""
+        if self.link_roles:
+            return self.link_roles
+
+        rows = []
+
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
@@ -80,9 +90,20 @@ class BaseLinkManager(BaseXbrlManager):
 
             data["xbrl_id"] = self.xbrl_id
 
-            yield data.to_dict(orient="records")
+            rows.append(data.to_dict(orient="records"))
 
-    def get_link_locs(self):
+        self.items["link_roles"] = rows
+
+        self.link_roles = rows
+
+    def set_link_locs(self):
+        """ link_locsを設定します。"""
+
+        if self.link_locs:
+            return self.link_locs
+
+        rows = []
+
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
@@ -96,9 +117,20 @@ class BaseLinkManager(BaseXbrlManager):
 
             data["xbrl_id"] = self.xbrl_id
 
-            yield data.to_dict(orient="records")
+            rows.append(data.to_dict(orient="records"))
 
-    def get_link_arcs(self):
+        self.items["link_locs"] = rows
+
+        self.link_locs = rows
+
+    def set_link_arcs(self):
+        """ link_arcsを設定します。"""
+
+        if self.link_arcs:
+            return self.link_arcs
+
+        rows = []
+
         output_path = self.output_path
         files = self.files
         if self.document_type is not None:
@@ -112,7 +144,11 @@ class BaseLinkManager(BaseXbrlManager):
 
             data["xbrl_id"] = self.xbrl_id
 
-            yield data.to_dict(orient="records")
+            rows.append(data.to_dict(orient="records"))
+
+        self.items["link_arcs"] = rows
+
+        self.link_arcs = rows
 
 
 class CalLinkManager(BaseLinkManager):

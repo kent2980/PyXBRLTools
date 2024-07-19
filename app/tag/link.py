@@ -73,6 +73,7 @@ class LinkLoc(BaseTag):
     xlink_schema: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
     xlink_label: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -89,6 +90,7 @@ class LinkArc(BaseTag):
     xlink_arcrole: Optional[str] = field(default=None)
     xlink_order: Optional[float] = field(default=None)
     xlink_weight: Optional[float] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass

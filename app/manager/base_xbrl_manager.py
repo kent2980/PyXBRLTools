@@ -5,7 +5,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
-from app.parser import SchemaParser
+from app.parser import BaseXBRLParser, SchemaParser
 
 
 class BaseXbrlManager:
@@ -203,3 +203,15 @@ class BaseXbrlManager:
     def to_dict(self):
         """辞書形式で出力する"""
         return self.data
+
+    def set_source_file(self, xbrl_id:str=None, output_path:str=None):
+        """ソースファイルを設定する"""
+        items = []
+        for _, row in self.files.iterrows():
+            parser = BaseXBRLParser.create(
+                row["xlink_href"], output_path
+            )
+            sources = parser.source_file
+            sources["xbrl_id"] = xbrl_id
+            items.append(sources)
+        self.items["source_files"] = items

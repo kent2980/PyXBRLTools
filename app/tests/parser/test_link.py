@@ -4,12 +4,8 @@ from pathlib import Path
 import pytest
 
 from app.exception import TypeOfXBRLIsDifferent
-from app.parser import (
-    BaseLinkParser,
-    CalLinkParser,
-    DefLinkParser,
-    PreLinkParser,
-)
+from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                        PreLinkParser)
 from app.tag import LinkArc, LinkBase, LinkLoc, LinkRole, LinkTag
 
 

@@ -26,6 +26,15 @@ class LabelManager(BaseXbrlManager):
         self.set_language(lang)
         self.label = None
 
+        self.link_labels = None
+        self.link_label_locs = None
+        self.link_label_arcs = None
+
+        self.set_source_file(xbrl_id="labelLinkbaseRef", output_path=output_path)
+        self.set_link_labels()
+        self.set_link_label_locs()
+        self.set_link_label_arcs()
+
     def set_language(self, lang):
         """
         言語を設定します。
@@ -57,7 +66,7 @@ class LabelManager(BaseXbrlManager):
 
         return self
 
-    def get_link_labels(self, document_type=None):
+    def set_link_labels(self, document_type=None):
         """
         label属性を設定します。
         ラベル情報を取得します。
@@ -65,6 +74,10 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        if self.link_labels:
+            return self.link_labels
+
+        rows = []
         output_path = self.output_path
         files = self.files
         if document_type is not None:
@@ -76,9 +89,13 @@ class LabelManager(BaseXbrlManager):
 
             data = parser.to_dict()
 
-            yield data
+            rows.append(data)
 
-    def get_link_label_locs(self, document_type=None):
+        self.items["link_values"] = rows
+
+        self.link_labels = rows
+
+    def set_link_label_locs(self, document_type=None):
         """
         loc属性を設定します。
         loc情報を取得します。
@@ -86,6 +103,10 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        if self.link_label_locs:
+            return self.link_label_locs
+
+        rows = []
         output_path = self.output_path
         files = self.files
         if document_type is not None:
@@ -97,9 +118,13 @@ class LabelManager(BaseXbrlManager):
 
             data = parser.to_dict()
 
-            yield data
+            rows.append(data)
 
-    def get_link_label_arcs(self, document_type=None):
+        self.items["link_locs"] = rows
+
+        self.link_label_locs = rows
+
+    def set_link_label_arcs(self, document_type=None):
         """
         labelArc属性を設定します。
         labelArc情報を取得します。
@@ -107,6 +132,11 @@ class LabelManager(BaseXbrlManager):
         Returns:
             self (LabelManager): 自身のインスタンス
         """
+        if self.link_label_arcs:
+            return self.link_label_arcs
+
+        rows = []
+
         output_path = self.output_path
         files = self.files
         if document_type is not None:
@@ -118,4 +148,8 @@ class LabelManager(BaseXbrlManager):
 
             data = parser.to_dict()
 
-            yield data
+            rows.append(data)
+
+        self.items["link_arcs"] = rows
+
+        self.link_label_arcs = rows

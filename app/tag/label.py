@@ -13,6 +13,7 @@ class LabelValue(BaseTag):
     xlink_role: Optional[str] = field(default=None)
     xml_lang: Optional[str] = field(default=None)
     label: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -23,6 +24,7 @@ class LabelLoc(BaseTag):
     xlink_label: Optional[str] = field(default=None)
     xlink_schema: Optional[str] = field(default=None)
     xlink_href: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -33,6 +35,7 @@ class LabelArc(BaseTag):
     xlink_from: Optional[str] = field(default=None)
     xlink_to: Optional[str] = field(default=None)
     xlink_arcrole: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass

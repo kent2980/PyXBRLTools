@@ -1,5 +1,3 @@
-from pandas import DataFrame
-
 from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import IxbrlParser
@@ -31,11 +29,14 @@ class IXBRLManager(BaseXbrlManager):
         # items
         self.__ix_non_fraction = None
         self.__ix_non_numeric = None
+        self.__ix_context = None
         self.__ix_header = None
 
+        self.set_ix_header()
+        self.set_source_file(self.xbrl_id)
         self.set_ix_non_fraction()
         self.set_ix_non_numeric()
-        self.set_ix_header()
+        self.set_ix_context()
 
     @property
     def ix_non_fraction(self):
@@ -44,6 +45,10 @@ class IXBRLManager(BaseXbrlManager):
     @property
     def ix_non_numeric(self):
         return self.__ix_non_numeric
+
+    @property
+    def ix_context(self):
+        return self.__ix_context
 
     @property
     def ix_header(self):
@@ -56,6 +61,16 @@ class IXBRLManager(BaseXbrlManager):
     def ix_non_numeric_yields(self):
         for value in self.ix_non_numeric:
             yield value
+
+    def ix_context_yields(self):
+        for value in self.ix_context:
+            yield value
+
+    def ixbrl_roles(self):
+        for _, row in self.files.iterrows():
+            if row["xlink_href"].endswith("ixbrl.htm"):
+                parser = IxbrlParser.create(row["xlink_href"])
+                yield parser.ixbrl_role
 
     def set_ix_non_fraction(self, document_type=None):
         """
@@ -78,7 +93,7 @@ class IXBRLManager(BaseXbrlManager):
 
                 parser = IxbrlParser.create(
                     row["xlink_href"]
-                ).ix_non_fractions()
+                ).ix_non_fraction()
 
                 df = parser.to_DataFrame()
 
@@ -88,7 +103,7 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_non_fraction = rows
 
-        self.items["ix_non_fraction"] = rows
+        self.items["non_fraction"] = rows
 
     def set_ix_non_numeric(self, document_type=None):
         """
@@ -121,7 +136,40 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_non_numeric = rows
 
-        self.items["ix_non_numeric"] = rows
+        self.items["non_numeric"] = rows
+
+    def set_ix_context(self, document_type=None):
+        """
+        ix_context属性を設定します。
+        iXBRLのコンテキスト情報を取得します。
+
+        Yields:
+            dict: iXBRLのコンテキスト情報
+        """
+
+        rows = []
+
+        files = self.files
+
+        if document_type is not None:
+            files = files.query(f"document_type == '{document_type}'")
+
+        for _, row in files.iterrows():
+            if row["xlink_href"].endswith("ixbrl.htm"):
+
+                parser = IxbrlParser.create(
+                    row["xlink_href"]
+                ).ix_context()
+
+                df = parser.to_DataFrame()
+
+                df["xbrl_id"] = self.xbrl_id
+
+                rows.append(df.to_dict(orient="records"))
+
+        self.__ix_context = rows
+
+        self.items["context"] = rows
 
     def set_ix_header(self):
         """
@@ -140,6 +188,8 @@ class IXBRLManager(BaseXbrlManager):
             "xbrl_id": None,
             "report_type": None,
         }
+        if self.ix_non_numeric is None:
+            self.set_ix_non_numeric()
         for values in self.ix_non_numeric:
             for value in values:
                 header["company_name"] = (
@@ -203,58 +253,4 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_header = ix_header.__dict__
 
-        self.items["ix_header"] = ix_header.__dict__
-
-    def get_ix_summary(self):
-        def get_value(value_: dict[str, str], item: list[str]):
-            return (
-                value_["numeric"]
-                if any(value_["name"].endswith(item) for item in item)
-                else None
-            )
-
-        contexts = []
-        dfs = []
-        for values in self.get_ix_non_fraction("sm"):
-            dfs.append(DataFrame(values))
-            # dfをcontext_period, context_entity, context_categoryでグループ化
-            for key, values in DataFrame(values).groupby(
-                [
-                    "context_period",
-                    "context_entity",
-                    "context_category",
-                ]
-            ):
-                context = key
-                contexts.append(context)
-        contexts = list(set(contexts))
-
-        for context in contexts:
-            for df in dfs:
-                df_query: DataFrame = df.query(
-                    "context_period == @context[0] & \
-                    context_entity == @context[1] & \
-                    context_category == @context[2]"
-                )
-                # df_queryからnameが"_NetSales"で終わる行を取得
-                # 売上高
-                net_sales = get_value(
-                    df_query.to_dict(orient="records")[0],
-                    ["_NetSales"],
-                )
-                # 営業利益
-                operating_income = get_value(
-                    df_query.to_dict(orient="records")[0],
-                    ["OperatingIncome"],
-                )
-                # 経常利益
-                ordinary_income = get_value(
-                    df_query.to_dict(orient="records")[0],
-                    ["_OrdinaryIncome"],
-                )
-                # 純利益
-                net_income = get_value(
-                    df_query.to_dict(orient="records")[0],
-                    ["_NetIncome"],
-                )
-                yield net_sales, operating_income, ordinary_income, net_income
+        self.items["header"] = ix_header.__dict__
