@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 from urllib.parse import urlparse
 from uuid import uuid4
 
@@ -17,25 +18,19 @@ class BaseXBRLParser:
     """XBRLを解析する基底クラス"""
 
     def __init__(self, xbrl_url, output_path=None):
-        if xbrl_url.startswith("http"):
-            if output_path is None:
-                raise Exception("Please specify the output path")
-        if (not xbrl_url.startswith("http")) and (
-            not os.path.exists(xbrl_url)
-        ):
-            raise FileNotFoundError(
-                f"ファイルが見つかりません。[{xbrl_url}]"
-            )
 
-        file_name = os.path.basename(xbrl_url)
-        self.__document_type = "fr" if "fr" in file_name else "sm"
-        self.__xbrl_url = xbrl_url
-        self.__output_path = output_path
-        self.soup: bs | None = None
-        self.data = None
-        self.__xbrl_id = str(uuid4())
-        self.__basename = Path(self.xbrl_url).name
-        self.__source_file = self.__set_source_file()
+        # urlの検証を行います
+        self.assert_valid_url(xbrl_url, output_path)
+
+        # プロパティの初期化
+        self.__xbrl_url = xbrl_url      # XBRLのURL
+        self.__output_path = output_path        # 出力先のパス
+        self.__basename = Path(self.xbrl_url).name      # ファイル名
+        self.__document_type = "fr" if "fr" in self.basename else "sm"      # ドキュメントタイプ
+        self.__soup = None      # BeautifulSoup
+        self.__data = None      # 解析結果のデータ
+        self.__xbrl_id = str(uuid4())       # XBRLファイル固有のID
+        self.__source_file = self.__set_source_file()       # XBRLのソースファイル
 
     @property
     def xbrl_url(self):
@@ -72,6 +67,26 @@ class BaseXBRLParser:
     @property
     def basename(self):
         return self.__basename
+
+    @property
+    def soup(self):
+        return self.__soup
+
+
+    @property
+    def data(self):
+        return self.__data
+
+    def assert_valid_url(self, url: str, output_path: Optional[str]):
+
+        if url.startswith("http"):
+            if output_path is None:
+                raise Exception("出力先のパスが指定されていません。")
+        else:
+            if not os.path.exists(url):
+                raise FileNotFoundError(
+                    f"ファイルが見つかりません。[{url}]"
+                )
 
     def _read_xbrl(self, xbrl_path):
         """XBRLをBeautifulSoup読み込む"""
@@ -147,4 +162,4 @@ class BaseXBRLParser:
         return SourceFile(
             name=self.basename,
             xbrl_id=self.xbrl_id
-            ).__dict__
+            )
