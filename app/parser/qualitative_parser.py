@@ -66,6 +66,6 @@ class QualitativeParser(BaseXBRLParser):
             else:
                 content += text
 
-        self.data = lists
+        self._set_data(lists)
 
         return self

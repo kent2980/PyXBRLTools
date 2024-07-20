@@ -214,7 +214,7 @@ class BaseXbrlManager:
             parser = BaseXBRLParser.create(
                 row["xlink_href"], output_path
             )
-            sources = parser.source_file
+            sources = parser.source_file.__dict__
             sources["xbrl_id"] = xbrl_id
             items.append(sources)
         self.items["source_files"] = items

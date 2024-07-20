@@ -5,37 +5,7 @@ from . import BaseXBRLParser
 
 
 class LabelParser(BaseXBRLParser):
-    """XBRLのラベル情報を取得するクラス
-        このクラスはBaseXBRLParserを継承しています。
-        XBRLのラベル情報を取得します。
-        以下の機能を提供します。
-        - ラベル情報取得
-
-    Attributes:
-    - xbrl_url: str
-        XBRLのURL
-    - output_path: str
-        ファイルの保存先
-
-    Properties:
-    - data: list[dict]
-        解析結果のデータ
-
-    Methods:
-    - link_labels
-        link:label要素を取得する
-    - link_locs
-        link:loc要素を取得する
-    - link_label_arcs
-        link:labelArc要素を取得する
-    - role_refs
-        roleRef要素を取得する
-
-    Examples:
-        >>> from xbrl_parser.label_parser import LabelParser
-        >>> parser = LabelParser.create(file_path)
-        >>> print(parser.label().to_dataframe())
-    """
+    """ XBRLのラベル情報を取得するクラス """
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
@@ -45,11 +15,9 @@ class LabelParser(BaseXBRLParser):
             raise TypeOfXBRLIsDifferent(
                 f"{self.basename} はlab.xmlではありません。"
             )
-        self.__source_file = self.__set_source_file()
 
-    @property
-    def source_file(self):
-        return self.__source_file
+        # 初期化メソッド
+        self._set_source_file(SourceFile(name=self.basename, xbrl_id="labelLinkbaseRef"))
 
     def link_labels(self):
         """link:label要素を取得するメソッド。
@@ -77,11 +45,11 @@ class LabelParser(BaseXBRLParser):
                 xlink_role=tag.get("xlink:role"),
                 xml_lang=tag.get("xml:lang"),
                 label=tag.text,
-                source_file_id=self.source_file["id"],
+                source_file_id=self.source_file.id,
             )
             lists.append(lv.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -118,11 +86,11 @@ class LabelParser(BaseXBRLParser):
                 xlink_label=tag.get("xlink:label"),
                 xlink_schema=xlink_schema,
                 xlink_href=xlink_href,
-                source_file_id=self.source_file["id"],
+                source_file_id=self.source_file.id,
             )
             lists.append(ll.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -150,11 +118,11 @@ class LabelParser(BaseXBRLParser):
                 xlink_arcrole=tag.get("xlink:arcrole"),
                 xlink_from=tag.get("xlink:from"),
                 xlink_to=tag.get("xlink:to"),
-                source_file_id=self.source_file["id"],
+                source_file_id=self.source_file.id,
             )
             lists.append(la.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -198,12 +166,6 @@ class LabelParser(BaseXBRLParser):
 
             lists.append(lrr.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
-
-    def __set_source_file(self):
-        return SourceFile(
-            name=self.basename,
-            xbrl_id="labelLinkbaseRef",
-        ).__dict__

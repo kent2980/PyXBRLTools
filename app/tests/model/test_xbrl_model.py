@@ -139,11 +139,11 @@ def test_non_numeric_api_insert(get_xbrl_zip_dir, get_output_dir):
                 print(response.json())
                 assert response.status_code == 200
             if isinstance(value, list):
-                if "cal" in key:
+                if "cal" in key or "lab" in key:
                     # print(key)
                     for items in value:
                         try:
-                            pprint.pprint(items)
+                            # pprint.pprint(items)
                             url = urls[key]
                             # urlが有効かどうかを確認
                             print(url)

@@ -48,7 +48,7 @@ class BaseLinkParser(BaseXBRLParser):
             )
             lists.append(lrr.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -80,12 +80,12 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_schema=xlink_schema,
                     xlink_href=xlink_href,
                     xlink_label=tag.get("xlink:label"),
-                    source_file_id=self.source_file["id"],
+                    source_file_id=self.source_file.id,
                 )
 
                 lists.append(ll.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -127,11 +127,11 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_arcrole=tag.get("arcrole"),
                     xlink_order=xlink_order,
                     xlink_weight=xlink_weight,
-                    source_file_id=self.source_file["id"],
+                    source_file_id=self.source_file.id,
                 )
                 lists.append(la.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -155,7 +155,7 @@ class BaseLinkParser(BaseXBRLParser):
             )
             lists.append(lb.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -178,7 +178,7 @@ class BaseLinkParser(BaseXBRLParser):
             )
             lists.append(lt.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 

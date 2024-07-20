@@ -186,7 +186,7 @@ class IxbrlParser(BaseXBRLParser):
             )
             lists.append(inn.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         self.__ix_non_numeric = lists
 
@@ -266,7 +266,7 @@ class IxbrlParser(BaseXBRLParser):
             )
             lists.append(inn.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         self.__ix_non_fraction = lists
 
@@ -310,7 +310,7 @@ class IxbrlParser(BaseXBRLParser):
             )
             lists.append(inn.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         self.__ix_context = lists
 

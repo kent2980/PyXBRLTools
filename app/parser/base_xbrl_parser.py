@@ -20,7 +20,7 @@ class BaseXBRLParser:
     def __init__(self, xbrl_url, output_path=None):
 
         # urlの検証を行います
-        self.assert_valid_url(xbrl_url, output_path)
+        self.__assert_valid_url(xbrl_url, output_path)
 
         # プロパティの初期化
         self.__xbrl_url = xbrl_url      # XBRLのURL
@@ -30,15 +30,23 @@ class BaseXBRLParser:
         self.__soup = None      # BeautifulSoup
         self.__data = None      # 解析結果のデータ
         self.__xbrl_id = str(uuid4())       # XBRLファイル固有のID
-        self.__source_file = self.__set_source_file()       # XBRLのソースファイル
+        self.__source_file = None       # XBRLのソースファイル
+
+        # 初期化メソッド
+        self._set_source_file(SourceFile(name=self.basename, xbrl_id=self.xbrl_id))
+        self.__init_parser()
 
     @property
-    def xbrl_url(self):
-        return self.__xbrl_url
+    def basename(self):
+        return self.__basename
 
-    @xbrl_url.setter
-    def xbrl_url(self, xbrl_url: str):
-        self.__xbrl_url = xbrl_url
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def document_type(self):
+        return self.__document_type
 
     @property
     def output_path(self):
@@ -49,6 +57,14 @@ class BaseXBRLParser:
         self.__output_path = output_path
 
     @property
+    def source_file(self):
+        return self.__source_file
+
+    @property
+    def soup(self):
+        return self.__soup
+
+    @property
     def xbrl_id(self):
         return self.__xbrl_id
 
@@ -57,46 +73,12 @@ class BaseXBRLParser:
         self.__xbrl_id = xbrl_id
 
     @property
-    def document_type(self):
-        return self.__document_type
+    def xbrl_url(self):
+        return self.__xbrl_url
 
-    @property
-    def source_file(self):
-        return self.__source_file
-
-    @property
-    def basename(self):
-        return self.__basename
-
-    @property
-    def soup(self):
-        return self.__soup
-
-
-    @property
-    def data(self):
-        return self.__data
-
-    def assert_valid_url(self, url: str, output_path: Optional[str]):
-
-        if url.startswith("http"):
-            if output_path is None:
-                raise Exception("出力先のパスが指定されていません。")
-        else:
-            if not os.path.exists(url):
-                raise FileNotFoundError(
-                    f"ファイルが見つかりません。[{url}]"
-                )
-
-    def _read_xbrl(self, xbrl_path):
-        """XBRLをBeautifulSoup読み込む"""
-        with open(xbrl_path, "r", encoding="utf-8") as f:
-            # 読み取り専用でファイルをロック
-            fcntl.flock(f.fileno(), fcntl.LOCK_SH)
-            self.soup = bs(f, features="lxml-xml")
-            # ファイルのロックを解除
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
-            return self.soup
+    @xbrl_url.setter
+    def xbrl_url(self, xbrl_url: str):
+        self.__xbrl_url = xbrl_url
 
     def _fetch_url(self):
         """URLからローカルにファイルを保存する"""
@@ -138,8 +120,50 @@ class BaseXBRLParser:
             else:
                 return False, None
 
+    def _read_xbrl(self, xbrl_path):
+        """XBRLをBeautifulSoup読み込む"""
+        with open(xbrl_path, "r", encoding="utf-8") as f:
+            # 読み取り専用でファイルをロック
+            fcntl.flock(f.fileno(), fcntl.LOCK_SH)
+            self.__soup = bs(f, features="lxml-xml")
+            # ファイルのロックを解除
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            return self.soup
+
+    def _set_data(self, data):
+        """ 解析結果のデータを設定する """
+        self.__data = data
+
+    def _set_source_file(self, source_file_tag: SourceFile):
+        """XBRLのソースファイルを取得する"""
+        self.__source_file = source_file_tag
+
+    def __assert_valid_url(self, url: str, output_path: Optional[str]):
+        """ URLが有効かどうかを検証する """
+
+        if url.startswith("http"):
+            if output_path is None:
+                raise Exception("出力先のパスが指定されていません。")
+        else:
+            if not os.path.exists(url):
+                raise FileNotFoundError(
+                    f"ファイルが見つかりません。[{url}]"
+                )
+
+    def __init_parser(self):
+        """ 解析用の初期化処理 """
+
+        # ファイルが存在するか確認
+        is_file, file_path = self._is_url_in_local()
+        # ファイルが存在しない場合は、URLから取得
+        if is_file is False:
+            file_path = self._fetch_url()
+        # XBRLを読み込む
+        self._read_xbrl(file_path)
+
     @classmethod
     def create(cls, xbrl_url, output_path=None):
+        """ インスタンスを生成する """
         instance = cls(xbrl_url, output_path)
         is_file, file_path = instance._is_url_in_local()
         if is_file is False:
@@ -154,12 +178,3 @@ class BaseXBRLParser:
     def to_dict(self):
         """辞書形式で出力する"""
         return self.data
-
-
-    def __set_source_file(self):
-        """XBRLのソースファイルを取得する"""
-
-        return SourceFile(
-            name=self.basename,
-            xbrl_id=self.xbrl_id
-            )

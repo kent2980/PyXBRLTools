@@ -47,7 +47,7 @@ class SchemaParser(BaseXBRLParser):
 
             lists.append(si.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -67,7 +67,7 @@ class SchemaParser(BaseXBRLParser):
 
             lists.append(slb.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
 
@@ -91,6 +91,6 @@ class SchemaParser(BaseXBRLParser):
 
             lists.append(se.__dict__)
 
-        self.data = lists
+        self._set_data(lists)
 
         return self
