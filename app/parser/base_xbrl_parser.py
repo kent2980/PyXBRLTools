@@ -32,7 +32,7 @@ class BaseXBRLParser:
         self.__xbrl_url = xbrl_url
         self.__output_path = output_path
         self.soup: bs | None = None
-        self.data = [{}]
+        self.data = None
         self.__xbrl_id = str(uuid4())
         self.__basename = Path(self.xbrl_url).name
         self.__source_file = self.__set_source_file()
