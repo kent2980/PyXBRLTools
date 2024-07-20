@@ -250,7 +250,6 @@ class IxbrlParser(BaseXBRLParser):
                 scale = None
                 numeric = None
 
-
             inn = IxNonFraction(
                 xbrl_id=self.xbrl_id,
                 context=context,
@@ -296,11 +295,16 @@ class IxbrlParser(BaseXBRLParser):
                 period = {"start": start, "end": end, "instant": instant}
             scenario = []
             for value in tag.find_all(name="xbrli:scenario"):
-                for explicit_member in value.find_all(name="xbrldi:explicitMember"):
-                    dimension = explicit_member.get("dimension").replace(":", "_")
+                for explicit_member in value.find_all(
+                    name="xbrldi:explicitMember"
+                ):
+                    dimension = explicit_member.get("dimension").replace(
+                        ":", "_"
+                    )
                     scenario_value = explicit_member.text.replace(":", "_")
-                    scenario.append({"dimension": dimension, "value": scenario_value})
-
+                    scenario.append(
+                        {"dimension": dimension, "value": scenario_value}
+                    )
 
             inn = IxContext(
                 xbrl_id=self.xbrl_id,

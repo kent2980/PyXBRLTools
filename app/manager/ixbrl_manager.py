@@ -10,7 +10,7 @@ class IXBRLManager(BaseXbrlManager):
     raise   - XbrlListEmptyError("ixbrlファイルが見つかりません。")
     """
 
-    def __init__(self, directory_path, xbrl_id:str=None) -> None:
+    def __init__(self, directory_path, xbrl_id: str = None) -> None:
         """
         IxbrlManagerクラスのコンストラクタです。
 
@@ -91,9 +91,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(
-                    row["xlink_href"]
-                ).ix_non_fraction()
+                parser = IxbrlParser(row["xlink_href"]).ix_non_fraction()
 
                 df = parser.to_DataFrame()
 
@@ -124,9 +122,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(
-                    row["xlink_href"]
-                ).ix_non_numeric()
+                parser = IxbrlParser(row["xlink_href"]).ix_non_numeric()
 
                 df = parser.to_DataFrame()
 
@@ -157,9 +153,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(
-                    row["xlink_href"]
-                ).ix_context()
+                parser = IxbrlParser(row["xlink_href"]).ix_context()
 
                 df = parser.to_DataFrame()
 

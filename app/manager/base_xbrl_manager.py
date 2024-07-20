@@ -24,7 +24,7 @@ class BaseXbrlManager:
         "efjp": "ETF決算短信(日本基準)",
     }
 
-    def __init__(self, directory_path, xbrl_id:str=None) -> None:
+    def __init__(self, directory_path, xbrl_id: str = None) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
         self.data = {}
@@ -207,13 +207,13 @@ class BaseXbrlManager:
         """辞書形式で出力する"""
         return self.data
 
-    def set_source_file(self, xbrl_id:str=None, output_path:str=None):
+    def set_source_file(
+        self, xbrl_id: str = None, output_path: str = None
+    ):
         """ソースファイルを設定する"""
         items = []
         for _, row in self.files.iterrows():
-            parser = BaseXBRLParser(
-                row["xlink_href"], output_path
-            )
+            parser = BaseXBRLParser(row["xlink_href"], output_path)
             sources = parser.source_file.__dict__
             sources["xbrl_id"] = xbrl_id
             items.append(sources)

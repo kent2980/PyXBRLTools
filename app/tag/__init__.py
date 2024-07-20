@@ -1,8 +1,16 @@
 from .base import BaseTag, SourceFile
 from .ixbrl import IxContext, IxHeader, IxNonFraction, IxNonNumeric
 from .label import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
-from .link import (LinkArc, LinkBase, LinkBaseRef, LinkElement, LinkLoc,
-                   LinkRole, LinkSchemaImport, LinkTag)
+from .link import (
+    LinkArc,
+    LinkBase,
+    LinkBaseRef,
+    LinkElement,
+    LinkLoc,
+    LinkRole,
+    LinkSchemaImport,
+    LinkTag,
+)
 from .schema import SchemaElement, SchemaImport, SchemaLinkBaseRef
 
 __all__ = [

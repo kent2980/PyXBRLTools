@@ -27,5 +27,5 @@ class BaseTag:
 class SourceFile(BaseTag):
 
     id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
-    xbrl_id : Optional[str] = field(default=None)
-    name: Optional[str]  = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)

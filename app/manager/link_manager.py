@@ -1,6 +1,10 @@
 from app.manager import BaseXbrlManager
-from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                        PreLinkParser)
+from app.parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -12,7 +16,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path,
         document_type=None,
         is_child=False,
-        xbrl_id:str=None
+        xbrl_id: str = None,
     ) -> None:
         super().__init__(directory_path, xbrl_id=xbrl_id)
         self._output_path = output_path
@@ -98,7 +102,7 @@ class BaseLinkManager(BaseXbrlManager):
         self.link_roles = rows
 
     def set_link_locs(self):
-        """ link_locsを設定します。"""
+        """link_locsを設定します。"""
 
         if self.link_locs:
             return self.link_locs
@@ -125,7 +129,7 @@ class BaseLinkManager(BaseXbrlManager):
         self.link_locs = rows
 
     def set_link_arcs(self):
-        """ link_arcsを設定します。"""
+        """link_arcsを設定します。"""
 
         if self.link_arcs:
             return self.link_arcs

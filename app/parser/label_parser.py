@@ -1,11 +1,17 @@
 from app.exception import TagNotFoundError, TypeOfXBRLIsDifferent
-from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue, SourceFile
+from app.tag import (
+    LabelArc,
+    LabelLoc,
+    LabelRoleRefs,
+    LabelValue,
+    SourceFile,
+)
 
 from . import BaseXBRLParser
 
 
 class LabelParser(BaseXBRLParser):
-    """ XBRLのラベル情報を取得するクラス """
+    """XBRLのラベル情報を取得するクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
@@ -17,7 +23,7 @@ class LabelParser(BaseXBRLParser):
             )
 
         # 初期化メソッド
-        self._set_source_file(SourceFile(name=self.basename, xbrl_id="labelLinkbaseRef"))
+        self._set_source_file(self.basename, "labelLinkbaseRef")
 
     def link_labels(self):
         """link:label要素を取得するメソッド。

@@ -30,7 +30,9 @@ class LabelManager(BaseXbrlManager):
         self.link_label_locs = None
         self.link_label_arcs = None
 
-        self.set_source_file(xbrl_id="labelLinkbaseRef", output_path=output_path)
+        self.set_source_file(
+            xbrl_id="labelLinkbaseRef", output_path=output_path
+        )
         self.set_link_labels()
         self.set_link_label_locs()
         self.set_link_label_arcs()

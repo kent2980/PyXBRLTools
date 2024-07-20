@@ -1,6 +1,12 @@
 from app.exception import XbrlListEmptyError
-from app.manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
-                         IXBRLManager, LabelManager, PreLinkManager)
+from app.manager import (
+    BaseXbrlManager,
+    CalLinkManager,
+    DefLinkManager,
+    IXBRLManager,
+    LabelManager,
+    PreLinkManager,
+)
 
 from .base_xbrl_model import BaseXbrlModel
 
@@ -10,7 +16,9 @@ class XBRLModel(BaseXbrlModel):
 
     def __init__(self, xbrl_zip_path, output_path) -> None:
         super().__init__(xbrl_zip_path, output_path)
-        self.__ixbrl_manager:IXBRLManager = IXBRLManager(self.directory_path)
+        self.__ixbrl_manager: IXBRLManager = IXBRLManager(
+            self.directory_path
+        )
         self.__label_manager = self._init_manager(LabelManager)
         self.__cal_link_manager = self._init_manager(CalLinkManager)
         self.__def_link_manager = self._init_manager(DefLinkManager)
@@ -25,7 +33,7 @@ class XBRLModel(BaseXbrlModel):
         except XbrlListEmptyError:
             return None
 
-    def __set_xbrl_id(self, xbrl_id:str):
+    def __set_xbrl_id(self, xbrl_id: str):
         managers = self.get_all_manager()
         for manager in managers.values():
             manager.set_xbrl_id(xbrl_id)
