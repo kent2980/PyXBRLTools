@@ -26,9 +26,9 @@ class QualitativeParser(BaseXBRLParser):
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
-        if self.basename() != "qualitative.htm":
+        if self.basename != "qualitative.htm":
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はqualitative.htmではありません。"
+                f"{self.basename} はqualitative.htmではありません。"
             )
 
     def qualitative_info(self):

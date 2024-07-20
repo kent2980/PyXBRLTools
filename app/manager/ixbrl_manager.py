@@ -10,7 +10,7 @@ class IXBRLManager(BaseXbrlManager):
     raise   - XbrlListEmptyError("ixbrlファイルが見つかりません。")
     """
 
-    def __init__(self, directory_path) -> None:
+    def __init__(self, directory_path, xbrl_id:str=None) -> None:
         """
         IxbrlManagerクラスのコンストラクタです。
 
@@ -20,7 +20,7 @@ class IXBRLManager(BaseXbrlManager):
         Returns:
             None
         """
-        super().__init__(directory_path)
+        super().__init__(directory_path, xbrl_id=xbrl_id)
         self.set_htmlbase_files("ixbrl")
 
         if len(self.files) == 0:

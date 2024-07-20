@@ -28,9 +28,9 @@ class SchemaParser(BaseXBRLParser):
         super().__init__(xbrl_url, output_path)
 
         # xsd.xml以外のファイルはエラーを出力する
-        if not self.basename().endswith(".xsd"):
+        if not self.basename.endswith(".xsd"):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} は[.xsd]ではありません。"
+                f"{self.basename} は[.xsd]ではありません。"
             )
 
     def import_schemas(self):

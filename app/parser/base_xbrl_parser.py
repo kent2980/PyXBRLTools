@@ -34,6 +34,7 @@ class BaseXBRLParser:
         self.soup: bs | None = None
         self.data = [{}]
         self.__xbrl_id = str(uuid4())
+        self.__basename = Path(self.xbrl_url).name
         self.__source_file = self.__set_source_file()
 
     @property
@@ -67,6 +68,10 @@ class BaseXBRLParser:
     @property
     def source_file(self):
         return self.__source_file
+
+    @property
+    def basename(self):
+        return self.__basename
 
     def _read_xbrl(self, xbrl_path):
         """XBRLをBeautifulSoup読み込む"""
@@ -135,18 +140,11 @@ class BaseXBRLParser:
         """辞書形式で出力する"""
         return self.data
 
-    def basename(self):
-        """URLからファイル名を取得する"""
-        if self.xbrl_url.startswith("http"):
-            base_name = urlparse(self.xbrl_url).path.split("/")[-1]
-            return str(base_name)
-        else:
-            return str(Path(self.xbrl_url).name)
 
     def __set_source_file(self):
         """XBRLのソースファイルを取得する"""
 
         return SourceFile(
-            name=self.basename(),
+            name=self.basename,
             xbrl_id=self.xbrl_id
             ).__dict__

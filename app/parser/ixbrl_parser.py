@@ -49,9 +49,9 @@ class IxbrlParser(BaseXBRLParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
         # ファイルの拡張子がixbrl.htmでない場合はエラーを出力
-        if not self.basename().endswith("ixbrl.htm"):
+        if not self.basename.endswith("ixbrl.htm"):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はixbrl.htmではありません。"
+                f"{self.basename} はixbrl.htmではありません。"
             )
 
         self.__report_type = None
@@ -92,7 +92,7 @@ class IxbrlParser(BaseXBRLParser):
     def __set_ixbrl_role(self):
         """ドキュメントの要素を設定する"""
         const = read_const()
-        file_name = self.basename()
+        file_name = self.basename
         ixbrl_type = file_name.split("-")[1]
         role = {}
         if "fr" not in file_name:

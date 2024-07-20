@@ -41,9 +41,9 @@ class LabelParser(BaseXBRLParser):
         super().__init__(xbrl_url, output_path)
 
         # ファイル名がlab.xmlでない場合はエラーを発生
-        if not self.basename().endswith(("lab.xml", "lab-en.xml")):
+        if not self.basename.endswith(("lab.xml", "lab-en.xml")):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はlab.xmlではありません。"
+                f"{self.basename} はlab.xmlではありません。"
             )
         self.__source_file = self.__set_source_file()
 
@@ -66,7 +66,7 @@ class LabelParser(BaseXBRLParser):
             xlink_label = tag.get("xlink:label")
 
             # ファイル名にtseが含まれている場合
-            if "tse" in self.basename():
+            if "tse" in self.basename:
                 # xlink_labelにtseが含まれていない場合はスキップ
                 if "tse" not in xlink_label:
                     continue
@@ -104,7 +104,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href = tag.get("xlink:href").split("#")[-1:][0]
 
                 # ファイル名にtseが含まれている場合
-                if "tse" in self.basename():
+                if "tse" in self.basename:
                     # xlink_hrefにtseが含まれていない場合はスキップ
                     if "tse" not in xlink_href:
                         continue
@@ -140,7 +140,7 @@ class LabelParser(BaseXBRLParser):
             xlink_to = tag.get("xlink:to")
 
             # ファイル名にtseが含まれている場合
-            if "tse" in self.basename():
+            if "tse" in self.basename:
                 # xlink_from, xlink_toにtseが含まれていない場合はスキップ
                 if "tse" not in xlink_from or "tse" not in xlink_to:
                     continue
@@ -180,7 +180,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href = tag.get("xlink:href").split("#")[-1:][0]
 
                 # ファイル名にtseが含まれている場合
-                if "tse" in self.basename():
+                if "tse" in self.basename:
                     # xlink_schemaにtseが含まれていない場合はスキップ
                     if "tse" not in xlink_schema:
                         continue
@@ -204,6 +204,6 @@ class LabelParser(BaseXBRLParser):
 
     def __set_source_file(self):
         return SourceFile(
-            name=self.basename(),
+            name=self.basename,
             xbrl_id="labelLinkbaseRef",
         ).__dict__

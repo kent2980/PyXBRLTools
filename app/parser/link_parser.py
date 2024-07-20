@@ -190,9 +190,9 @@ class CalLinkParser(BaseLinkParser):
         super().__init__(xbrl_url, output_path, is_child=True)
 
         # cal.xmlでない場合はエラーを出力
-        if not self.basename().endswith("cal.xml"):
+        if not self.basename.endswith("cal.xml"):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はcal.xmlではありません。"
+                f"{self.basename} はcal.xmlではありません。"
             )
 
     def set_link_tag_name(self):
@@ -209,9 +209,9 @@ class DefLinkParser(BaseLinkParser):
         super().__init__(xbrl_url, output_path, is_child=True)
 
         # def.xmlでない場合はエラーを出力
-        if not self.basename().endswith("def.xml"):
+        if not self.basename.endswith("def.xml"):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はdef.xmlではありません。"
+                f"{self.basename} はdef.xmlではありません。"
             )  # pragma: no cover
 
     def set_link_tag_name(self):
@@ -228,9 +228,9 @@ class PreLinkParser(BaseLinkParser):
         super().__init__(xbrl_url, output_path, is_child=True)
 
         # pre.xmlでない場合はエラーを出力
-        if not self.basename().endswith("pre.xml"):
+        if not self.basename.endswith("pre.xml"):
             raise TypeOfXBRLIsDifferent(
-                f"{self.basename()} はpre.xmlではありません。"
+                f"{self.basename} はpre.xmlではありません。"
             )  # pragma: no cover
 
     def set_link_tag_name(self):

@@ -12,8 +12,9 @@ class BaseLinkManager(BaseXbrlManager):
         output_path,
         document_type=None,
         is_child=False,
+        xbrl_id:str=None
     ) -> None:
-        super().__init__(directory_path)
+        super().__init__(directory_path, xbrl_id=xbrl_id)
         self._output_path = output_path
         self._document_type = document_type
         if is_child:

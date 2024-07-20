@@ -24,12 +24,15 @@ class BaseXbrlManager:
         "efjp": "ETF決算短信(日本基準)",
     }
 
-    def __init__(self, directory_path) -> None:
+    def __init__(self, directory_path, xbrl_id:str=None) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
         self.data = {}
-        self.__xbrl_id = str(uuid4())
         self.__items = {}
+        if xbrl_id:
+            self.__xbrl_id = xbrl_id
+        else:
+            self.__xbrl_id = str(uuid4())
 
     @property
     def items(self):
