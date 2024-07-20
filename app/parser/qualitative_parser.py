@@ -2,25 +2,7 @@ from . import BaseXBRLParser
 
 
 class QualitativeParser(BaseXBRLParser):
-    """
-    XBRLドキュメントから定性データを解析するためのクラスです。
-
-    このクラスはBaseXBRLParserクラスを拡張し、XBRLドキュメントから定性データを解析するためのメソッドを提供します。
-    ドキュメントのHTMLコンテンツから特定のタグを抽出し、それらを構造化された形式で整理します。
-
-    Args:
-        xbrl_url (str): XBRLドキュメントのURLです。
-        output_path (str): 解析結果を保存するファイルのパスです。
-
-    Properties:
-        data (list): 解析された定性データを含む辞書のリストです。
-
-    Methods:
-        smt_head: ドキュメントのHTMLコンテンツから特定のタグを抽出し、それらを構造化された形式で整理します。
-
-    Raises:
-        ValueError: ドキュメントが定性データでない場合に発生します。
-    """
+    """ XBRLドキュメントから定性データを解析するためのクラス """
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)

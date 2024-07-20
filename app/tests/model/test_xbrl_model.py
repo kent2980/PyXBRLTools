@@ -3,14 +3,8 @@ import pprint
 import pytest
 import requests
 
-from app.manager import (
-    BaseXbrlManager,
-    CalLinkManager,
-    DefLinkManager,
-    IXBRLManager,
-    LabelManager,
-    PreLinkManager,
-)
+from app.manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
+                         IXBRLManager, LabelManager, PreLinkManager)
 from app.models import XBRLModel
 from app.tag import IxHeader
 from app.tests.conftest import get_output_dir, get_xbrl_zip_dir
@@ -175,7 +169,7 @@ def test_xbrl_id_equal(get_xbrl_zip_dir, get_output_dir):
     for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
         ix_header = model.get_ixbrl().ix_header
         print(ix_header)
-        xbrl_id = ix_header["xbrl_id"]
+        xbrl_id = ix_header.xbrl_id
         for key, value in model.get_all_items().items():
             if isinstance(value, list):
                 for items in value:

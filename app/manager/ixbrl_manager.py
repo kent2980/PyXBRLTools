@@ -33,7 +33,7 @@ class IXBRLManager(BaseXbrlManager):
         self.__ix_header = None
 
         self.set_ix_header()
-        self.set_source_file(self.xbrl_id)
+        self.set_source_file(xbrl_id=self.xbrl_id)
         self.set_ix_non_fraction()
         self.set_ix_non_numeric()
         self.set_ix_context()
@@ -101,7 +101,7 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_non_fraction = rows
 
-        self.items["non_fraction"] = rows
+        self._set_items("non_fraction", rows)
 
     def set_ix_non_numeric(self, document_type=None):
         """
@@ -132,7 +132,7 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_non_numeric = rows
 
-        self.items["non_numeric"] = rows
+        self._set_items("non_numeric", rows)
 
     def set_ix_context(self, document_type=None):
         """
@@ -163,7 +163,7 @@ class IXBRLManager(BaseXbrlManager):
 
         self.__ix_context = rows
 
-        self.items["context"] = rows
+        self._set_items("context", rows)
 
     def set_ix_header(self):
         """
@@ -245,6 +245,6 @@ class IXBRLManager(BaseXbrlManager):
             report_type=header["report_type"],
         )
 
-        self.__ix_header = ix_header.__dict__
+        self.__ix_header = ix_header
 
-        self.items["header"] = ix_header.__dict__
+        self._set_items("header", ix_header)

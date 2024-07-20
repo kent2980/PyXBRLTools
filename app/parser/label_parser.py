@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.exception import TagNotFoundError
 from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
 
@@ -7,8 +9,8 @@ from . import BaseXBRLParser
 class LabelParser(BaseXBRLParser):
     """XBRLのラベル情報を取得するクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名を検証
         self._assert_valid_basename("lab.xml", "lab-en.xml")
@@ -44,7 +46,7 @@ class LabelParser(BaseXBRLParser):
                 label=tag.text,
                 source_file_id=self.source_file.id,
             )
-            lists.append(lv.__dict__)
+            lists.append(lv)
 
         self._set_data(lists)
 
@@ -85,7 +87,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 source_file_id=self.source_file.id,
             )
-            lists.append(ll.__dict__)
+            lists.append(ll)
 
         self._set_data(lists)
 
@@ -117,7 +119,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_to=tag.get("xlink:to"),
                 source_file_id=self.source_file.id,
             )
-            lists.append(la.__dict__)
+            lists.append(la)
 
         self._set_data(lists)
 
@@ -161,7 +163,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
             )
 
-            lists.append(lrr.__dict__)
+            lists.append(lrr)
 
         self._set_data(lists)
 

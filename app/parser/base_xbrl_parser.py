@@ -18,7 +18,7 @@ from app.tag import SourceFile
 class BaseXBRLParser:
     """XBRLを解析する基底クラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
 
         # urlの検証を行います
         self.__assert_valid_url(xbrl_url, output_path)
@@ -32,7 +32,7 @@ class BaseXBRLParser:
         )  # ドキュメントタイプ
         self.__soup = None  # BeautifulSoup
         self.__data = None  # 解析結果のデータ
-        self.__xbrl_id = str(uuid4())  # XBRLファイル固有のID
+        self.__xbrl_id = xbrl_id if xbrl_id else str(uuid4())  # XBRLファイル固有のID
         self.__source_file = None  # XBRLのソースファイル
 
         # 初期化メソッド
@@ -177,4 +177,4 @@ class BaseXBRLParser:
 
     def to_dict(self):
         """辞書形式で出力する"""
-        return self.data
+        return DataFrame(self.data).to_dict(orient="records")

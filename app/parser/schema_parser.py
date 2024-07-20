@@ -5,33 +5,13 @@ from . import BaseXBRLParser
 
 
 class SchemaParser(BaseXBRLParser):
-    """スキーマファイルを解析するクラス
-
-    Attributes:
-        soup (BeautifulSoup): BeautifulSoupオブジェクト
-        data (list): 解析結果を格納するリスト
-
-    Properties:
-        import_schemas: importタグの情報を取得する
-        link_base_refs: linkbaseRefタグの情報を取得する
-        elements: elementタグの情報を取得する
-
-    Examples:
-        >>> from PyXBRLTools.xbrl_manager.schema_manager import SchemaManager
-        >>> schema_manager = SchemaManager.create("path/to/schema_file.xsd")
-        >>> schema_manager.parser.import_schemas()
-        >>> schema_manager.parser.link_base_refs()
-        >>> schema_manager.parser.elements()
-    """
+    """ スキーマファイルを解析するクラス """
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
-        # xsd.xml以外のファイルはエラーを出力する
-        if not self.basename.endswith(".xsd"):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} は[.xsd]ではありません。"
-            )
+        # ファイル名を検証
+        self._assert_valid_basename(".xsd")
 
     def import_schemas(self):
         lists = []
@@ -45,7 +25,7 @@ class SchemaParser(BaseXBRLParser):
                 document_type=self.document_type,
             )
 
-            lists.append(si.__dict__)
+            lists.append(si)
 
         self._set_data(lists)
 
@@ -65,7 +45,7 @@ class SchemaParser(BaseXBRLParser):
                 document_type=self.document_type,
             )
 
-            lists.append(slb.__dict__)
+            lists.append(slb)
 
         self._set_data(lists)
 
@@ -89,7 +69,7 @@ class SchemaParser(BaseXBRLParser):
                 document_type=self.document_type,
             )
 
-            lists.append(se.__dict__)
+            lists.append(se)
 
         self._set_data(lists)
 

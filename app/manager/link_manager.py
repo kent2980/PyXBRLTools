@@ -1,10 +1,6 @@
 from app.manager import BaseXbrlManager
-from app.parser import (
-    BaseLinkParser,
-    CalLinkParser,
-    DefLinkParser,
-    PreLinkParser,
-)
+from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                        PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -97,7 +93,7 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data.to_dict(orient="records"))
 
-        self.items["link_roles"] = rows
+        self._set_items("link_roles", rows)
 
         self.link_roles = rows
 
@@ -124,7 +120,7 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data.to_dict(orient="records"))
 
-        self.items["link_locs"] = rows
+        self._set_items("link_locs", rows)
 
         self.link_locs = rows
 
@@ -151,7 +147,7 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data.to_dict(orient="records"))
 
-        self.items["link_arcs"] = rows
+        self._set_items("link_arcs", rows)
 
         self.link_arcs = rows
 

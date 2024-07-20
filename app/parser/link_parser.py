@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.tag import LinkArc, LinkBase, LinkLoc, LinkRole, LinkTag
 
 from . import BaseXBRLParser
@@ -6,23 +8,26 @@ from . import BaseXBRLParser
 class BaseLinkParser(BaseXBRLParser):
     """BaseLinkParserのクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, is_child=False):
-        super().__init__(xbrl_url, output_path)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # プロパティの初期化
-        self.link_tag_name = None
-        self.arc_tag_name = None
+        self.__link_tag_name = None
+        self.__arc_tag_name = None
 
-        # link要素とarc要素のタグ名を設定
-        if is_child:
-            self.set_link_tag_name()
-            self.set_arc_tag_name()
+    @property
+    def link_tag_name(self):
+        return self.__link_tag_name
 
-    def set_link_tag_name(self):
-        raise NotImplementedError
+    @property
+    def arc_tag_name(self):
+        return self.__arc_tag_name
 
-    def set_arc_tag_name(self):
-        raise NotImplementedError
+    def _set_link_tag_name(self, tag_name):
+        self.__link_tag_name = tag_name
+
+    def _set_arc_tag_name(self, tag_name):
+        self.__arc_tag_name = tag_name
 
     def link_roles(self):
         """link:role要素を取得するメソッド。
@@ -44,7 +49,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 role_uri=tag.get("roleURI"),
             )
-            lists.append(lrr.__dict__)
+            lists.append(lrr)
 
         self._set_data(lists)
 
@@ -81,7 +86,7 @@ class BaseLinkParser(BaseXBRLParser):
                     source_file_id=self.source_file.id,
                 )
 
-                lists.append(ll.__dict__)
+                lists.append(ll)
 
         self._set_data(lists)
 
@@ -127,7 +132,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_weight=xlink_weight,
                     source_file_id=self.source_file.id,
                 )
-                lists.append(la.__dict__)
+                lists.append(la)
 
         self._set_data(lists)
 
@@ -151,7 +156,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xmlns_xsi=tag.get("xmlns:xsi"),
                 xmlns_link=tag.get("xmlns:link"),
             )
-            lists.append(lb.__dict__)
+            lists.append(lb)
 
         self._set_data(lists)
 
@@ -174,7 +179,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_type=tag.get("xlink:type"),
                 xlink_role=tag.get("xlink:role"),
             )
-            lists.append(lt.__dict__)
+            lists.append(lt)
 
         self._set_data(lists)
 
@@ -184,46 +189,38 @@ class BaseLinkParser(BaseXBRLParser):
 class CalLinkParser(BaseLinkParser):
     """CalculationLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=True)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証
         self._assert_valid_basename("cal.xml")
 
-    def set_link_tag_name(self):
-        self.link_tag_name = "link:calculationLink"
-
-    def set_arc_tag_name(self):
-        self.arc_tag_name = "link:calculationArc"
-
+        # 初期化メソッド
+        self._set_link_tag_name("link:calculationLink")
+        self._set_arc_tag_name("link:calculationArc")
 
 class DefLinkParser(BaseLinkParser):
     """DefinitionLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=True)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証
         self._assert_valid_basename("def.xml")
 
-    def set_link_tag_name(self):
-        self.link_tag_name = ["link:definitionLink", "definitionLink"]
-
-    def set_arc_tag_name(self):
-        self.arc_tag_name = ["link:definitionArc", "definitionArc"]
-
+        # 初期化メソッド
+        self._set_link_tag_name("link:definitionLink")
+        self._set_arc_tag_name("link:definitionArc")
 
 class PreLinkParser(BaseLinkParser):
     """PresentationLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path, is_child=True)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証
         self._assert_valid_basename("pre.xml")
 
-    def set_link_tag_name(self):
-        self.link_tag_name = "link:presentationLink"
-
-    def set_arc_tag_name(self):
-        self.arc_tag_name = "link:presentationArc"
+        # 初期化メソッド
+        self._set_link_tag_name("link:presentationLink")
+        self._set_arc_tag_name("link:presentationArc")

@@ -1,6 +1,7 @@
 import os
 import re
 from decimal import Decimal, InvalidOperation
+from typing import Optional
 from urllib.parse import urlparse
 
 from app.tag import IxContext, IxNonFraction, IxNonNumeric
@@ -12,8 +13,8 @@ from . import BaseXBRLParser
 class IxbrlParser(BaseXBRLParser):
     """iXBRLを解析するクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名を検証
         self._assert_valid_basename("ixbrl.htm")

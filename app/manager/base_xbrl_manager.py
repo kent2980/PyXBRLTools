@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 from uuid import uuid4
 
 import pandas as pd
@@ -6,33 +7,18 @@ from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.parser import BaseXBRLParser, SchemaParser
+from app.utils import Utils
 
 
 class BaseXbrlManager:
     """XBRLディレクトリの解析を行う基底クラス"""
 
-    REPORT_TYPE = {
-        "edjp": "決算短信(日本基準)",
-        "edus": "決算短信(米国基準)",
-        "edif": "決算短信(国際会計基準)",
-        "edit": "決算短信(国際会計基準)",
-        "rvdf": "配当予想修正に関するお知らせ",
-        "rvfc": "業績予想修正に関するお知らせ",
-        "rejp": "REIT決算短信(日本基準)",
-        "rrdf": "分配予想の修正に関するお知らせ",
-        "rrfc": "運用状況の予想の修正に関するお知らせ",
-        "efjp": "ETF決算短信(日本基準)",
-    }
-
-    def __init__(self, directory_path, xbrl_id: str = None) -> None:
+    def __init__(self, directory_path, xbrl_id: Optional[str] = None) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
-        self.data = {}
-        self.__items = {}
-        if xbrl_id:
-            self.__xbrl_id = xbrl_id
-        else:
-            self.__xbrl_id = str(uuid4())
+        self.__data = None
+        self.__items = None
+        self.__xbrl_id = xbrl_id if xbrl_id else str(uuid4())
 
     @property
     def items(self):
@@ -41,6 +27,22 @@ class BaseXbrlManager:
     @property
     def xbrl_id(self):
         return self.__xbrl_id
+
+    @property
+    def data(self):
+        return self.__data
+
+    def _set_data(self, key:str, value:any):
+        if self.__data is None:
+            self.__data = {}
+        else:
+            self.__data[key] = value
+
+    def _set_items(self, key:str, value:any):
+        if self.__items is None:
+            self.__items = {}
+        else:
+            self.__items[key] = value
 
     def set_xbrl_id(self, xbrl_id: str):
         self.__xbrl_id = xbrl_id
@@ -60,11 +62,7 @@ class BaseXbrlManager:
         self.__directory_path = directory_path
 
     def __to_filelist(self):
-        """ディレクトリ内のファイル一覧を取得する
-
-        Returns:
-            list: ファイル一覧
-        """
+        """ディレクトリ内のファイル一覧を取得する"""
         return [
             file.as_posix()
             for file in self.directory_path.glob("**/*")
@@ -72,20 +70,7 @@ class BaseXbrlManager:
         ]
 
     def xbrl_type(self):
-        """書類品種を取得します
-
-        Returns:
-            tuple: 書類品種 (品種コード, 書類名)
-
-        Examples:
-            >>> manager = BaseXbrlManager("path/to/directory")
-            >>> type_str, report_type = manager.xbrl_type()
-            >>> print(f'1.{type_str}')
-            >>> print(f'2.{report_type}')
-            [output]
-            1.edjp
-            2.決算短信(日本基準)
-        """
+        """ 書類品種を取得します """
         files = self.__to_filelist()
         for file_str in files:
             file = Path(file_str)
@@ -94,14 +79,10 @@ class BaseXbrlManager:
                 code = (
                     type_str[:4] if len(type_str) == 4 else type_str[2:6]
                 )
-                return code, self.REPORT_TYPE.get(code)
+                return code, Utils.read_const_json["report"][code]
 
     def set_linkbase_files(self, xlink_role=None):
-        """関係ファイルのリストを取得する
-
-        Returns:
-            pd.DataFrame: 関係ファイルのデータフレーム
-        """
+        """ 関係ファイルのリストを取得する """
         files = self.__to_filelist()
         xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
 
@@ -154,11 +135,7 @@ class BaseXbrlManager:
         return self
 
     def set_htmlbase_files(self, xlink_role=None):
-        """HTMLベースのファイルリストを取得する
-
-        Returns:
-            pd.DataFrame: HTMLベースのファイルリスト
-        """
+        """HTMLベースのファイルリストを取得する"""
         lists = []
         files = self.__to_filelist()
         for file_str in files:
@@ -217,4 +194,4 @@ class BaseXbrlManager:
             sources = parser.source_file.__dict__
             sources["xbrl_id"] = xbrl_id
             items.append(sources)
-        self.items["source_files"] = items
+        self._set_items("source_files", items)

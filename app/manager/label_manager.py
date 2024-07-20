@@ -93,7 +93,7 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-        self.items["link_values"] = rows
+        self._set_items("link_values", rows)
 
         self.link_labels = rows
 
@@ -122,7 +122,7 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-        self.items["link_locs"] = rows
+        self._set_items("link_locs", rows)
 
         self.link_label_locs = rows
 
@@ -152,6 +152,6 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-        self.items["link_arcs"] = rows
+        self._set_items("link_arcs", rows)
 
         self.link_label_arcs = rows
