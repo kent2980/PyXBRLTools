@@ -1,11 +1,5 @@
-from app.exception import TagNotFoundError, TypeOfXBRLIsDifferent
-from app.tag import (
-    LabelArc,
-    LabelLoc,
-    LabelRoleRefs,
-    LabelValue,
-    SourceFile,
-)
+from app.exception import TagNotFoundError
+from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
 
 from . import BaseXBRLParser
 
@@ -16,11 +10,8 @@ class LabelParser(BaseXBRLParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
 
-        # ファイル名がlab.xmlでない場合はエラーを発生
-        if not self.basename.endswith(("lab.xml", "lab-en.xml")):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はlab.xmlではありません。"
-            )
+        # ファイル名を検証
+        self._assert_valid_basename("lab.xml", "lab-en.xml")
 
         # 初期化メソッド
         self._set_source_file(self.basename, "labelLinkbaseRef")

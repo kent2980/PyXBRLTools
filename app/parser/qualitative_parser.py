@@ -1,5 +1,3 @@
-from app.exception import TypeOfXBRLIsDifferent
-
 from . import BaseXBRLParser
 
 
@@ -26,10 +24,9 @@ class QualitativeParser(BaseXBRLParser):
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
-        if self.basename != "qualitative.htm":
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はqualitative.htmではありません。"
-            )
+
+        # ファイル名を検証
+        self._assert_valid_basename("qualitative.htm")
 
     def qualitative_info(self):
         lists = []

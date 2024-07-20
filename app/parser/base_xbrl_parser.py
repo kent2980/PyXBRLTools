@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 
+from app.exception import TypeOfXBRLIsDifferent
 from app.tag import SourceFile
 
 
@@ -154,6 +155,13 @@ class BaseXBRLParser:
             file_path = self.__fetch_url()
         # XBRLを読み込む
         self.__read_xbrl(file_path)
+
+    def _assert_valid_basename(self, *keywords: str):
+        """ ファイル名が有効かどうかを検証する """
+        if not self.basename.endswith(keywords):
+            raise TypeOfXBRLIsDifferent(
+                f"{self.basename} は{keywords}ではありません。"
+            )
 
     def _set_data(self, data):
         """解析結果のデータを設定する"""

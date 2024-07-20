@@ -1,59 +1,24 @@
-import json
 import os
 import re
 from decimal import Decimal, InvalidOperation
-from pathlib import Path
 from urllib.parse import urlparse
 
-from app.exception import TypeOfXBRLIsDifferent
 from app.tag import IxContext, IxNonFraction, IxNonNumeric
 from app.utils import Utils
 
 from . import BaseXBRLParser
 
 
-def read_const():
-    # 現在のディレクトリを取得
-    current_dir = Path(os.path.dirname(__file__)).parent
-    const_path = current_dir / "const" / "const.json"
-    with open(const_path) as f:
-        const = json.load(f)
-    return const
-
-
 class IxbrlParser(BaseXBRLParser):
-    """iXBRLを解析するクラス
-        このクラスはBaseXBRLParserを継承しています。
-        iXBRLの解析を行います。
-        以下の機能を提供します。
-        - iXBRLの非数値情報取得
-        - iXBRLの非分数情報取得
-
-    Attributes:
-    - xbrl_url: str
-        XBRLのURL
-    - output_path: str
-        ファイルの保存先
-
-    Properties:
-    - data: list[dict]
-        解析結果のデータ
-
-    Methods:
-    - ix_non_numeric
-        iXBRLの非数値情報を取得する
-    - ix_non_fractions
-        iXBRLの非分数情報を取得する
-    """
+    """iXBRLを解析するクラス"""
 
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path)
-        # ファイルの拡張子がixbrl.htmでない場合はエラーを出力
-        if not self.basename.endswith("ixbrl.htm"):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はixbrl.htmではありません。"
-            )
 
+        # ファイル名を検証
+        self._assert_valid_basename("ixbrl.htm")
+
+        # プロパティの初期化
         self.__report_type = None
         self.__ixbrl_role = None
         self.__ix_non_fraction = None
@@ -61,11 +26,7 @@ class IxbrlParser(BaseXBRLParser):
         self.__ix_context = None
 
         # 初期化処理
-        self.__init_xbrl()
-
-    def __init_xbrl(self):
-        self.__report_type = self.__set_report_type(self.xbrl_url)
-        self.__ixbrl_role = self.__set_ixbrl_role()
+        self.__init_parser()
 
     @property
     def report_type(self):
@@ -91,7 +52,7 @@ class IxbrlParser(BaseXBRLParser):
 
     def __set_ixbrl_role(self):
         """ドキュメントの要素を設定する"""
-        const = read_const()
+        const = Utils.read_const_json()
         file_name = self.basename
         ixbrl_type = file_name.split("-")[1]
         role = {}
@@ -108,6 +69,10 @@ class IxbrlParser(BaseXBRLParser):
                 "en_label": const["document_element"][ixbrl_type],
             }
         return role
+
+    def __init_parser(self):
+        self.__report_type = self.__set_report_type(self.xbrl_url)
+        self.__ixbrl_role = self.__set_ixbrl_role()
 
     def ix_non_numeric(self):
         """iXBRLの非数値情報を取得する
@@ -184,7 +149,7 @@ class IxbrlParser(BaseXBRLParser):
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 
@@ -263,7 +228,7 @@ class IxbrlParser(BaseXBRLParser):
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 
@@ -312,7 +277,7 @@ class IxbrlParser(BaseXBRLParser):
                 period=period,
                 scenario=scenario,
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 

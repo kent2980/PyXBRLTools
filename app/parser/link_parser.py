@@ -1,6 +1,4 @@
-from app.exception import TypeOfXBRLIsDifferent
 from app.tag import LinkArc, LinkBase, LinkLoc, LinkRole, LinkTag
-from app.tag.base import SourceFile
 
 from . import BaseXBRLParser
 
@@ -189,11 +187,8 @@ class CalLinkParser(BaseLinkParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path, is_child=True)
 
-        # cal.xmlでない場合はエラーを出力
-        if not self.basename.endswith("cal.xml"):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はcal.xmlではありません。"
-            )
+        # ファイル名の検証
+        self._assert_valid_basename("cal.xml")
 
     def set_link_tag_name(self):
         self.link_tag_name = "link:calculationLink"
@@ -208,11 +203,8 @@ class DefLinkParser(BaseLinkParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path, is_child=True)
 
-        # def.xmlでない場合はエラーを出力
-        if not self.basename.endswith("def.xml"):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はdef.xmlではありません。"
-            )  # pragma: no cover
+        # ファイル名の検証
+        self._assert_valid_basename("def.xml")
 
     def set_link_tag_name(self):
         self.link_tag_name = ["link:definitionLink", "definitionLink"]
@@ -227,11 +219,8 @@ class PreLinkParser(BaseLinkParser):
     def __init__(self, xbrl_url, output_path=None):
         super().__init__(xbrl_url, output_path, is_child=True)
 
-        # pre.xmlでない場合はエラーを出力
-        if not self.basename.endswith("pre.xml"):
-            raise TypeOfXBRLIsDifferent(
-                f"{self.basename} はpre.xmlではありません。"
-            )  # pragma: no cover
+        # ファイル名の検証
+        self._assert_valid_basename("pre.xml")
 
     def set_link_tag_name(self):
         self.link_tag_name = "link:presentationLink"

@@ -1,9 +1,11 @@
+import json
 import os
 import re
 import shutil
 import unicodedata
 import zipfile
 from datetime import datetime
+from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
@@ -216,3 +218,12 @@ class Utils:
             if re.match(r"^\d{4}-\d{2}-\d{2}$", text):
                 format_str = "dateyearmonthday"
         return text, format_str
+
+    def read_const_json():
+        """ const.jsonを読み込む関数 """
+        # 現在のディレクトリを取得
+        current_dir = Path(os.path.dirname(__file__)).parent
+        const_path = current_dir / "const" / "const.json"
+        with open(const_path) as f:
+            const = json.load(f)
+        return const
