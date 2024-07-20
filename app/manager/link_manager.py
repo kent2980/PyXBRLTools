@@ -83,7 +83,7 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
 
-            parser = self.parser.create(
+            parser = self.parser(
                 row["xlink_href"], output_path
             ).link_roles()
 
@@ -110,7 +110,7 @@ class BaseLinkManager(BaseXbrlManager):
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
-            parser = self.parser.create(
+            parser = self.parser(
                 row["xlink_href"], output_path
             ).link_locs()
 
@@ -137,7 +137,7 @@ class BaseLinkManager(BaseXbrlManager):
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
-            parser = self.parser.create(
+            parser = self.parser(
                 row["xlink_href"], output_path
             ).link_arcs()
 

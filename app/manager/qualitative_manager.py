@@ -25,7 +25,7 @@ class QualitativeManager(BaseXbrlManager):
             files = self.files.query(f"document_type == '{document_type}'")
 
         for index, row in files.iterrows():
-            parser = QualitativeParser.create(row["xlink_href"])
+            parser = QualitativeParser(row["xlink_href"])
             if df is None:
                 df = parser.qualitative_info().to_DataFrame()
             else:

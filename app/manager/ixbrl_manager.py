@@ -69,7 +69,7 @@ class IXBRLManager(BaseXbrlManager):
     def ixbrl_roles(self):
         for _, row in self.files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
-                parser = IxbrlParser.create(row["xlink_href"])
+                parser = IxbrlParser(row["xlink_href"])
                 yield parser.ixbrl_role
 
     def set_ix_non_fraction(self, document_type=None):
@@ -91,7 +91,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser.create(
+                parser = IxbrlParser(
                     row["xlink_href"]
                 ).ix_non_fraction()
 
@@ -124,7 +124,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser.create(
+                parser = IxbrlParser(
                     row["xlink_href"]
                 ).ix_non_numeric()
 
@@ -157,7 +157,7 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser.create(
+                parser = IxbrlParser(
                     row["xlink_href"]
                 ).ix_context()
 

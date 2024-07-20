@@ -83,7 +83,7 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(
+            parser = LabelParser(
                 row["xlink_href"], output_path
             ).link_labels()
 
@@ -112,7 +112,7 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(
+            parser = LabelParser(
                 row["xlink_href"], output_path
             ).link_label_locs()
 
@@ -142,7 +142,7 @@ class LabelManager(BaseXbrlManager):
         if document_type is not None:
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
-            parser = LabelParser.create(
+            parser = LabelParser(
                 row["xlink_href"], output_path
             ).link_label_arcs()
 

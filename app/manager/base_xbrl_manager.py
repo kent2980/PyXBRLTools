@@ -106,7 +106,7 @@ class BaseXbrlManager:
         xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
 
         data_frames = [
-            SchemaParser.create(file).link_base_refs().to_DataFrame()
+            SchemaParser(file).link_base_refs().to_DataFrame()
             for file in xsd_files
         ]
         df = pd.concat(data_frames, ignore_index=True)
@@ -211,7 +211,7 @@ class BaseXbrlManager:
         """ソースファイルを設定する"""
         items = []
         for _, row in self.files.iterrows():
-            parser = BaseXBRLParser.create(
+            parser = BaseXBRLParser(
                 row["xlink_href"], output_path
             )
             sources = parser.source_file.__dict__
