@@ -2,8 +2,8 @@ import pandas as pd
 import pytest
 
 from app.exception import TagNotFoundError, TypeOfXBRLIsDifferent
-from app.parser import LabelParser
-from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
+from app.ix_parser import LabelParser
+from app.ix_tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
 
 
 @pytest.fixture

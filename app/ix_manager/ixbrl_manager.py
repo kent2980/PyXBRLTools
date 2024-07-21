@@ -1,9 +1,9 @@
 from typing import Optional
 
 from app.exception import XbrlListEmptyError
-from app.manager import BaseXbrlManager
-from app.parser import IxbrlParser
-from app.tag import IxHeader
+from app.ix_manager import BaseXbrlManager
+from app.ix_parser import IxbrlParser
+from app.ix_tag import IxHeader
 
 
 class IXBRLManager(BaseXbrlManager):

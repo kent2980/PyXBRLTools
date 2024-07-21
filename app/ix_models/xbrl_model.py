@@ -1,12 +1,6 @@
 from app.exception import XbrlListEmptyError
-from app.manager import (
-    BaseXbrlManager,
-    CalLinkManager,
-    DefLinkManager,
-    IXBRLManager,
-    LabelManager,
-    PreLinkManager,
-)
+from app.ix_manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
+                            IXBRLManager, LabelManager, PreLinkManager)
 
 from .base_xbrl_model import BaseXbrlModel
 

@@ -1,8 +1,8 @@
 import pytest
 
 from app.exception import SetLanguageNotError
-from app.manager import LabelManager
-from app.tag import LabelArc, LabelLoc, LabelValue
+from app.ix_manager import LabelManager
+from app.ix_tag import LabelArc, LabelLoc, LabelValue
 
 
 @pytest.fixture

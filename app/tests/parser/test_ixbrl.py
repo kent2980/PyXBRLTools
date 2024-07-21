@@ -2,8 +2,8 @@ import pandas as pd
 import pytest
 
 from app.exception import TypeOfXBRLIsDifferent
-from app.parser import IxbrlParser
-from app.tag import IxNonFraction, IxNonNumeric
+from app.ix_parser import IxbrlParser
+from app.ix_tag import IxNonFraction, IxNonNumeric
 
 
 @pytest.fixture

@@ -1,8 +1,8 @@
 from typing import Optional
 
 from app.exception import SetLanguageNotError
-from app.manager import BaseXbrlManager
-from app.parser import LabelParser
+from app.ix_manager import BaseXbrlManager
+from app.ix_parser import LabelParser
 
 
 class LabelManager(BaseXbrlManager):

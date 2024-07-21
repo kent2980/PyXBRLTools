@@ -2,8 +2,8 @@ import pprint
 
 import pytest
 
-from app.manager import CalLinkManager, DefLinkManager, PreLinkManager
-from app.tag import LinkArc, LinkLoc, LinkRole
+from app.ix_manager import CalLinkManager, DefLinkManager, PreLinkManager
+from app.ix_tag import LinkArc, LinkLoc, LinkRole
 
 
 @pytest.fixture

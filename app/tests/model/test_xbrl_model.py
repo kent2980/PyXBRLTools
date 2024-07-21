@@ -3,16 +3,10 @@ import pprint
 import pytest
 import requests
 
-from app.manager import (
-    BaseXbrlManager,
-    CalLinkManager,
-    DefLinkManager,
-    IXBRLManager,
-    LabelManager,
-    PreLinkManager,
-)
-from app.models import XBRLModel
-from app.tag import IxHeader
+from app.ix_manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
+                            IXBRLManager, LabelManager, PreLinkManager)
+from app.ix_models import XBRLModel
+from app.ix_tag import IxHeader
 
 
 @pytest.fixture

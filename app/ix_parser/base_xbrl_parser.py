@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 
 from app.exception import TypeOfXBRLIsDifferent
-from app.tag import SourceFile
+from app.ix_tag import SourceFile
 
 
 class BaseXBRLParser:

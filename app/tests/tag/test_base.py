@@ -1,6 +1,6 @@
 import pytest
 
-from app.tag import BaseTag
+from app.ix_tag import BaseTag
 
 
 @pytest.fixture

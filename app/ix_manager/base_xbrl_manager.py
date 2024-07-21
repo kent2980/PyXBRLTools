@@ -6,7 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
-from app.parser import BaseXBRLParser, SchemaParser
+from app.ix_parser import BaseXBRLParser, SchemaParser
 from app.utils import Utils
 
 

@@ -4,7 +4,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Optional
 from urllib.parse import urlparse
 
-from app.tag import IxContext, IxNonFraction, IxNonNumeric
+from app.ix_tag import IxContext, IxNonFraction, IxNonNumeric
 from app.utils import Utils
 
 from . import BaseXBRLParser

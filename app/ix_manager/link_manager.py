@@ -1,12 +1,8 @@
 from typing import Optional
 
-from app.manager import BaseXbrlManager
-from app.parser import (
-    BaseLinkParser,
-    CalLinkParser,
-    DefLinkParser,
-    PreLinkParser,
-)
+from app.ix_manager import BaseXbrlManager
+from app.ix_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                           PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):

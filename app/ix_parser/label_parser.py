@@ -1,7 +1,7 @@
 from typing import Optional
 
 from app.exception import TagNotFoundError
-from app.tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
+from app.ix_tag import LabelArc, LabelLoc, LabelRoleRefs, LabelValue
 
 from . import BaseXBRLParser
 

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from pandas import DataFrame
 
-from app.parser import BaseXBRLParser
+from app.ix_parser import BaseXBRLParser
 
 
 @pytest.fixture

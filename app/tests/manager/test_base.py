@@ -4,7 +4,7 @@ import pytest
 from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError
-from app.manager import BaseXbrlManager
+from app.ix_manager import BaseXbrlManager
 
 
 @pytest.fixture

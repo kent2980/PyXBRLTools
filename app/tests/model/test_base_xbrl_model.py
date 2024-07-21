@@ -1,6 +1,6 @@
 import pytest
 
-from app.models import BaseXbrlModel
+from app.ix_models import BaseXbrlModel
 
 
 @pytest.fixture

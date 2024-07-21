@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.tag import SchemaElement, SchemaImport, SchemaLinkBaseRef
+from app.ix_tag import SchemaElement, SchemaImport, SchemaLinkBaseRef
 
 from . import BaseXBRLParser
 

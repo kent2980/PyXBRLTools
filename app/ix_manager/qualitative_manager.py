@@ -3,8 +3,8 @@ from typing import Optional
 import pandas
 
 from app.exception import XbrlListEmptyError
-from app.manager import BaseXbrlManager
-from app.parser import QualitativeParser
+from app.ix_manager import BaseXbrlManager
+from app.ix_parser import QualitativeParser
 
 
 class QualitativeManager(BaseXbrlManager):
