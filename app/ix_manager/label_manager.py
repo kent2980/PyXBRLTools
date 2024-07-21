@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from app.exception import SetLanguageNotError
 from app.ix_manager import BaseXbrlManager
@@ -6,11 +6,7 @@ from app.ix_parser import LabelParser
 
 
 class LabelManager(BaseXbrlManager):
-    """labelLinkbaseデータの解析を行うクラス
-
-    raise   - SetLanguageNotError("言語の設定が不正です。[jp, en]を指定してください。")
-            - XbrlListEmptyError("labelLinkbaseファイルが見つかりません。")
-    """
+    """labelLinkbaseデータの解析を行うクラス"""
 
     def __init__(
         self,
@@ -18,44 +14,47 @@ class LabelManager(BaseXbrlManager):
         output_path,
         lang="jp",
         xbrl_id: Optional[str] = None,
-    ) -> None:
-        """
-        LabelManagerクラスのコンストラクタです。
-
-        Parameters:
-            directory_path (str): XBRLファイルが格納されているディレクトリのパス
-
-        Returns:
-            None
-        """
+    ):
         super().__init__(directory_path, xbrl_id=xbrl_id)
-        self.set_linkbase_files("labelLinkbaseRef")
-        self.output_path = output_path
-        self.set_language(lang)
-        self.label = None
+        self.__output_path = output_path
+        self.__lang = None
+        self.__link_labels = None
+        self.__link_label_locs = None
+        self.__link_label_arcs = None
+        self.__parsers: Optional[List[LabelParser]] = None
 
-        self.link_labels = None
-        self.link_label_locs = None
-        self.link_label_arcs = None
+        self._set_linkbase_files("labelLinkbaseRef")
+        self.__init_language(lang)
+        self.__init_parser()
+        self.__init_manager()
 
-        self.set_source_file(
-            xbrl_id="labelLinkbaseRef", output_path=output_path
-        )
-        self.set_link_labels()
-        self.set_link_label_locs()
-        self.set_link_label_arcs()
+    @property
+    def output_path(self):
+        return self.__output_path
 
-    def set_language(self, lang):
-        """
-        言語を設定します。
+    @property
+    def lang(self):
+        return self.__lang
 
-        Parameters:
-            language (str): 言語の設定
+    @property
+    def link_labels(self):
+        return self.__link_labels
 
-        Returns:
-            self (LabelManager): 自身のインスタンス
-        """
-        self.lang = lang
+    @property
+    def link_label_locs(self):
+        return self.__link_label_locs
+
+    @property
+    def link_label_arcs(self):
+        return self.__link_label_arcs
+
+    @property
+    def parsers(self):
+        return self.__parsers
+
+    def __init_language(self, lang):
+        """言語を設定します。"""
+        self.__lang = lang
 
         if lang not in ["jp", "en"]:
             raise SetLanguageNotError(
@@ -74,9 +73,24 @@ class LabelManager(BaseXbrlManager):
                     self.files["xlink_href"].str.endswith("lab-en.xml")
                 ]
 
-        return self
+    def __init_parser(self):
+        """パーサーを設定します。"""
+        parsers: List[LabelParser] = []
+        for _, row in self.files.iterrows():
+            parser = LabelParser(
+                row["xlink_href"], self.output_path, xbrl_id=self.xbrl_id
+            )
+            parsers.append(parser)
 
-    def set_link_labels(self, document_type=None):
+        self.__parsers = parsers
+
+    def __init_manager(self):
+        self.set_source_file(self.parsers)
+        self.__set_link_labels()
+        self.__set_link_label_locs()
+        self.__set_link_label_arcs()
+
+    def __set_link_labels(self):
         """
         label属性を設定します。
         ラベル情報を取得します。
@@ -88,24 +102,19 @@ class LabelManager(BaseXbrlManager):
             return self.link_labels
 
         rows = []
-        output_path = self.output_path
-        files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for _, row in files.iterrows():
-            parser = LabelParser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_labels()
 
-            data = parser.to_dict()
+        for parser in self.parsers:
+            parser = parser.link_labels()
+
+            data = parser.data
 
             rows.append(data)
 
         self._set_items("link_values", rows)
 
-        self.link_labels = rows
+        self.__link_labels = rows
 
-    def set_link_label_locs(self, document_type=None):
+    def __set_link_label_locs(self):
         """
         loc属性を設定します。
         loc情報を取得します。
@@ -117,24 +126,19 @@ class LabelManager(BaseXbrlManager):
             return self.link_label_locs
 
         rows = []
-        output_path = self.output_path
-        files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for _, row in files.iterrows():
-            parser = LabelParser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_label_locs()
 
-            data = parser.to_dict()
+        for parser in self.parsers:
+            parser = parser.link_label_locs()
+
+            data = parser.data
 
             rows.append(data)
 
         self._set_items("link_locs", rows)
 
-        self.link_label_locs = rows
+        self.__link_label_locs = rows
 
-    def set_link_label_arcs(self, document_type=None):
+    def __set_link_label_arcs(self):
         """
         labelArc属性を設定します。
         labelArc情報を取得します。
@@ -147,19 +151,13 @@ class LabelManager(BaseXbrlManager):
 
         rows = []
 
-        output_path = self.output_path
-        files = self.files
-        if document_type is not None:
-            files = files.query(f"document_type == '{document_type}'")
-        for _, row in files.iterrows():
-            parser = LabelParser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_label_arcs()
+        for parser in self.parsers:
+            parser = parser.link_label_arcs()
 
-            data = parser.to_dict()
+            data = parser.data
 
             rows.append(data)
 
         self._set_items("link_arcs", rows)
 
-        self.link_label_arcs = rows
+        self.__link_label_arcs = rows

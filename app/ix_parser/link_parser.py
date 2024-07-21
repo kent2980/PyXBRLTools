@@ -51,7 +51,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 role_uri=tag.get("roleURI"),
             )
-            lists.append(lrr)
+            lists.append(lrr.__dict__)
 
         self._set_data(lists)
 
@@ -88,7 +88,7 @@ class BaseLinkParser(BaseXBRLParser):
                     source_file_id=self.source_file.id,
                 )
 
-                lists.append(ll)
+                lists.append(ll.__dict__)
 
         self._set_data(lists)
 
@@ -134,7 +134,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_weight=xlink_weight,
                     source_file_id=self.source_file.id,
                 )
-                lists.append(la)
+                lists.append(la.__dict__)
 
         self._set_data(lists)
 
@@ -158,7 +158,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xmlns_xsi=tag.get("xmlns:xsi"),
                 xmlns_link=tag.get("xmlns:link"),
             )
-            lists.append(lb)
+            lists.append(lb.__dict__)
 
         self._set_data(lists)
 
@@ -181,7 +181,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_type=tag.get("xlink:type"),
                 xlink_role=tag.get("xlink:role"),
             )
-            lists.append(lt)
+            lists.append(lt.__dict__)
 
         self._set_data(lists)
 

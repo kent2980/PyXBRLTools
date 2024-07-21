@@ -6,6 +6,7 @@ from uuid import uuid4
 import pandas as pd
 
 from app.exception import NotXbrlDirectoryException, NotXbrlTypeException
+from app.utils.utils import Utils
 
 
 class BaseXbrlModel:
@@ -18,7 +19,9 @@ class BaseXbrlModel:
         # XBRLファイルを解凍したディレクトリのパスを取得
         self.__directory_path = self.__unzip_xbrl()
         self.__xbrl_type = self.__xbrl_type()
-        self.__xbrl_id = str(uuid4())
+        self.__xbrl_id = str(Utils.string_to_uuid(
+            Path(self.xbrl_zip_path).name
+        ))
 
     @classmethod
     def xbrl_models(cls, xbrl_zip_dirs, output_path):

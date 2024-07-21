@@ -17,7 +17,7 @@ class QualitativeManager(BaseXbrlManager):
         self, directory_path, xbrl_id: Optional[str] = None
     ) -> None:
         super().__init__(directory_path, xbrl_id=xbrl_id)
-        self.set_htmlbase_files("qualitative")
+        self._set_htmlbase_files("qualitative")
 
         if len(self.files) == 0:
             raise XbrlListEmptyError("qualitative.htmが見つかりません。")

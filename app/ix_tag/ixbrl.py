@@ -18,6 +18,7 @@ class IxNonNumeric(BaseTag):
     value: Optional[str] = field(default=None)
     report_type: Optional[str] = field(default=None)
     ixbrl_role: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -35,6 +36,7 @@ class IxNonFraction(BaseTag):
     numeric: Optional[Decimal] = field(default=None)
     report_type: Optional[str] = field(default=None)
     ixbrl_role: Optional[str] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -58,3 +60,4 @@ class IxContext(BaseTag):
     context_id: Optional[str] = field(default=None)
     period: Optional[dict] = field(default=None)
     scenario: Optional[list] = field(default=None)
+    source_file_id: Optional[str] = field(default=None)

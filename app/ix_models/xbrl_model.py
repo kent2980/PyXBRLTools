@@ -23,8 +23,8 @@ class XBRLModel(BaseXbrlModel):
             return manager_class(
                 self.directory_path, self.output_path, xbrl_id=self.xbrl_id
             )
-        except XbrlListEmptyError:
-            return None
+        except XbrlListEmptyError as e:
+            print(e)
 
     @property
     def ixbrl_manager(self):

@@ -3,7 +3,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 from urllib.parse import urlparse
 from uuid import uuid4
 
@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup as bs
 from pandas import DataFrame
 
 from app.exception import TypeOfXBRLIsDifferent
-from app.ix_tag import SourceFile
+from app.ix_tag import BaseTag, SourceFile
 
 
 class BaseXBRLParser:
@@ -29,19 +29,19 @@ class BaseXBRLParser:
         self.__xbrl_url = xbrl_url  # XBRLのURL
         self.__output_path = output_path  # 出力先のパス
         self.__basename = Path(self.xbrl_url).name  # ファイル名
-        self.__document_type = (
-            "fr" if "fr" in self.basename else "sm"
-        )  # ドキュメントタイプ
+        self.__xbrl_type = None  # XbrlType(fr or sm)
         self.__soup = None  # BeautifulSoup
-        self.__data = None  # 解析結果のデータ
-        self.__xbrl_id = (
-            xbrl_id if xbrl_id else str(uuid4())
-        )  # XBRLファイル固有のID
-        self.__source_file = None  # XBRLのソースファイル
+        self.__data: Optional[List[dict]] = None  # 解析結果のデータ
+        self.__xbrl_id = xbrl_id  # XBRLファイル固有のID
+        self.__source_file: Optional[SourceFile] = (
+            None  # XBRLのソースファイル
+        )
 
         # 初期化メソッド
-        self._set_source_file(self.basename, self.xbrl_id)
+        self.__init_xbrl_id()
+        self.__init_xbrl_type()
         self.__init_parser()
+        self._set_source_file(self.basename)
 
     @property
     def basename(self):
@@ -52,8 +52,8 @@ class BaseXBRLParser:
         return self.__data
 
     @property
-    def document_type(self):
-        return self.__document_type
+    def xbrl_type(self):
+        return self.__xbrl_type
 
     @property
     def output_path(self):
@@ -74,6 +74,10 @@ class BaseXBRLParser:
     @property
     def xbrl_id(self):
         return self.__xbrl_id
+
+    @xbrl_id.setter
+    def xbrl_id(self, xbrl_id: str):
+        self.__xbrl_id = xbrl_id
 
     @xbrl_id.setter
     def xbrl_id(self, xbrl_id: str):
@@ -160,6 +164,18 @@ class BaseXBRLParser:
         # XBRLを読み込む
         self.__read_xbrl(file_path)
 
+    def __init_xbrl_id(self):
+        """XBRLファイル固有のIDを設定する"""
+        if self.xbrl_id is None:
+            self.__xbrl_id = str(uuid4())
+
+    def __init_xbrl_type(self):
+        """XBRLの種類を設定する"""
+        if "fr" in self.basename:
+            self.__xbrl_type = "fr"
+        elif "sm" in self.basename:
+            self.__xbrl_type = "sm"
+
     def _assert_valid_basename(self, *keywords: str):
         """ファイル名が有効かどうかを検証する"""
         if not self.basename.endswith(keywords):
@@ -167,13 +183,23 @@ class BaseXBRLParser:
                 f"{self.basename} は{keywords}ではありません。"
             )
 
-    def _set_data(self, data):
+    def _set_data(self, data: List[BaseTag]):
         """解析結果のデータを設定する"""
         self.__data = data
 
-    def _set_source_file(self, name: str, xbrl_id: str):
+    def _set_source_file(self, name: str):
         """XBRLのソースファイルを取得する"""
-        self.__source_file = SourceFile(name=name, xbrl_id=xbrl_id)
+        if self.xbrl_url.startswith("http"):
+            type = "url"
+            xbrl_id = None
+            url = self.xbrl_url
+        else:
+            type = "local"
+            xbrl_id = self.xbrl_id
+            url = None
+        self.__source_file = SourceFile(
+            name=name, type=type, url=url, xbrl_id=xbrl_id
+        )
 
     def to_DataFrame(self):
         """DataFrame形式で出力する"""

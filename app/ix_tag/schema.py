@@ -10,7 +10,7 @@ class SchemaImport(BaseTag):
 
     schema_location: Optional[str] = field(default=None)
     name_space: Optional[str] = field(default=None)
-    document_type: Optional[str] = field(default=None)
+    xbrl_type: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -21,7 +21,7 @@ class SchemaLinkBaseRef(BaseTag):
     xlink_href: Optional[str] = field(default=None)
     xlink_role: Optional[str] = field(default=None)
     xlink_arcrole: Optional[str] = field(default=None)
-    document_type: Optional[str] = field(default=None)
+    xbrl_type: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -36,4 +36,4 @@ class SchemaElement(BaseTag):
     substitution_group: Optional[str] = field(default=None)
     type: Optional[str] = field(default=None)
     abstract: Optional[str] = field(default=None)
-    document_type: Optional[str] = field(default=None)
+    xbrl_type: Optional[str] = field(default=None)

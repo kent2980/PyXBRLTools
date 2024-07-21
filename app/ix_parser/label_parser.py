@@ -18,7 +18,7 @@ class LabelParser(BaseXBRLParser):
         self._assert_valid_basename("lab.xml", "lab-en.xml")
 
         # 初期化メソッド
-        self._set_source_file(self.basename, "labelLinkbaseRef")
+        self._set_source_file(self.basename)
 
     def link_labels(self):
         """link:label要素を取得するメソッド。
@@ -48,7 +48,7 @@ class LabelParser(BaseXBRLParser):
                 label=tag.text,
                 source_file_id=self.source_file.id,
             )
-            lists.append(lv)
+            lists.append(lv.__dict__)
 
         self._set_data(lists)
 
@@ -89,7 +89,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 source_file_id=self.source_file.id,
             )
-            lists.append(ll)
+            lists.append(ll.__dict__)
 
         self._set_data(lists)
 
@@ -121,7 +121,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_to=tag.get("xlink:to"),
                 source_file_id=self.source_file.id,
             )
-            lists.append(la)
+            lists.append(la.__dict__)
 
         self._set_data(lists)
 
@@ -165,7 +165,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
             )
 
-            lists.append(lrr)
+            lists.append(lrr.__dict__)
 
         self._set_data(lists)
 

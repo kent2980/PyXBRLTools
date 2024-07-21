@@ -25,10 +25,10 @@ class SchemaParser(BaseXBRLParser):
             si = SchemaImport(
                 schema_location=tag.get("schemaLocation"),
                 name_space=tag.get("namespace"),
-                document_type=self.document_type,
+                xbrl_type=self.xbrl_type,
             )
 
-            lists.append(si)
+            lists.append(si.__dict__)
 
         self._set_data(lists)
 
@@ -45,10 +45,10 @@ class SchemaParser(BaseXBRLParser):
                 xlink_href=tag.get("xlink:href"),
                 xlink_role=tag.get("xlink:role"),
                 xlink_arcrole=tag.get("xlink:arcrole"),
-                document_type=self.document_type,
+                xbrl_type=self.xbrl_type,
             )
 
-            lists.append(slb)
+            lists.append(slb.__dict__)
 
         self._set_data(lists)
 
@@ -69,10 +69,10 @@ class SchemaParser(BaseXBRLParser):
                 substitution_group=tag.get("substitutionGroup"),
                 type=tag.get("type"),
                 abstract=tag.get("abstract"),
-                document_type=self.document_type,
+                xbrl_type=self.xbrl_type,
             )
 
-            lists.append(se)
+            lists.append(se.__dict__)
 
         self._set_data(lists)
 

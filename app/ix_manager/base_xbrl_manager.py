@@ -1,9 +1,8 @@
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 from uuid import uuid4
 
 import pandas as pd
-from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.ix_parser import BaseXBRLParser, SchemaParser
@@ -18,7 +17,6 @@ class BaseXbrlManager:
     ) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
-        self.__data = None
         self.__items = None
         self.__xbrl_id = xbrl_id if xbrl_id else str(uuid4())
 
@@ -30,25 +28,17 @@ class BaseXbrlManager:
     def xbrl_id(self):
         return self.__xbrl_id
 
-    @property
-    def data(self):
-        return self.__data
+    @xbrl_id.setter
+    def xbrl_id(self, xbrl_id):
+        self.__xbrl_id = xbrl_id
 
-    def _set_data(self, key: str, value: any):
-        if self.__data is None:
-            self.__data = {}
-        else:
-            self.__data[key] = value
-
-    def _set_items(self, key: str, value: any):
+    def _set_items(self, key: str, value):
+        """アイテムを設定する"""
         if self.__items is None:
             self.__items = {}
+            self.__items[key] = value
         else:
             self.__items[key] = value
-
-    def set_xbrl_id(self, xbrl_id: str):
-        self.__xbrl_id = xbrl_id
-        return self
 
     @property
     def directory_path(self):
@@ -83,7 +73,7 @@ class BaseXbrlManager:
                 )
                 return code, Utils.read_const_json["report"][code]
 
-    def set_linkbase_files(self, xlink_role=None):
+    def _set_linkbase_files(self, xlink_role=None):
         """関係ファイルのリストを取得する"""
         files = self.__to_filelist()
         xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
@@ -136,7 +126,7 @@ class BaseXbrlManager:
         self.files = df
         return self
 
-    def set_htmlbase_files(self, xlink_role=None):
+    def _set_htmlbase_files(self, xlink_role=None):
         """HTMLベースのファイルリストを取得する"""
         lists = []
         files = self.__to_filelist()
@@ -178,22 +168,10 @@ class BaseXbrlManager:
 
         return self
 
-    def to_DataFrame(self):
-        """DataFrame形式で出力する"""
-        return DataFrame(self.data)
-
-    def to_dict(self):
-        """辞書形式で出力する"""
-        return self.data
-
-    def set_source_file(
-        self, xbrl_id: str = None, output_path: str = None
-    ):
+    def set_source_file(self, parsers: List[BaseXBRLParser]):
         """ソースファイルを設定する"""
         items = []
-        for _, row in self.files.iterrows():
-            parser = BaseXBRLParser(row["xlink_href"], output_path)
-            sources = parser.source_file.__dict__
-            sources["xbrl_id"] = xbrl_id
-            items.append(sources)
-        self._set_items("source_files", items)
+        for parser in parsers:
+            sources = parser.source_file
+            items.append(sources.__dict__)
+        self._set_items("source_files", [items])

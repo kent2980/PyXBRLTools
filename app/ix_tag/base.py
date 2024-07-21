@@ -1,6 +1,7 @@
-import uuid
 from dataclasses import dataclass, field
 from typing import Optional
+
+from app.utils import Utils
 
 
 class BaseTag:
@@ -25,7 +26,16 @@ class BaseTag:
 
 @dataclass
 class SourceFile(BaseTag):
+    """ソースファイル情報を格納するクラス"""
 
-    id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
-    xbrl_id: Optional[str] = field(default=None)
+    id: Optional[str] = field(init=False)
     name: Optional[str] = field(default=None)
+    type: Optional[str] = field(default=None)
+    xbrl_id: Optional[str] = field(default=None)
+    url: Optional[str] = field(default=None)
+
+    def __post_init__(self):
+        self.id = str(Utils.string_to_uuid(self.__str__()))
+
+    def __str__(self) -> str:
+        return f"{self.name},{self.type},{self.xbrl_id},{self.url}"

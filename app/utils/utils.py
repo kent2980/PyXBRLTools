@@ -1,8 +1,10 @@
+import hashlib
 import json
 import os
 import re
 import shutil
 import unicodedata
+import uuid
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -227,3 +229,9 @@ class Utils:
         with open(const_path) as f:
             const = json.load(f)
         return const
+
+    def string_to_uuid(name: str):
+        # SHA-1ハッシュを生成
+        hash = hashlib.sha1(name.encode("utf-8")).hexdigest()
+        # 最初の32文字を取り出してUUIDに変換
+        return uuid.UUID(hash[:32])

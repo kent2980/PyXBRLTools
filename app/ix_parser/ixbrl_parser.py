@@ -39,6 +39,18 @@ class IxbrlParser(BaseXBRLParser):
     def ixbrl_role(self):
         return self.__ixbrl_role
 
+    @property
+    def ix_non_fraction(self):
+        return self.__ix_non_fraction
+
+    @property
+    def ix_non_numeric(self):
+        return self.__ix_non_numeric
+
+    @property
+    def ix_context(self):
+        return self.__ix_context
+
     def __set_report_type(self, xbrl_url):
         """レポートの種類を設定する"""
         if xbrl_url.startswith("http"):
@@ -77,7 +89,7 @@ class IxbrlParser(BaseXBRLParser):
         self.__report_type = self.__set_report_type(self.xbrl_url)
         self.__ixbrl_role = self.__set_ixbrl_role()
 
-    def ix_non_numeric(self):
+    def set_ix_non_numeric(self):
         """iXBRLの非数値情報を取得する
 
         Returns:
@@ -85,7 +97,7 @@ class IxbrlParser(BaseXBRLParser):
         """
 
         if self.__ix_non_numeric:
-            self.data = self.ix_non_numeric
+            self._set_data(self.__ix_non_numeric)
 
         lists = []
 
@@ -151,8 +163,9 @@ class IxbrlParser(BaseXBRLParser):
                 value=text,
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
+                source_file_id=self.source_file.id,
             )
-            lists.append(inn)
+            lists.append(inn.__dict__)
 
         self._set_data(lists)
 
@@ -160,7 +173,7 @@ class IxbrlParser(BaseXBRLParser):
 
         return self
 
-    def ix_non_fraction(self):
+    def set_ix_non_fraction(self):
         """iXBRLの非分数情報を取得する
 
         Returns:
@@ -169,7 +182,7 @@ class IxbrlParser(BaseXBRLParser):
         # ix_non_fractionが存在する場合はそのまま返す
 
         if self.__ix_non_fraction:
-            self.data = self.ix_non_fraction
+            self._set_data(self.__ix_non_fraction)
 
         lists = []
         tags = self.soup.find_all(name="ix:nonFraction")
@@ -230,8 +243,9 @@ class IxbrlParser(BaseXBRLParser):
                 numeric=numeric,
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
+                source_file_id=self.source_file.id,
             )
-            lists.append(inn)
+            lists.append(inn.__dict__)
 
         self._set_data(lists)
 
@@ -239,10 +253,10 @@ class IxbrlParser(BaseXBRLParser):
 
         return self
 
-    def ix_context(self):
+    def set_ix_context(self):
 
         if self.__ix_context:
-            self.data = self.__ix_context
+            self._set_data(self.__ix_context)
 
         lists = []
         tags = self.soup.find_all(name="xbrli:context")
@@ -279,8 +293,9 @@ class IxbrlParser(BaseXBRLParser):
                 context_id=context_id,
                 period=period,
                 scenario=scenario,
+                source_file_id=self.source_file.id,
             )
-            lists.append(inn)
+            lists.append(inn.__dict__)
 
         self._set_data(lists)
 

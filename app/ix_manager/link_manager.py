@@ -1,8 +1,12 @@
-from typing import Optional
+from typing import List, Optional
 
 from app.ix_manager import BaseXbrlManager
-from app.ix_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                           PreLinkParser)
+from app.ix_parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -13,145 +17,140 @@ class BaseLinkManager(BaseXbrlManager):
         directory_path,
         output_path,
         document_type=None,
-        is_child=False,
         xbrl_id: Optional[str] = None,
-    ) -> None:
+    ):
         super().__init__(directory_path, xbrl_id=xbrl_id)
-        self._output_path = output_path
-        self._document_type = document_type
-        if is_child:
-            self.set_linkbase_files(self.get_role())
-            self.parser = self.get_parser()
 
-        self.link_roles = None
-        self.link_locs = None
-        self.link_arcs = None
-
-        self.set_source_file(self.xbrl_id, output_path=output_path)
-        self.set_link_roles()
-        self.set_link_locs()
-        self.set_link_arcs()
-
-    @property
-    def output_path(self):
-        return self._output_path
+        # プロパティの初期化
+        self.__output_path = output_path
+        self.__document_type = document_type
+        self.__parser = None
+        self.__parsers: Optional[List[BaseLinkParser]] = None
+        self.__role = None
+        self.__link_roles = None
+        self.__link_locs = None
+        self.__link_arcs = None
 
     @property
     def document_type(self):
-        return self._document_type
+        return self.__document_type
 
-    @output_path.setter
-    def output_path(self, output_path):
-        """
-        出力先のパスを設定します。
+    @property
+    def output_path(self):
+        return self.__output_path
 
-        Parameters:
-            output_path (str): 出力先のパス
+    @property
+    def parser(self):
+        return self.__parser
 
-        Returns:
-            self (LabelManager): 自身のインスタンス
-        """
-        self._output_path = output_path
+    @parser.setter
+    def parser(self, parser):
+        self.__parser = parser
 
-    @document_type.setter
-    def document_type(self, document_type):
-        """
-        document_typeを設定します。
+    @property
+    def role(self):
+        return self.__role
 
-        Parameters:
-            document_type (str): document_typeの設定
+    @role.setter
+    def role(self, role):
+        self.__role = role
 
-        Returns:
-            self (BaseLinkManager): 自身のインスタンス
-        """
-        self._document_type = document_type
+    @property
+    def parsers(self):
+        return self.__parsers
 
-    def get_parser(self) -> BaseLinkParser:
-        raise NotImplementedError
+    @property
+    def link_roles(self):
+        return self.__link_roles
 
-    def get_role(self):
-        raise NotImplementedError
+    @property
+    def link_locs(self):
+        return self.__link_locs
 
-    def set_link_roles(self):
+    @property
+    def link_arcs(self):
+        return self.__link_arcs
+
+    def _init_parser(self):
+        """パーサーを設定します。"""
+        parsers: List[BaseLinkParser] = []
+        for _, row in self.files.iterrows():
+            parser = self.parser(
+                row["xlink_href"], self.output_path, xbrl_id=self.xbrl_id
+            )
+            parsers.append(parser)
+        self.__parsers = parsers
+
+    def _init_manager(self):
+        self.set_source_file(self.parsers)
+        self.__set_link_roles()
+        self.__set_link_locs()
+        self.__set_link_arcs()
+
+    def __set_link_roles(self):
         """link_rolesを設定します。"""
-        if self.link_roles:
-            return self.link_roles
+        if self.__link_roles:
+            return self.__link_roles
 
         rows = []
 
-        output_path = self.output_path
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for _, row in files.iterrows():
+        for parser in self.parsers:
 
-            parser = self.parser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_roles()
+            parser = parser.link_roles()
 
-            data = parser.to_DataFrame()
+            data = parser.data
 
-            data["xbrl_id"] = self.xbrl_id
-
-            rows.append(data.to_dict(orient="records"))
+            rows.append(data)
 
         self._set_items("link_roles", rows)
 
-        self.link_roles = rows
+        self.__link_roles = rows
 
-    def set_link_locs(self):
+    def __set_link_locs(self):
         """link_locsを設定します。"""
 
-        if self.link_locs:
-            return self.link_locs
+        if self.__link_locs:
+            return self.__link_locs
 
         rows = []
 
-        output_path = self.output_path
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for _, row in files.iterrows():
-            parser = self.parser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_locs()
+        for parser in self.parsers:
+            parser = parser.link_locs()
 
-            data = parser.to_DataFrame()
+            data = parser.data
 
-            data["xbrl_id"] = self.xbrl_id
-
-            rows.append(data.to_dict(orient="records"))
+            rows.append(data)
 
         self._set_items("link_locs", rows)
 
-        self.link_locs = rows
+        self.__link_locs = rows
 
-    def set_link_arcs(self):
+    def __set_link_arcs(self):
         """link_arcsを設定します。"""
-
-        if self.link_arcs:
-            return self.link_arcs
+        if self.__link_arcs:
+            return self.__link_arcs
 
         rows = []
 
-        output_path = self.output_path
         files = self.files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
-        for _, row in files.iterrows():
-            parser = self.parser(
-                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
-            ).link_arcs()
+        for parser in self.parsers:
+            parser = parser.link_arcs()
 
-            data = parser.to_DataFrame()
+            data = parser.data
 
-            data["xbrl_id"] = self.xbrl_id
-
-            rows.append(data.to_dict(orient="records"))
+            rows.append(data)
 
         self._set_items("link_arcs", rows)
 
-        self.link_arcs = rows
+        self.__link_arcs = rows
 
 
 class CalLinkManager(BaseLinkManager):
@@ -167,21 +166,20 @@ class CalLinkManager(BaseLinkManager):
         output_path,
         document_type=None,
         xbrl_id: Optional[str] = None,
-    ) -> None:
+    ):
         super().__init__(
             directory_path,
             output_path,
             document_type,
-            is_child=True,
             xbrl_id=xbrl_id,
         )
+        self.role = "calculationLinkbaseRef"
+        self.parser = CalLinkParser
 
-    def get_parser(self) -> BaseLinkParser:
-        return CalLinkParser
-
-    def get_role(self):
-        role = "calculationLinkbaseRef"
-        return role
+        # 初期化メソッドを実行
+        self._set_linkbase_files(self.role)
+        self._init_parser()
+        self._init_manager()
 
 
 class DefLinkManager(BaseLinkManager):
@@ -197,21 +195,17 @@ class DefLinkManager(BaseLinkManager):
         output_path,
         document_type=None,
         xbrl_id: Optional[str] = None,
-    ) -> None:
+    ):
         super().__init__(
-            directory_path,
-            output_path,
-            document_type,
-            is_child=True,
-            xbrl_id=xbrl_id,
+            directory_path, output_path, document_type, xbrl_id=xbrl_id
         )
+        self.role = "definitionLinkbaseRef"
+        self.parser = DefLinkParser
 
-    def get_parser(self) -> BaseLinkParser:
-        return DefLinkParser
-
-    def get_role(self):
-        role = "definitionLinkbaseRef"
-        return role
+        # 初期化メソッドを実行
+        self._set_linkbase_files(self.role)
+        self._init_parser()
+        self._init_manager()
 
 
 class PreLinkManager(BaseLinkManager):
@@ -227,18 +221,14 @@ class PreLinkManager(BaseLinkManager):
         output_path,
         document_type=None,
         xbrl_id: Optional[str] = None,
-    ) -> None:
+    ):
         super().__init__(
-            directory_path,
-            output_path,
-            document_type,
-            is_child=True,
-            xbrl_id=xbrl_id,
+            directory_path, output_path, document_type, xbrl_id=xbrl_id
         )
+        self.role = "presentationLinkbaseRef"
+        self.parser = PreLinkParser
 
-    def get_parser(self) -> BaseLinkParser:
-        return PreLinkParser
-
-    def get_role(self):
-        role = "presentationLinkbaseRef"
-        return role
+        # 初期化メソッドを実行
+        self._set_linkbase_files(self.role)
+        self._init_parser()
+        self._init_manager()
