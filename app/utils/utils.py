@@ -220,7 +220,7 @@ class Utils:
         return text, format_str
 
     def read_const_json():
-        """ const.jsonを読み込む関数 """
+        """const.jsonを読み込む関数"""
         # 現在のディレクトリを取得
         current_dir = Path(os.path.dirname(__file__)).parent
         const_path = current_dir / "const" / "const.json"

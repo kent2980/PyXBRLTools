@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pandas
 
 from app.exception import XbrlListEmptyError
@@ -11,8 +13,10 @@ class QualitativeManager(BaseXbrlManager):
     raise   - XbrlListEmptyError("qualitative.htmが見つかりません。")
     """
 
-    def __init__(self, directory_path) -> None:
-        super().__init__(directory_path)
+    def __init__(
+        self, directory_path, xbrl_id: Optional[str] = None
+    ) -> None:
+        super().__init__(directory_path, xbrl_id=xbrl_id)
         self.set_htmlbase_files("qualitative")
 
         if len(self.files) == 0:

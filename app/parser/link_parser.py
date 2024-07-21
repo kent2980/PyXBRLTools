@@ -8,7 +8,9 @@ from . import BaseXBRLParser
 class BaseLinkParser(BaseXBRLParser):
     """BaseLinkParserのクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
         super().__init__(xbrl_url, output_path, xbrl_id)
 
         # プロパティの初期化
@@ -189,7 +191,9 @@ class BaseLinkParser(BaseXBRLParser):
 class CalLinkParser(BaseLinkParser):
     """CalculationLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
         super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証
@@ -199,10 +203,13 @@ class CalLinkParser(BaseLinkParser):
         self._set_link_tag_name("link:calculationLink")
         self._set_arc_tag_name("link:calculationArc")
 
+
 class DefLinkParser(BaseLinkParser):
     """DefinitionLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
         super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証
@@ -212,10 +219,13 @@ class DefLinkParser(BaseLinkParser):
         self._set_link_tag_name("link:definitionLink")
         self._set_arc_tag_name("link:definitionArc")
 
+
 class PreLinkParser(BaseLinkParser):
     """PresentationLinkのParserクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
         super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名の検証

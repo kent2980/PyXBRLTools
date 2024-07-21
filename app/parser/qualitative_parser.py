@@ -1,11 +1,15 @@
+from typing import Optional
+
 from . import BaseXBRLParser
 
 
 class QualitativeParser(BaseXBRLParser):
-    """ XBRLドキュメントから定性データを解析するためのクラス """
+    """XBRLドキュメントから定性データを解析するためのクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名を検証
         self._assert_valid_basename("qualitative.htm")

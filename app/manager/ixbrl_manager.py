@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.exception import XbrlListEmptyError
 from app.manager import BaseXbrlManager
 from app.parser import IxbrlParser
@@ -10,7 +12,9 @@ class IXBRLManager(BaseXbrlManager):
     raise   - XbrlListEmptyError("ixbrlファイルが見つかりません。")
     """
 
-    def __init__(self, directory_path, xbrl_id: str = None) -> None:
+    def __init__(
+        self, directory_path, xbrl_id: Optional[str] = None
+    ) -> None:
         """
         IxbrlManagerクラスのコンストラクタです。
 
@@ -69,7 +73,9 @@ class IXBRLManager(BaseXbrlManager):
     def ixbrl_roles(self):
         for _, row in self.files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
-                parser = IxbrlParser(row["xlink_href"])
+                parser = IxbrlParser(
+                    row["xlink_href"], xbrl_id=self.xbrl_id
+                )
                 yield parser.ixbrl_role
 
     def set_ix_non_fraction(self, document_type=None):
@@ -91,7 +97,9 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(row["xlink_href"]).ix_non_fraction()
+                parser = IxbrlParser(
+                    row["xlink_href"], xbrl_id=self.xbrl_id
+                ).ix_non_fraction()
 
                 df = parser.to_DataFrame()
 
@@ -122,7 +130,9 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(row["xlink_href"]).ix_non_numeric()
+                parser = IxbrlParser(
+                    row["xlink_href"], xbrl_id=self.xbrl_id
+                ).ix_non_numeric()
 
                 df = parser.to_DataFrame()
 
@@ -153,7 +163,9 @@ class IXBRLManager(BaseXbrlManager):
         for _, row in files.iterrows():
             if row["xlink_href"].endswith("ixbrl.htm"):
 
-                parser = IxbrlParser(row["xlink_href"]).ix_context()
+                parser = IxbrlParser(
+                    row["xlink_href"], xbrl_id=self.xbrl_id
+                ).ix_context()
 
                 df = parser.to_DataFrame()
 

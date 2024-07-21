@@ -1,14 +1,17 @@
-from app.exception import TypeOfXBRLIsDifferent
+from typing import Optional
+
 from app.tag import SchemaElement, SchemaImport, SchemaLinkBaseRef
 
 from . import BaseXBRLParser
 
 
 class SchemaParser(BaseXBRLParser):
-    """ スキーマファイルを解析するクラス """
+    """スキーマファイルを解析するクラス"""
 
-    def __init__(self, xbrl_url, output_path=None):
-        super().__init__(xbrl_url, output_path)
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
+        super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名を検証
         self._assert_valid_basename(".xsd")

@@ -13,7 +13,9 @@ from . import BaseXBRLParser
 class IxbrlParser(BaseXBRLParser):
     """iXBRLを解析するクラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
         super().__init__(xbrl_url, output_path, xbrl_id)
 
         # ファイル名を検証

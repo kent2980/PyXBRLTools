@@ -1,6 +1,12 @@
+from typing import Optional
+
 from app.manager import BaseXbrlManager
-from app.parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                        PreLinkParser)
+from app.parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -12,7 +18,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path,
         document_type=None,
         is_child=False,
-        xbrl_id: str = None,
+        xbrl_id: Optional[str] = None,
     ) -> None:
         super().__init__(directory_path, xbrl_id=xbrl_id)
         self._output_path = output_path
@@ -84,7 +90,7 @@ class BaseLinkManager(BaseXbrlManager):
         for _, row in files.iterrows():
 
             parser = self.parser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_roles()
 
             data = parser.to_DataFrame()
@@ -111,7 +117,7 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
             parser = self.parser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_locs()
 
             data = parser.to_DataFrame()
@@ -138,7 +144,7 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{self.document_type}'")
         for _, row in files.iterrows():
             parser = self.parser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_arcs()
 
             data = parser.to_DataFrame()
@@ -160,10 +166,18 @@ class CalLinkManager(BaseLinkManager):
     """
 
     def __init__(
-        self, directory_path, output_path, document_type=None
+        self,
+        directory_path,
+        output_path,
+        document_type=None,
+        xbrl_id: Optional[str] = None,
     ) -> None:
         super().__init__(
-            directory_path, output_path, document_type, is_child=True
+            directory_path,
+            output_path,
+            document_type,
+            is_child=True,
+            xbrl_id=xbrl_id,
         )
 
     def get_parser(self) -> BaseLinkParser:
@@ -182,10 +196,18 @@ class DefLinkManager(BaseLinkManager):
     """
 
     def __init__(
-        self, directory_path, output_path, document_type=None
+        self,
+        directory_path,
+        output_path,
+        document_type=None,
+        xbrl_id: Optional[str] = None,
     ) -> None:
         super().__init__(
-            directory_path, output_path, document_type, is_child=True
+            directory_path,
+            output_path,
+            document_type,
+            is_child=True,
+            xbrl_id=xbrl_id,
         )
 
     def get_parser(self) -> BaseLinkParser:
@@ -204,10 +226,18 @@ class PreLinkManager(BaseLinkManager):
     """
 
     def __init__(
-        self, directory_path, output_path, document_type=None
+        self,
+        directory_path,
+        output_path,
+        document_type=None,
+        xbrl_id: Optional[str] = None,
     ) -> None:
         super().__init__(
-            directory_path, output_path, document_type, is_child=True
+            directory_path,
+            output_path,
+            document_type,
+            is_child=True,
+            xbrl_id=xbrl_id,
         )
 
     def get_parser(self) -> BaseLinkParser:

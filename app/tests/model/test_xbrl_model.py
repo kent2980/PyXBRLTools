@@ -3,11 +3,16 @@ import pprint
 import pytest
 import requests
 
-from app.manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
-                         IXBRLManager, LabelManager, PreLinkManager)
+from app.manager import (
+    BaseXbrlManager,
+    CalLinkManager,
+    DefLinkManager,
+    IXBRLManager,
+    LabelManager,
+    PreLinkManager,
+)
 from app.models import XBRLModel
 from app.tag import IxHeader
-from app.tests.conftest import get_output_dir, get_xbrl_zip_dir
 
 
 @pytest.fixture
@@ -135,11 +140,11 @@ def test_non_numeric_api_insert(get_xbrl_zip_dir, get_output_dir):
         # print(model)
         items = model.get_all_items()
         for key, value in items.items():
-            if isinstance(value, dict):
+            if isinstance(value, IxHeader):
                 url = urls[key]
                 response = requests.post(
                     url,
-                    json=value,
+                    json=value.__dict__,
                 )
                 print(response.json())
                 assert response.status_code == 200
@@ -165,11 +170,9 @@ def test_non_numeric_api_insert(get_xbrl_zip_dir, get_output_dir):
 
 
 def test_xbrl_id_equal(get_xbrl_zip_dir, get_output_dir):
-    xbrl_id = None
     for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
         ix_header = model.get_ixbrl().ix_header
         print(ix_header)
-        xbrl_id = ix_header.xbrl_id
         for key, value in model.get_all_items().items():
             if isinstance(value, list):
                 for items in value:

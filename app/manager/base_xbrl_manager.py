@@ -13,7 +13,9 @@ from app.utils import Utils
 class BaseXbrlManager:
     """XBRLディレクトリの解析を行う基底クラス"""
 
-    def __init__(self, directory_path, xbrl_id: Optional[str] = None) -> None:
+    def __init__(
+        self, directory_path, xbrl_id: Optional[str] = None
+    ) -> None:
         self.directory_path = Path(directory_path)
         self.files = None
         self.__data = None
@@ -32,13 +34,13 @@ class BaseXbrlManager:
     def data(self):
         return self.__data
 
-    def _set_data(self, key:str, value:any):
+    def _set_data(self, key: str, value: any):
         if self.__data is None:
             self.__data = {}
         else:
             self.__data[key] = value
 
-    def _set_items(self, key:str, value:any):
+    def _set_items(self, key: str, value: any):
         if self.__items is None:
             self.__items = {}
         else:
@@ -70,7 +72,7 @@ class BaseXbrlManager:
         ]
 
     def xbrl_type(self):
-        """ 書類品種を取得します """
+        """書類品種を取得します"""
         files = self.__to_filelist()
         for file_str in files:
             file = Path(file_str)
@@ -82,7 +84,7 @@ class BaseXbrlManager:
                 return code, Utils.read_const_json["report"][code]
 
     def set_linkbase_files(self, xlink_role=None):
-        """ 関係ファイルのリストを取得する """
+        """関係ファイルのリストを取得する"""
         files = self.__to_filelist()
         xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
 

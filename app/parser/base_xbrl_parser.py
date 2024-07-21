@@ -18,7 +18,9 @@ from app.tag import SourceFile
 class BaseXBRLParser:
     """XBRLを解析する基底クラス"""
 
-    def __init__(self, xbrl_url, output_path=None, xbrl_id: Optional[str]=None):
+    def __init__(
+        self, xbrl_url, output_path=None, xbrl_id: Optional[str] = None
+    ):
 
         # urlの検証を行います
         self.__assert_valid_url(xbrl_url, output_path)
@@ -32,7 +34,9 @@ class BaseXBRLParser:
         )  # ドキュメントタイプ
         self.__soup = None  # BeautifulSoup
         self.__data = None  # 解析結果のデータ
-        self.__xbrl_id = xbrl_id if xbrl_id else str(uuid4())  # XBRLファイル固有のID
+        self.__xbrl_id = (
+            xbrl_id if xbrl_id else str(uuid4())
+        )  # XBRLファイル固有のID
         self.__source_file = None  # XBRLのソースファイル
 
         # 初期化メソッド
@@ -157,7 +161,7 @@ class BaseXBRLParser:
         self.__read_xbrl(file_path)
 
     def _assert_valid_basename(self, *keywords: str):
-        """ ファイル名が有効かどうかを検証する """
+        """ファイル名が有効かどうかを検証する"""
         if not self.basename.endswith(keywords):
             raise TypeOfXBRLIsDifferent(
                 f"{self.basename} は{keywords}ではありません。"

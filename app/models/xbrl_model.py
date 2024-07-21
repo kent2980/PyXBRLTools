@@ -17,26 +17,20 @@ class XBRLModel(BaseXbrlModel):
     def __init__(self, xbrl_zip_path, output_path) -> None:
         super().__init__(xbrl_zip_path, output_path)
         self.__ixbrl_manager: IXBRLManager = IXBRLManager(
-            self.directory_path
+            self.directory_path, xbrl_id=self.xbrl_id
         )
         self.__label_manager = self._init_manager(LabelManager)
         self.__cal_link_manager = self._init_manager(CalLinkManager)
         self.__def_link_manager = self._init_manager(DefLinkManager)
         self.__pre_link_manager = self._init_manager(PreLinkManager)
 
-        # xbrl_idを設定
-        self.__set_xbrl_id(self.xbrl_id)
-
     def _init_manager(self, manager_class: BaseXbrlManager):
         try:
-            return manager_class(self.directory_path, self.output_path)
+            return manager_class(
+                self.directory_path, self.output_path, xbrl_id=self.xbrl_id
+            )
         except XbrlListEmptyError:
             return None
-
-    def __set_xbrl_id(self, xbrl_id: str):
-        managers = self.get_all_manager()
-        for manager in managers.values():
-            manager.set_xbrl_id(xbrl_id)
 
     @property
     def ixbrl_manager(self):
@@ -108,4 +102,5 @@ class XBRLModel(BaseXbrlModel):
 
     def __str__(self) -> str:
         header = self.ix_header()
-        return f" - [{header['securities_code']}] {header['company_name']} <{header['document_name']}>"
+        return f" - [{header['securities_code']}] \
+            {header['company_name']} <{header['document_name']}>"

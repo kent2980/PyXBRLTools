@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.exception import SetLanguageNotError
 from app.manager import BaseXbrlManager
 from app.parser import LabelParser
@@ -10,7 +12,13 @@ class LabelManager(BaseXbrlManager):
             - XbrlListEmptyError("labelLinkbaseファイルが見つかりません。")
     """
 
-    def __init__(self, directory_path, output_path, lang="jp") -> None:
+    def __init__(
+        self,
+        directory_path,
+        output_path,
+        lang="jp",
+        xbrl_id: Optional[str] = None,
+    ) -> None:
         """
         LabelManagerクラスのコンストラクタです。
 
@@ -20,7 +28,7 @@ class LabelManager(BaseXbrlManager):
         Returns:
             None
         """
-        super().__init__(directory_path)
+        super().__init__(directory_path, xbrl_id=xbrl_id)
         self.set_linkbase_files("labelLinkbaseRef")
         self.output_path = output_path
         self.set_language(lang)
@@ -86,7 +94,7 @@ class LabelManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
             parser = LabelParser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_labels()
 
             data = parser.to_dict()
@@ -115,7 +123,7 @@ class LabelManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
             parser = LabelParser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_label_locs()
 
             data = parser.to_dict()
@@ -145,7 +153,7 @@ class LabelManager(BaseXbrlManager):
             files = files.query(f"document_type == '{document_type}'")
         for _, row in files.iterrows():
             parser = LabelParser(
-                row["xlink_href"], output_path
+                row["xlink_href"], output_path, xbrl_id=self.xbrl_id
             ).link_label_arcs()
 
             data = parser.to_dict()
