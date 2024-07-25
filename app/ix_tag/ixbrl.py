@@ -19,6 +19,7 @@ class IxNonNumeric(BaseTag):
     report_type: Optional[str] = field(default=None)
     ixbrl_role: Optional[str] = field(default=None)
     source_file_id: Optional[str] = field(default=None)
+    xbrl_type: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -37,6 +38,7 @@ class IxNonFraction(BaseTag):
     report_type: Optional[str] = field(default=None)
     ixbrl_role: Optional[str] = field(default=None)
     source_file_id: Optional[str] = field(default=None)
+    xbrl_type: Optional[str] = field(default=None)
 
 
 @dataclass

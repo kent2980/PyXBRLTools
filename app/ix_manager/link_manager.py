@@ -1,12 +1,8 @@
 from typing import List, Optional
 
 from app.ix_manager import BaseXbrlManager
-from app.ix_parser import (
-    BaseLinkParser,
-    CalLinkParser,
-    DefLinkParser,
-    PreLinkParser,
-)
+from app.ix_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
+                           PreLinkParser)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -18,6 +14,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path,
         document_type=None,
         xbrl_id: Optional[str] = None,
+        class_name: Optional[str]=None,
     ):
         super().__init__(directory_path, xbrl_id=xbrl_id)
 
@@ -25,11 +22,11 @@ class BaseLinkManager(BaseXbrlManager):
         self.__output_path = output_path
         self.__document_type = document_type
         self.__parser = None
-        self.__parsers: Optional[List[BaseLinkParser]] = None
         self.__role = None
         self.__link_roles = None
         self.__link_locs = None
         self.__link_arcs = None
+        self.__class_name = class_name
 
     @property
     def document_type(self):
@@ -56,10 +53,6 @@ class BaseLinkManager(BaseXbrlManager):
         self.__role = role
 
     @property
-    def parsers(self):
-        return self.__parsers
-
-    @property
     def link_roles(self):
         return self.__link_roles
 
@@ -71,6 +64,10 @@ class BaseLinkManager(BaseXbrlManager):
     def link_arcs(self):
         return self.__link_arcs
 
+    @property
+    def class_name(self):
+        return self.__class_name
+
     def _init_parser(self):
         """パーサーを設定します。"""
         parsers: List[BaseLinkParser] = []
@@ -79,10 +76,11 @@ class BaseLinkManager(BaseXbrlManager):
                 row["xlink_href"], self.output_path, xbrl_id=self.xbrl_id
             )
             parsers.append(parser)
-        self.__parsers = parsers
+
+        self._set_parsers(parsers)
 
     def _init_manager(self):
-        self.set_source_file(self.parsers)
+        self.set_source_file(self.parsers, class_name=self.class_name)
         self.__set_link_roles()
         self.__set_link_locs()
         self.__set_link_arcs()
@@ -99,13 +97,15 @@ class BaseLinkManager(BaseXbrlManager):
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:
 
+            id = parser.source_file_id
+
             parser = parser.link_roles()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_roles", rows)
+            self._set_items(id=id, key=f"{self.class_name}_link_roles", item=data)
 
         self.__link_roles = rows
 
@@ -121,13 +121,16 @@ class BaseLinkManager(BaseXbrlManager):
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:
+
+            id = parser.source_file_id
+
             parser = parser.link_locs()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_locs", rows)
+            self._set_items(id=id, key=f"{self.class_name}_link_locs", item=data)
 
         self.__link_locs = rows
 
@@ -142,13 +145,16 @@ class BaseLinkManager(BaseXbrlManager):
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:
+
+            id = parser.source_file_id
+
             parser = parser.link_arcs()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_arcs", rows)
+            self._set_items(id=id, key=f"{self.class_name}_link_arcs", item=data)
 
         self.__link_arcs = rows
 
@@ -172,6 +178,7 @@ class CalLinkManager(BaseLinkManager):
             output_path,
             document_type,
             xbrl_id=xbrl_id,
+            class_name="cal"
         )
         self.role = "calculationLinkbaseRef"
         self.parser = CalLinkParser
@@ -180,6 +187,7 @@ class CalLinkManager(BaseLinkManager):
         self._set_linkbase_files(self.role)
         self._init_parser()
         self._init_manager()
+        self._set_source_file_ids()
 
 
 class DefLinkManager(BaseLinkManager):
@@ -197,7 +205,7 @@ class DefLinkManager(BaseLinkManager):
         xbrl_id: Optional[str] = None,
     ):
         super().__init__(
-            directory_path, output_path, document_type, xbrl_id=xbrl_id
+            directory_path, output_path, document_type, xbrl_id=xbrl_id, class_name="def"
         )
         self.role = "definitionLinkbaseRef"
         self.parser = DefLinkParser
@@ -206,6 +214,7 @@ class DefLinkManager(BaseLinkManager):
         self._set_linkbase_files(self.role)
         self._init_parser()
         self._init_manager()
+        self._set_source_file_ids()
 
 
 class PreLinkManager(BaseLinkManager):
@@ -223,7 +232,7 @@ class PreLinkManager(BaseLinkManager):
         xbrl_id: Optional[str] = None,
     ):
         super().__init__(
-            directory_path, output_path, document_type, xbrl_id=xbrl_id
+            directory_path, output_path, document_type, xbrl_id=xbrl_id, class_name="pre"
         )
         self.role = "presentationLinkbaseRef"
         self.parser = PreLinkParser
@@ -232,3 +241,4 @@ class PreLinkManager(BaseLinkManager):
         self._set_linkbase_files(self.role)
         self._init_parser()
         self._init_manager()
+        self._set_source_file_ids()

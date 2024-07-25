@@ -1,3 +1,4 @@
+import pprint
 from typing import List, Optional
 
 from app.exception import XbrlListEmptyError
@@ -31,7 +32,6 @@ class IXBRLManager(BaseXbrlManager):
             raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
 
         # プロパティの初期化
-        self.__parsers: Optional[List[IxbrlParser]] = None
         self.__ix_non_fraction = None
         self.__ix_non_numeric = None
         self.__ix_context = None
@@ -40,10 +40,7 @@ class IXBRLManager(BaseXbrlManager):
         # 初期化メソッドを実行
         self.__init_parser()
         self.__init_manager()
-
-    @property
-    def parsers(self):
-        return self.__parsers
+        self._set_source_file_ids()
 
     @property
     def ix_non_fraction(self):
@@ -68,15 +65,17 @@ class IXBRLManager(BaseXbrlManager):
             parser = IxbrlParser(row["xlink_href"], xbrl_id=self.xbrl_id)
             parsers.append(parser)
 
-        self.__parsers = parsers
+        self._set_parsers(parsers)
 
     def __init_manager(self):
         """managerを初期化します。"""
-        self.set_source_file(self.parsers)
         self.__set_ix_header()
+        self.set_source_file(self.parsers, class_name="ix")
         self.__set_ix_non_fraction()
         self.__set_ix_non_numeric()
         self.__set_ix_context()
+
+        self.items.sort(key=lambda x: x["sort_position"])
 
     def __set_ix_non_fraction(self):
         """
@@ -91,15 +90,17 @@ class IXBRLManager(BaseXbrlManager):
 
         for parser in self.parsers:
 
-            parser = parser.set_ix_non_fraction()
+            id = parser.source_file_id
+
+            parser:IxbrlParser = parser.set_ix_non_fraction()
 
             data = parser.data
 
             rows.append(data)
 
-        self.__ix_non_fraction = rows
+            self._set_items(id=id, key="ix_non_fraction", item=data)
 
-        self._set_items("non_fraction", rows)
+        self.__ix_non_fraction = rows
 
     def __set_ix_non_numeric(self):
         """
@@ -110,9 +111,15 @@ class IXBRLManager(BaseXbrlManager):
             dict: 非数値のIXBRLデータ
         """
 
+        # ix_non_numericが設定されている場合は、何もしない
+        if self.ix_non_numeric:
+            return None
+
         rows = []
 
         for parser in self.parsers:
+
+            id = parser.source_file_id
 
             data = parser.set_ix_non_numeric()
 
@@ -120,9 +127,10 @@ class IXBRLManager(BaseXbrlManager):
 
             rows.append(data)
 
+            self._set_items(id=id, key="ix_non_numeric", item=data)
+
         self.__ix_non_numeric = rows
 
-        self._set_items("non_numeric", rows)
 
     def __set_ix_context(self):
         """
@@ -137,24 +145,22 @@ class IXBRLManager(BaseXbrlManager):
 
         for parser in self.parsers:
 
+            id = parser.source_file_id
+
             parser = parser.set_ix_context()
 
             data = parser.data
 
             rows.append(data)
 
+            self._set_items(id=id, key="ix_context", item=data)
+
         self.__ix_context = rows
 
-        self._set_items("context", rows)
-
     def __set_ix_header(self):
-        """
-        ix_header属性を設定します。
-        iXBRLのヘッダー情報を取得します。
+        """ ix_header属性を設定します。 """
 
-        Returns:
-            self (IxbrlManager): 自身のインスタンス
-        """
+        # ヘッダー情報を初期化する
         header = {
             "company_name": None,
             "securities_code": None,
@@ -164,10 +170,15 @@ class IXBRLManager(BaseXbrlManager):
             "xbrl_id": None,
             "report_type": None,
         }
+
+        # ix_non_numericがNoneの場合は、ix_non_numericを設定する
         if self.ix_non_numeric is None:
             self.__set_ix_non_numeric()
-        for values in self.ix_non_numeric:
-            for value in values:
+
+        # ix_non_numericからヘッダー情報を取得する
+        for value_dict in self.ix_non_numeric:
+            # pprint.pprint(value_dict)
+            for value in value_dict:
                 header["company_name"] = (
                     value["value"]
                     if any(
@@ -216,7 +227,6 @@ class IXBRLManager(BaseXbrlManager):
                 )
                 header["xbrl_id"] = value["xbrl_id"]
                 header["report_type"] = value["report_type"]
-                # header["source_file_id"] = value["source_file_id"]
 
         ix_header = IxHeader(
             company_name=header["company_name"],
@@ -226,9 +236,10 @@ class IXBRLManager(BaseXbrlManager):
             current_period=header["current_period"],
             xbrl_id=header["xbrl_id"],
             report_type=header["report_type"],
-            # source_file_id=header["source_file_id"],
         )
 
-        self.__ix_header = ix_header.__dict__
+        header = ix_header.__dict__
 
-        self._set_items("header", ix_header.__dict__)
+        self.__ix_header = header
+
+        self._set_items(id=ix_header.xbrl_id, key="ix_head_title", item=header, sort_position=0)

@@ -1,6 +1,7 @@
 from app.exception import XbrlListEmptyError
 from app.ix_manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
-                            IXBRLManager, LabelManager, PreLinkManager)
+                            IXBRLManager, LabelManager, PreLinkManager,
+                            SchemaManager)
 
 from .base_xbrl_model import BaseXbrlModel
 
@@ -17,6 +18,9 @@ class XBRLModel(BaseXbrlModel):
         self.__cal_link_manager = self._init_manager(CalLinkManager)
         self.__def_link_manager = self._init_manager(DefLinkManager)
         self.__pre_link_manager = self._init_manager(PreLinkManager)
+        self.__schema_manager: SchemaManager = SchemaManager(
+            self.directory_path, xbrl_id=self.xbrl_id
+        )
 
     def _init_manager(self, manager_class: BaseXbrlManager):
         try:
@@ -24,7 +28,12 @@ class XBRLModel(BaseXbrlModel):
                 self.directory_path, self.output_path, xbrl_id=self.xbrl_id
             )
         except XbrlListEmptyError as e:
-            print(e)
+            # print(e)
+            pass
+
+    @property
+    def schema_manager(self):
+        return self.__schema_manager
 
     @property
     def ixbrl_manager(self):
@@ -53,6 +62,10 @@ class XBRLModel(BaseXbrlModel):
         self.__cal_link_manager = None
         self.__def_link_manager = None
         self.__pre_link_manager = None
+        self.__schema_manager = None
+
+    def get_schema(self):
+        return self.schema_manager
 
     def get_ixbrl(self):
         return self.ixbrl_manager
@@ -76,6 +89,7 @@ class XBRLModel(BaseXbrlModel):
             "cal": self.get_cal_link(),
             "def": self.get_def_link(),
             "pre": self.get_pre_link(),
+            "schema": self.get_schema(),
         }
         # all_dataから値がNoneのものを削除
         return {k: v for k, v in all_data.items() if v is not None}
@@ -85,16 +99,22 @@ class XBRLModel(BaseXbrlModel):
             yield value
 
     def get_all_items(self):
-        items = {}
-        for name, manager in self.get_all_manager().items():
-            for key, value in manager.items.items():
-                items[f"{name}_{key}"] = value
-        return items
+        lists = []
+        for _, manager in self.get_all_manager().items():
+            for item in manager.items:
+                # listsとitemsを結合
+                lists.append(item)
+
+        return lists
 
     def ix_header(self):
         return self.ixbrl_manager.ix_header
 
     def __str__(self) -> str:
+
         header = self.ix_header()
+
+        print(header)
+
         return f" - [{header['securities_code']}] \
             {header['company_name']} <{header['document_name']}>"

@@ -163,7 +163,8 @@ class IxbrlParser(BaseXBRLParser):
                 value=text,
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
-                source_file_id=self.source_file.id,
+                source_file_id=self.source_file_id,
+                xbrl_type=self.xbrl_type,
             )
             lists.append(inn.__dict__)
 
@@ -243,7 +244,8 @@ class IxbrlParser(BaseXBRLParser):
                 numeric=numeric,
                 report_type=self.report_type,
                 ixbrl_role=self.ixbrl_role["en_label"],
-                source_file_id=self.source_file.id,
+                source_file_id=self.source_file_id,
+                xbrl_type=self.xbrl_type,
             )
             lists.append(inn.__dict__)
 
@@ -293,7 +295,7 @@ class IxbrlParser(BaseXBRLParser):
                 context_id=context_id,
                 period=period,
                 scenario=scenario,
-                source_file_id=self.source_file.id,
+                source_file_id=self.source_file_id,
             )
             lists.append(inn.__dict__)
 

@@ -1,6 +1,8 @@
+from pathlib import Path
 from typing import Optional
 
 from app.ix_tag import SchemaElement, SchemaImport, SchemaLinkBaseRef
+from app.utils import Utils
 
 from . import BaseXBRLParser
 
@@ -26,6 +28,8 @@ class SchemaParser(BaseXBRLParser):
                 schema_location=tag.get("schemaLocation"),
                 name_space=tag.get("namespace"),
                 xbrl_type=self.xbrl_type,
+                xbrl_id=self.xbrl_id,
+                source_file_id=self.source_file_id,
             )
 
             lists.append(si.__dict__)
@@ -34,11 +38,24 @@ class SchemaParser(BaseXBRLParser):
 
         return self
 
-    def link_base_refs(self):
+    def link_base_refs(self, exclude: list = []):
         lists = []
+
+        # 除外リスト
 
         tags = self.soup.find_all(name="linkbaseRef")
         for tag in tags:
+
+            xlink_href = tag.get("xlink:href")
+            if xlink_href:
+                if xlink_href.startswith("http"):
+                    source_file_id = str(Utils.string_to_uuid(xlink_href))
+                else:
+                    source_file_id = str(Utils.string_to_uuid(f"{self.xbrl_id}{Path(xlink_href).name}"))
+
+                # excludeリストの要素文字列がxlink_hrefに含まれている場合はスキップ
+                if any([e in xlink_href for e in exclude]):
+                    continue
 
             slb = SchemaLinkBaseRef(
                 xlink_type=tag.get("xlink:type"),
@@ -46,6 +63,8 @@ class SchemaParser(BaseXBRLParser):
                 xlink_role=tag.get("xlink:role"),
                 xlink_arcrole=tag.get("xlink:arcrole"),
                 xbrl_type=self.xbrl_type,
+                xbrl_id=self.xbrl_id,
+                source_file_id=source_file_id,
             )
 
             lists.append(slb.__dict__)
@@ -70,6 +89,8 @@ class SchemaParser(BaseXBRLParser):
                 type=tag.get("type"),
                 abstract=tag.get("abstract"),
                 xbrl_type=self.xbrl_type,
+                xbrl_id=self.xbrl_id,
+                source_file_id=self.source_file_id,
             )
 
             lists.append(se.__dict__)

@@ -1,8 +1,10 @@
+import pprint
 from typing import List, Optional
 
 from app.exception import SetLanguageNotError
 from app.ix_manager import BaseXbrlManager
 from app.ix_parser import LabelParser
+from app.ix_parser.base_xbrl_parser import BaseXBRLParser
 
 
 class LabelManager(BaseXbrlManager):
@@ -21,12 +23,12 @@ class LabelManager(BaseXbrlManager):
         self.__link_labels = None
         self.__link_label_locs = None
         self.__link_label_arcs = None
-        self.__parsers: Optional[List[LabelParser]] = None
 
         self._set_linkbase_files("labelLinkbaseRef")
         self.__init_language(lang)
         self.__init_parser()
         self.__init_manager()
+        self._set_source_file_ids()
 
     @property
     def output_path(self):
@@ -47,10 +49,6 @@ class LabelManager(BaseXbrlManager):
     @property
     def link_label_arcs(self):
         return self.__link_label_arcs
-
-    @property
-    def parsers(self):
-        return self.__parsers
 
     def __init_language(self, lang):
         """言語を設定します。"""
@@ -82,13 +80,15 @@ class LabelManager(BaseXbrlManager):
             )
             parsers.append(parser)
 
-        self.__parsers = parsers
+        self._set_parsers(parsers)
 
     def __init_manager(self):
-        self.set_source_file(self.parsers)
+        self.set_source_file(self.parsers, class_name="lab")
         self.__set_link_labels()
         self.__set_link_label_locs()
         self.__set_link_label_arcs()
+
+        self.items.sort(key=lambda x: x["sort_position"])
 
     def __set_link_labels(self):
         """
@@ -104,13 +104,16 @@ class LabelManager(BaseXbrlManager):
         rows = []
 
         for parser in self.parsers:
+
+            id = parser.source_file_id
+
             parser = parser.link_labels()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_values", rows)
+            self._set_items(id=id, key="lab_link_values", item=data, sort_position=3)
 
         self.__link_labels = rows
 
@@ -128,13 +131,16 @@ class LabelManager(BaseXbrlManager):
         rows = []
 
         for parser in self.parsers:
+
+            id = parser.source_file_id
+
             parser = parser.link_label_locs()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_locs", rows)
+            self._set_items(id=id, key="lab_link_locs", item=data, sort_position=1)
 
         self.__link_label_locs = rows
 
@@ -152,12 +158,15 @@ class LabelManager(BaseXbrlManager):
         rows = []
 
         for parser in self.parsers:
+
+            id = parser.source_file_id
+
             parser = parser.link_label_arcs()
 
             data = parser.data
 
             rows.append(data)
 
-        self._set_items("link_arcs", rows)
+            self._set_items(id=id, key="lab_link_arcs", item=data, sort_position=2)
 
         self.__link_label_arcs = rows

@@ -1,4 +1,5 @@
 import pprint
+from time import sleep
 
 import pytest
 import requests
@@ -109,72 +110,34 @@ def test_all_managers(get_xbrl_zip_dir, get_output_dir):
             print(key)
 
 
-def test_non_numeric_api_insert(get_xbrl_zip_dir, get_output_dir):
-    url_base = "http://localhost/api/v1/xbrl"
-    urls = {
-        "ix_header": f"{url_base}/ix/head/",
-        "ix_non_fraction": f"{url_base}/ix/non_fraction/list/",
-        "ix_non_numeric": f"{url_base}/ix/non_numeric/list/",
-        "ix_source_files": f"{url_base}/source/list/",
-        # 'ix_context': f'{url_base}/ix/context/',
-        "lab_link_locs": f"{url_base}/link/lab/loc/list/all/",
-        "lab_link_arcs": f"{url_base}/link/lab/arc/list/all/",
-        "lab_link_values": f"{url_base}/link/lab/value/list/all/",
-        "lab_source_files": f"{url_base}/source/list/",
-        # 'cal_link_roles': f'{url_base}/link/cal/role/',
-        "cal_link_locs": f"{url_base}/link/cal/loc/list/",
-        "cal_link_arcs": f"{url_base}/link/cal/arc/list/",
-        "cal_source_files": f"{url_base}/source/list/",
-        # 'def_link_roles': f'{url_base}/link/def/role/',
-        "def_link_locs": f"{url_base}/link/def/loc/list/",
-        "def_link_arcs": f"{url_base}/link/def/arc/list/",
-        "def_source_files": f"{url_base}/source/list/",
-        # 'pre_link_roles': f'{url_base}/link/pre/role/',
-        "pre_link_locs": f"{url_base}/link/pre/loc/list/",
-        "pre_link_arcs": f"{url_base}/link/pre/arc/list/",
-        "pre_source_files": f"{url_base}/source/list/",
-    }
+def test_api_insert(get_xbrl_zip_dir, get_output_dir, get_api_url):
+
+    urls = get_api_url
+
     for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
         print(model)
-        head = model.get_ixbrl().ix_header
-        url = urls["ix_header"]
-        print(url)
-        print(head)
-        # response = requests.post(s
-        items = model.get_all_items()
-        for key, value in items.items():
-            if isinstance(value, list):
-                if "source" in key:
-                    for items in value:
-                        url = urls[key]
-                        print(url)
-                        response = requests.post(
-                            url,
-                            json={"data": items},
-                        )
-                        result = response.json()
+        for key, value in model.get_all_items().items():
+            flag = True
+            if "source" in key:
+                assert "source" in key
+                print(f"key: {key},{urls[key]}")
+                # pprint.pprint(value)
+                response = requests.post(urls[key], json={"data":value})
+                assert response.status_code == 200
+                flag = response.json()
+                print(response.json())
+            else:
+                if flag:
+                    assert isinstance(value, list)
+                    try:
+                        print(f"key: {key},{urls[key]}")
+                        response = requests.post(urls[key], json={"data":value})
+                        print(response.json())
                         assert response.status_code == 200
-                if result != "Items already exists":
-                    if (
-                        "ix" in key
-                        or "cal" in key
-                        or "def" in key
-                        or "pre" in key
-                        or "lab" in key
-                    ):
-                        for items in value:
-                            try:
-                                url = urls[key]
-                                print(url)
-                                response = requests.post(
-                                    url,
-                                    json={"data": items},
-                                )
-                                print(response.json())
-                                assert response.status_code == 200
-                            except KeyError:
-                                continue
-
+                        # if "linkbase" in key:
+                            # pprint.pprint(value)
+                    except KeyError as e:
+                        print(e)
 
 def test_xbrl_id_equal(get_xbrl_zip_dir, get_output_dir):
     for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
@@ -190,3 +153,82 @@ def test_xbrl_id_equal(get_xbrl_zip_dir, get_output_dir):
                                 print(item["xbrl_id"])
                                 # assert xbrl_id == item["xbrl_id"]
         break
+
+def test_items(get_xbrl_zip_dir, get_output_dir, get_api_url, get_api_is):
+
+    urls = get_api_url
+
+    is_urls = get_api_is
+
+    for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
+        items = model.get_all_items()
+        print("*" * 100)
+        # print(model)
+        for key, value in items.items():
+            try:
+                url = urls[key]
+            except KeyError as e:
+                continue
+            # assert isinstance(value, list)
+            for items in value:
+                # assert isinstance(items, dict)
+                for sc_id, item in items.items():
+                    print(f"{sc_id},key:{key} , {len(item)}")
+                    # if len(item) > 0:
+                    is_url = f"{is_urls[key]}{sc_id}"
+                    print(is_url)
+                    is_add = requests.get(is_url).json()
+                    print(is_add)
+                    if not is_add:
+                        print(f"add item ***** [{sc_id}]")
+                        print(url)
+                        assert isinstance(item[0], dict)
+                        json_item = {"data":item} if isinstance(item, list) else item
+                        response = requests.post(url, json=json_item)
+                        if not response.status_code == 200:
+                            print(item[0])
+                        assert response.status_code == 200
+
+def test_sf_id_list(get_xbrl_zip_dir, get_output_dir, get_api_url, get_api_is):
+
+    url, is_url = None, None
+
+    urls = get_api_url
+
+    is_urls = get_api_is
+
+    get_xbrl_zip_dir = "/Users/user/Documents/tdnet/xbrl"
+
+    for model in XBRLModel.xbrl_models(get_xbrl_zip_dir, get_output_dir):
+        print(model.xbrl_zip_path)
+        print(model)
+        items = model.get_all_items()
+        for item in items:
+            assert isinstance(item["item"], list)
+            assert isinstance(item["id"], str)
+            assert isinstance(item["key"], str)
+
+            try:
+                url = urls[item["key"]]
+                is_url = is_urls[item["key"]]
+            except KeyError as e:
+                continue
+
+            print(f"{item["id"]}, {item["key"]}, type:{type(item["item"])}, {len(item["item"])}")
+
+            print(url)
+
+            print(is_url)
+
+            is_add = requests.get(f"{is_url}{item["id"]}/").json()
+
+            print(is_add)
+            # assert is_add
+            if not is_add:
+                response = requests.post(url, json={"data":item["item"]})
+
+                if not response.status_code == 200:
+                    pprint.pprint(item["item"])
+
+                # print(response.json())
+                assert response.status_code == 200

@@ -27,7 +27,10 @@ class BaseXbrlModel:
     def xbrl_models(cls, xbrl_zip_dirs, output_path):
         zip_files = Path(xbrl_zip_dirs).rglob("*.zip")
         for zip_file in zip_files:
-            yield cls(zip_file.as_posix(), output_path)
+            try:
+                yield cls(zip_file.as_posix(), output_path)
+            except NotXbrlDirectoryException:
+                continue
 
     @property
     def xbrl_id(self):
@@ -95,7 +98,7 @@ class BaseXbrlModel:
                         .split("-")[1][2:6]
                     )
             raise NotXbrlDirectoryException(
-                "ixbrlファイルが複数存在します。"
+                "ixbrlファイルが複数存在しますが、短信サマリーが存在しません。"
             )
         else:
             raise NotXbrlDirectoryException(

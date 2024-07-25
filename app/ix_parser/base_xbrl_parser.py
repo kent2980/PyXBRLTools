@@ -13,6 +13,7 @@ from pandas import DataFrame
 
 from app.exception import TypeOfXBRLIsDifferent
 from app.ix_tag import BaseTag, SourceFile
+from app.utils.utils import Utils
 
 
 class BaseXBRLParser:
@@ -33,6 +34,7 @@ class BaseXBRLParser:
         self.__soup = None  # BeautifulSoup
         self.__data: Optional[List[dict]] = None  # 解析結果のデータ
         self.__xbrl_id = xbrl_id  # XBRLファイル固有のID
+        self.__source_file_id = None  # XBRLのソースファイルID
         self.__source_file: Optional[SourceFile] = (
             None  # XBRLのソースファイル
         )
@@ -41,6 +43,7 @@ class BaseXBRLParser:
         self.__init_xbrl_id()
         self.__init_xbrl_type()
         self.__init_parser()
+        self.__init_source_file_id()
         self._set_source_file(self.basename)
 
     @property
@@ -66,6 +69,10 @@ class BaseXBRLParser:
     @property
     def source_file(self):
         return self.__source_file
+
+    @property
+    def source_file_id(self):
+        return self.__source_file_id
 
     @property
     def soup(self):
@@ -169,11 +176,25 @@ class BaseXBRLParser:
         if self.xbrl_id is None:
             self.__xbrl_id = str(uuid4())
 
+    def __init_source_file_id(self):
+        """XBRLのソースファイルIDを設定する"""
+
+        if self.xbrl_url is None:
+            raise Exception("XBRLのURLが指定されていません。")
+
+        if self.xbrl_id is None:
+            raise Exception("XBRLのIDが指定されていません。")
+
+        if self.xbrl_url.startswith("http"):
+            self.__source_file_id = str(Utils.string_to_uuid(self.xbrl_url))
+        else:
+            self.__source_file_id = str(Utils.string_to_uuid(f"{self.xbrl_id}{self.basename}"))
+
     def __init_xbrl_type(self):
         """XBRLの種類を設定する"""
         if "fr" in self.basename:
             self.__xbrl_type = "fr"
-        elif "sm" in self.basename:
+        else:
             self.__xbrl_type = "sm"
 
     def _assert_valid_basename(self, *keywords: str):
@@ -198,7 +219,7 @@ class BaseXBRLParser:
             xbrl_id = self.xbrl_id
             url = None
         self.__source_file = SourceFile(
-            name=name, type=type, url=url, xbrl_id=xbrl_id
+            name=name, type=type, url=url, xbrl_id=xbrl_id, id=self.source_file_id
         )
 
     def to_DataFrame(self):

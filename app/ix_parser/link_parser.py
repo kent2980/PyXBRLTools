@@ -85,7 +85,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_schema=xlink_schema,
                     xlink_href=xlink_href,
                     xlink_label=tag.get("xlink:label"),
-                    source_file_id=self.source_file.id,
+                    source_file_id=self.source_file_id,
                 )
 
                 lists.append(ll.__dict__)
@@ -132,7 +132,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_arcrole=tag.get("arcrole"),
                     xlink_order=xlink_order,
                     xlink_weight=xlink_weight,
-                    source_file_id=self.source_file.id,
+                    source_file_id=self.source_file_id,
                 )
                 lists.append(la.__dict__)
 
@@ -200,8 +200,8 @@ class CalLinkParser(BaseLinkParser):
         self._assert_valid_basename("cal.xml")
 
         # 初期化メソッド
-        self._set_link_tag_name("link:calculationLink")
-        self._set_arc_tag_name("link:calculationArc")
+        self._set_link_tag_name(["link:calculationLink", "calculationLink"])
+        self._set_arc_tag_name(["link:calculationArc", "calculationArc"])
 
 
 class DefLinkParser(BaseLinkParser):
@@ -216,8 +216,8 @@ class DefLinkParser(BaseLinkParser):
         self._assert_valid_basename("def.xml")
 
         # 初期化メソッド
-        self._set_link_tag_name("link:definitionLink")
-        self._set_arc_tag_name("link:definitionArc")
+        self._set_link_tag_name(["link:definitionLink", "definitionLink"])
+        self._set_arc_tag_name(["link:definitionArc", "definitionArc"])
 
 
 class PreLinkParser(BaseLinkParser):
@@ -232,5 +232,5 @@ class PreLinkParser(BaseLinkParser):
         self._assert_valid_basename("pre.xml")
 
         # 初期化メソッド
-        self._set_link_tag_name("link:presentationLink")
-        self._set_arc_tag_name("link:presentationArc")
+        self._set_link_tag_name(["link:presentationLink", "presentationLink"])
+        self._set_arc_tag_name(["link:presentationArc", "presentationArc"])
