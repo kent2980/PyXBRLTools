@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import List, Optional
 from uuid import uuid4
@@ -41,17 +42,32 @@ class BaseXbrlManager:
     def _set_parsers(self, parsers: List[BaseXBRLParser]):
         self.__parsers = parsers
 
-    def _set_items(self, id: str, key: str, item, sort_position:int=999):
+    def _set_items(
+        self, id: str, key: str, items: any, sort_position: int = 999
+    ):
         """アイテムを設定する"""
 
-        if not isinstance(item, list):
-            item = [item]
+        if not isinstance(items, list):
+            items = [items]
+
+        items_json = json.dumps(
+            [item.model_dump() for item in items],
+            ensure_ascii=False,
+            default=Utils.decimal_encoder,
+        )
+
+        items_dict = json.loads(items_json)
 
         # itemを辞書型に変換する
-        item = {"id": id, "key": key, "item": item, "sort_position": sort_position}
+        item_dict = {
+            "id": id,
+            "key": key,
+            "item": items_dict,
+            "sort_position": sort_position,
+        }
 
         # itemsにデータを追加する
-        self.__items.append(item)
+        self.__items.append(item_dict)
 
     @property
     def directory_path(self):
@@ -99,6 +115,7 @@ class BaseXbrlManager:
             SchemaParser(file).link_base_refs().to_DataFrame()
             for file in xsd_files
         ]
+
         df = pd.concat(data_frames, ignore_index=True)
 
         href_map = {
@@ -185,7 +202,11 @@ class BaseXbrlManager:
 
         return self
 
-    def set_source_file(self, parsers: List[BaseXBRLParser], class_name:Optional[str] = None):
+    def set_source_file(
+        self,
+        parsers: List[BaseXBRLParser],
+        class_name: Optional[str] = None,
+    ):
         """ソースファイルを設定する"""
         items = []
         for parser in parsers:
@@ -194,12 +215,17 @@ class BaseXbrlManager:
 
             sources = parser.source_file
 
-            items.append(sources.__dict__)
+            items.append(sources)
 
-            self._set_items(id=id, key=f"{class_name}_source_file", item=sources.__dict__, sort_position=1)
+            self._set_items(
+                id=id,
+                key=f"{class_name}_source_file",
+                items=sources,
+                sort_position=1,
+            )
 
     def _set_source_file_ids(self):
-        """ ソースファイルIDのリストを取得する """
+        """ソースファイルIDのリストを取得する"""
 
         # parsersがNoneの場合はエラーを発生させる
         if self.parsers is None:

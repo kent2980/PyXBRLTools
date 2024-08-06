@@ -32,7 +32,7 @@ class SchemaParser(BaseXBRLParser):
                 source_file_id=self.source_file_id,
             )
 
-            lists.append(si.__dict__)
+            lists.append(si)
 
         self._set_data(lists)
 
@@ -51,7 +51,11 @@ class SchemaParser(BaseXBRLParser):
                 if xlink_href.startswith("http"):
                     source_file_id = str(Utils.string_to_uuid(xlink_href))
                 else:
-                    source_file_id = str(Utils.string_to_uuid(f"{self.xbrl_id}{Path(xlink_href).name}"))
+                    source_file_id = str(
+                        Utils.string_to_uuid(
+                            f"{self.xbrl_id}{Path(xlink_href).name}"
+                        )
+                    )
 
                 # excludeリストの要素文字列がxlink_hrefに含まれている場合はスキップ
                 if any([e in xlink_href for e in exclude]):
@@ -64,10 +68,11 @@ class SchemaParser(BaseXBRLParser):
                 xlink_arcrole=tag.get("xlink:arcrole"),
                 xbrl_type=self.xbrl_type,
                 xbrl_id=self.xbrl_id,
-                source_file_id=source_file_id,
+                source_file_id=self.source_file_id,
+                href_source_file_id=source_file_id,
             )
 
-            lists.append(slb.__dict__)
+            lists.append(slb)
 
         self._set_data(lists)
 
@@ -93,7 +98,7 @@ class SchemaParser(BaseXBRLParser):
                 source_file_id=self.source_file_id,
             )
 
-            lists.append(se.__dict__)
+            lists.append(se)
 
         self._set_data(lists)
 

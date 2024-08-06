@@ -1,10 +1,8 @@
-import pprint
 from typing import List, Optional
 
 from app.exception import SetLanguageNotError
 from app.ix_manager import BaseXbrlManager
 from app.ix_parser import LabelParser
-from app.ix_parser.base_xbrl_parser import BaseXBRLParser
 
 
 class LabelManager(BaseXbrlManager):
@@ -113,7 +111,9 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="lab_link_values", item=data, sort_position=3)
+            self._set_items(
+                id=id, key="lab_link_values", items=data, sort_position=3
+            )
 
         self.__link_labels = rows
 
@@ -140,7 +140,9 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="lab_link_locs", item=data, sort_position=1)
+            self._set_items(
+                id=id, key="lab_link_locs", items=data, sort_position=1
+            )
 
         self.__link_label_locs = rows
 
@@ -167,6 +169,8 @@ class LabelManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="lab_link_arcs", item=data, sort_position=2)
+            self._set_items(
+                id=id, key="lab_link_arcs", items=data, sort_position=2
+            )
 
         self.__link_label_arcs = rows

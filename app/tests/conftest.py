@@ -81,39 +81,35 @@ def get_api_url():
     url_base = "http://localhost/api/v1/xbrl"
 
     urls = {
-    "ix_head_title": f"{url_base}/ix/head/list/",
-    "ix_source_file": f"{url_base}/source/list/",
-    "ix_non_numeric": f"{url_base}/ix/non_numeric/list/",
-    "ix_non_fraction": f"{url_base}/ix/non_fraction/list/",
-    # 'ix_context': f'{url_base}/ix/context/',
-
-    "lab_source_file": f"{url_base}/source/list/",
-    "lab_link_locs": f"{url_base}/link/lab/loc/list/",
-    "lab_link_arcs": f"{url_base}/link/lab/arc/list/",
-    "lab_link_values": f"{url_base}/link/lab/value/list/",
-
-    "cal_source_file": f"{url_base}/source/list/",
-    # 'cal_link_roles': f'{url_base}/link/cal/role/',
-    "cal_link_locs": f"{url_base}/link/cal/loc/list/",
-    "cal_link_arcs": f"{url_base}/link/cal/arc/list/",
-
-    "def_source_file": f"{url_base}/source/list/",
-    # 'def_link_roles': f'{url_base}/link/def/role/',
-    "def_link_locs": f"{url_base}/link/def/loc/list/",
-    "def_link_arcs": f"{url_base}/link/def/arc/list/",
-
-    "pre_source_file": f"{url_base}/source/list/",
-    # 'pre_link_roles': f'{url_base}/link/pre/role/',
-    "pre_link_locs": f"{url_base}/link/pre/loc/list/",
-    "pre_link_arcs": f"{url_base}/link/pre/arc/list/",
-
-    "sc_source_file": f"{url_base}/source/list/",
-    # "sc_link_elements": f"{url_base}/schema/elements/list/",
-    # "sc_link_import": f"{url_base}/schema/imports/list/",
-    "sc_linkbase_ref": f"{url_base}/schema/linkbase/list/",
-}
+        "ix_head_title": f"{url_base}/ix/head/list/",
+        "ix_source_file": f"{url_base}/source/list/",
+        "ix_non_numeric": f"{url_base}/ix/non_numeric/list/",
+        "ix_non_fraction": f"{url_base}/ix/non_fraction/list/",
+        # 'ix_context': f'{url_base}/ix/context/',
+        "lab_source_file": f"{url_base}/source/list/",
+        "lab_link_locs": f"{url_base}/link/lab/loc/list/",
+        "lab_link_arcs": f"{url_base}/link/lab/arc/list/",
+        "lab_link_values": f"{url_base}/link/lab/value/list/",
+        "cal_source_file": f"{url_base}/source/list/",
+        # 'cal_link_roles': f'{url_base}/link/cal/role/',
+        "cal_link_locs": f"{url_base}/link/cal/loc/list/",
+        "cal_link_arcs": f"{url_base}/link/cal/arc/list/",
+        "def_source_file": f"{url_base}/source/list/",
+        # 'def_link_roles': f'{url_base}/link/def/role/',
+        "def_link_locs": f"{url_base}/link/def/loc/list/",
+        "def_link_arcs": f"{url_base}/link/def/arc/list/",
+        "pre_source_file": f"{url_base}/source/list/",
+        # 'pre_link_roles': f'{url_base}/link/pre/role/',
+        "pre_link_locs": f"{url_base}/link/pre/loc/list/",
+        "pre_link_arcs": f"{url_base}/link/pre/arc/list/",
+        "sc_source_file": f"{url_base}/source/list/",
+        # "sc_link_elements": f"{url_base}/schema/elements/list/",
+        # "sc_link_import": f"{url_base}/schema/imports/list/",
+        "sc_linkbase_ref": f"{url_base}/schema/linkbase/list/",
+    }
 
     return urls
+
 
 @pytest.fixture(scope="module")
 def get_api_is():
@@ -127,27 +123,21 @@ def get_api_is():
         "ix_non_numeric": f"{url_base}/ix/non_numeric/is/",
         "ix_non_fraction": f"{url_base}/ix/non_fraction/is/",
         # "ix_context": f"{url_base}/ix/context/is/",
-
         "lab_source_file": f"{url_base}/source/is/",
         "lab_link_locs": f"{url_base}/link/lab/loc/is/",
         "lab_link_arcs": f"{url_base}/link/lab/arc/is/",
         "lab_link_values": f"{url_base}/link/lab/value/is/",
-
         "cal_source_file": f"{url_base}/source/is/",
         "cal_link_locs": f"{url_base}/link/cal/loc/is/",
         "cal_link_arcs": f"{url_base}/link/cal/arc/is/",
-
         "def_source_file": f"{url_base}/source/is/",
         "def_link_locs": f"{url_base}/link/def/loc/is/",
         "def_link_arcs": f"{url_base}/link/def/arc/is/",
-
         "pre_source_file": f"{url_base}/source/is/",
         "pre_link_locs": f"{url_base}/link/pre/loc/is/",
         "pre_link_arcs": f"{url_base}/link/pre/arc/is/",
-
         "sc_source_file": f"{url_base}/source/is/",
         "sc_linkbase_ref": f"{url_base}/schema/linkbase/is/",
-
     }
 
     return urls

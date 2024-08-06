@@ -42,7 +42,7 @@ class LabelParser(BaseXBRLParser):
                 label=tag.text,
                 source_file_id=self.source_file_id,
             )
-            lists.append(lv.__dict__)
+            lists.append(lv)
 
         self._set_data(lists)
 
@@ -84,7 +84,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 source_file_id=self.source_file_id,
             )
-            lists.append(ll.__dict__)
+            lists.append(ll)
 
         self._set_data(lists)
 
@@ -107,7 +107,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_to=tag.get("xlink:to"),
                 source_file_id=self.source_file_id,
             )
-            lists.append(la.__dict__)
+            lists.append(la)
 
         self._set_data(lists)
 
@@ -145,7 +145,7 @@ class LabelParser(BaseXBRLParser):
                 xlink_href=xlink_href,
             )
 
-            lists.append(lrr.__dict__)
+            lists.append(lrr)
 
         self._set_data(lists)
 

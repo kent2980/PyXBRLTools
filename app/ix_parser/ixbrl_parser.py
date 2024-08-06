@@ -166,7 +166,7 @@ class IxbrlParser(BaseXBRLParser):
                 source_file_id=self.source_file_id,
                 xbrl_type=self.xbrl_type,
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 
@@ -218,19 +218,67 @@ class IxbrlParser(BaseXBRLParser):
 
             # _____attr[numeric]
             numeric = tag.text
-            if numeric is not None:
-                try:
-                    numeric = Decimal(re.sub(",", "", tag.text))
-                    if sign == "-":
-                        numeric = numeric * -1
-                    numeric = str(numeric)
-                except (ValueError, InvalidOperation, TypeError):
-                    numeric = None
 
-            if format_str is None:
-                decimals = None
-                scale = None
+            if numeric is not None or numeric != "":
+                if len(numeric) > 0:
+                    try:
+
+                        # numericのカンマを削除
+                        numeric = numeric.replace(",", "")
+                        # numericをDecimalに変換
+                        numeric = Decimal(numeric)
+                        # sign属性が存在する場合は符号を反映
+                        numeric = numeric * -1 if sign == "-" else numeric
+                        # numericを文字列に変換
+                        # numeric = str(numeric)
+
+                    # 数値変換に失敗した場合はそのまま文字列として取得
+                    except (ValueError, InvalidOperation, TypeError):
+                        numeric = (
+                            str(numeric)
+                            if isinstance(numeric, Decimal)
+                            else numeric
+                        )
+
+            # numericが空白の場合はNoneに変換
+            if numeric == "":
                 numeric = None
+
+            # _____attr[display_numeric]
+            if numeric:
+                if sign == "-":
+                    display_numeric = f"△{str(tag.text)}"
+                else:
+                    display_numeric = str(tag.text)
+            else:
+                display_numeric = None
+
+            # _____attr[display_scale]
+            display_scale = None
+            if scale:
+                # 日本円の場合
+                if "JPY" in unit_ref:
+                    if scale == "6":
+                        display_scale = "百万円"
+                    elif scale == "3":
+                        display_scale = "千円"
+                    elif scale == "0":
+                        display_scale = "円"
+                # 米ドルの場合
+                elif "USD" in unit_ref:
+                    if scale == "6":
+                        display_scale = "百万ドル"
+                    elif scale == "3":
+                        display_scale = "千ドル"
+                    elif scale == "0":
+                        display_scale = "ドル"
+                # パーセントの場合
+                elif "Pure" in unit_ref:
+                    if scale == "-2":
+                        display_scale = "%"
+                # 株式の場合
+                elif unit_ref == "Shares":
+                    display_scale = "株"
 
             inn = IxNonFraction(
                 xbrl_id=self.xbrl_id,
@@ -246,8 +294,11 @@ class IxbrlParser(BaseXBRLParser):
                 ixbrl_role=self.ixbrl_role["en_label"],
                 source_file_id=self.source_file_id,
                 xbrl_type=self.xbrl_type,
+                sign=sign,
+                display_numeric=display_numeric,
+                display_scale=display_scale,
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 
@@ -297,7 +348,7 @@ class IxbrlParser(BaseXBRLParser):
                 scenario=scenario,
                 source_file_id=self.source_file_id,
             )
-            lists.append(inn.__dict__)
+            lists.append(inn)
 
         self._set_data(lists)
 

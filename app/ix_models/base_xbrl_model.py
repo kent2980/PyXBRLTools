@@ -19,9 +19,9 @@ class BaseXbrlModel:
         # XBRLファイルを解凍したディレクトリのパスを取得
         self.__directory_path = self.__unzip_xbrl()
         self.__xbrl_type = self.__xbrl_type()
-        self.__xbrl_id = str(Utils.string_to_uuid(
-            Path(self.xbrl_zip_path).name
-        ))
+        self.__xbrl_id = str(
+            Utils.string_to_uuid(Path(self.xbrl_zip_path).name)
+        )
 
     @classmethod
     def xbrl_models(cls, xbrl_zip_dirs, output_path):
@@ -30,7 +30,7 @@ class BaseXbrlModel:
             try:
                 yield cls(zip_file.as_posix(), output_path)
             except NotXbrlDirectoryException:
-                continue
+                yield None
 
     @property
     def xbrl_id(self):
@@ -88,7 +88,14 @@ class BaseXbrlModel:
         # ファイルの末尾が「ixbrl.htm」のファイルを再起的に取得してリストに追加
         ixbrl_files = list(directory_path.rglob("*ixbrl.htm"))
         if len(ixbrl_files) == 1:
-            return ixbrl_files[0].as_posix().split("/")[-1].split("-")[1]
+            if "sm" in ixbrl_files[0].as_posix():
+                raise NotXbrlDirectoryException(
+                    "短信サマリーのみのXBRLファイルです。財務報告書が存在しません。"
+                )
+            else:
+                return (
+                    ixbrl_files[0].as_posix().split("/")[-1].split("-")[1]
+                )
         elif len(ixbrl_files) > 1:
             for ixbrl_file in ixbrl_files:
                 if "sm" in ixbrl_file.as_posix():

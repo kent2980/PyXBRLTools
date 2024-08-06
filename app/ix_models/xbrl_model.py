@@ -1,7 +1,13 @@
 from app.exception import XbrlListEmptyError
-from app.ix_manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
-                            IXBRLManager, LabelManager, PreLinkManager,
-                            SchemaManager)
+from app.ix_manager import (
+    BaseXbrlManager,
+    CalLinkManager,
+    DefLinkManager,
+    IXBRLManager,
+    LabelManager,
+    PreLinkManager,
+    SchemaManager,
+)
 
 from .base_xbrl_model import BaseXbrlModel
 
@@ -112,7 +118,7 @@ class XBRLModel(BaseXbrlModel):
 
     def __str__(self) -> str:
 
-        header = self.ix_header()
+        header = self.ix_header().__dict__
 
         print(header)
 

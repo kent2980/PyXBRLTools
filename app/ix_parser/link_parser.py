@@ -51,7 +51,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_href=xlink_href,
                 role_uri=tag.get("roleURI"),
             )
-            lists.append(lrr.__dict__)
+            lists.append(lrr)
 
         self._set_data(lists)
 
@@ -88,7 +88,7 @@ class BaseLinkParser(BaseXBRLParser):
                     source_file_id=self.source_file_id,
                 )
 
-                lists.append(ll.__dict__)
+                lists.append(ll)
 
         self._set_data(lists)
 
@@ -134,7 +134,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_weight=xlink_weight,
                     source_file_id=self.source_file_id,
                 )
-                lists.append(la.__dict__)
+                lists.append(la)
 
         self._set_data(lists)
 
@@ -158,7 +158,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xmlns_xsi=tag.get("xmlns:xsi"),
                 xmlns_link=tag.get("xmlns:link"),
             )
-            lists.append(lb.__dict__)
+            lists.append(lb)
 
         self._set_data(lists)
 
@@ -181,7 +181,7 @@ class BaseLinkParser(BaseXBRLParser):
                 xlink_type=tag.get("xlink:type"),
                 xlink_role=tag.get("xlink:role"),
             )
-            lists.append(lt.__dict__)
+            lists.append(lt)
 
         self._set_data(lists)
 
@@ -200,7 +200,9 @@ class CalLinkParser(BaseLinkParser):
         self._assert_valid_basename("cal.xml")
 
         # 初期化メソッド
-        self._set_link_tag_name(["link:calculationLink", "calculationLink"])
+        self._set_link_tag_name(
+            ["link:calculationLink", "calculationLink"]
+        )
         self._set_arc_tag_name(["link:calculationArc", "calculationArc"])
 
 
@@ -232,5 +234,7 @@ class PreLinkParser(BaseLinkParser):
         self._assert_valid_basename("pre.xml")
 
         # 初期化メソッド
-        self._set_link_tag_name(["link:presentationLink", "presentationLink"])
+        self._set_link_tag_name(
+            ["link:presentationLink", "presentationLink"]
+        )
         self._set_arc_tag_name(["link:presentationArc", "presentationArc"])

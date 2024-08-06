@@ -7,6 +7,7 @@ import unicodedata
 import uuid
 import zipfile
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -235,3 +236,10 @@ class Utils:
         hash = hashlib.sha1(name.encode("utf-8")).hexdigest()
         # 最初の32文字を取り出してUUIDに変換
         return uuid.UUID(hash[:32])
+
+    def decimal_encoder(obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        raise TypeError(
+            f"Object of type {obj.__class__.__name__} is not JSON serializable"
+        )

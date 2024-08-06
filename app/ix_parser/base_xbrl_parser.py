@@ -32,7 +32,7 @@ class BaseXBRLParser:
         self.__basename = Path(self.xbrl_url).name  # ファイル名
         self.__xbrl_type = None  # XbrlType(fr or sm)
         self.__soup = None  # BeautifulSoup
-        self.__data: Optional[List[dict]] = None  # 解析結果のデータ
+        self.__data: Optional[List[BaseTag]] = None  # 解析結果のデータ
         self.__xbrl_id = xbrl_id  # XBRLファイル固有のID
         self.__source_file_id = None  # XBRLのソースファイルID
         self.__source_file: Optional[SourceFile] = (
@@ -186,9 +186,13 @@ class BaseXBRLParser:
             raise Exception("XBRLのIDが指定されていません。")
 
         if self.xbrl_url.startswith("http"):
-            self.__source_file_id = str(Utils.string_to_uuid(self.xbrl_url))
+            self.__source_file_id = str(
+                Utils.string_to_uuid(self.xbrl_url)
+            )
         else:
-            self.__source_file_id = str(Utils.string_to_uuid(f"{self.xbrl_id}{self.basename}"))
+            self.__source_file_id = str(
+                Utils.string_to_uuid(f"{self.xbrl_id}{self.basename}")
+            )
 
     def __init_xbrl_type(self):
         """XBRLの種類を設定する"""
@@ -219,13 +223,27 @@ class BaseXBRLParser:
             xbrl_id = self.xbrl_id
             url = None
         self.__source_file = SourceFile(
-            name=name, type=type, url=url, xbrl_id=xbrl_id, id=self.source_file_id
+            name=name,
+            type=type,
+            url=url,
+            xbrl_id=xbrl_id,
+            id=self.source_file_id,
         )
 
     def to_DataFrame(self):
         """DataFrame形式で出力する"""
-        return DataFrame(self.data)
+
+        lists = []
+
+        for _, item in enumerate(self.data):
+            if isinstance(item, BaseTag):
+                item = item.__dict__
+                lists.append(item)
+            else:
+                raise Exception("itemがBaseTagクラスではありません。")
+
+        return DataFrame(lists)
 
     def to_dict(self):
         """辞書形式で出力する"""
-        return DataFrame(self.data).to_dict(orient="records")
+        return self.to_DataFrame().to_dict(orient="records")

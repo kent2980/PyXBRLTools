@@ -6,15 +6,18 @@ from app.ix_parser import SchemaParser
 
 
 class SchemaManager(BaseXbrlManager):
-    """ XBRLディレクトリの解析を行うクラス """
-    def __init__(self, directory_path, xbrl_id: Optional[str] = None) -> None:
+    """XBRLディレクトリの解析を行うクラス"""
+
+    def __init__(
+        self, directory_path, xbrl_id: Optional[str] = None
+    ) -> None:
         super().__init__(directory_path, xbrl_id)
 
         self.__files = Path(directory_path).rglob("*.xsd")
         # self.__filesをリストに変換
         self.__files = list(self.__files)
 
-        if(len(self.__files) == 0):
+        if len(self.__files) == 0:
             raise Exception("xsdファイルが見つかりません。")
 
         # プロパティの初期化
@@ -45,7 +48,10 @@ class SchemaManager(BaseXbrlManager):
 
     def __init_parser(self):
         """パーサーの初期化を行う"""
-        self.__parsers = [SchemaParser(file.as_posix(), xbrl_id=self.xbrl_id) for file in self.__files]
+        self.__parsers = [
+            SchemaParser(file.as_posix(), xbrl_id=self.xbrl_id)
+            for file in self.__files
+        ]
 
     def __init_manager(self):
         """マネージャーの初期化を行う"""
@@ -67,7 +73,7 @@ class SchemaManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="sc_elements", item=data)
+            self._set_items(id=id, key="sc_elements", items=data)
 
         self.__elements = rows
 
@@ -84,7 +90,7 @@ class SchemaManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="sc_import", item=data)
+            self._set_items(id=id, key="sc_import", items=data)
 
         self.__import_schemas = rows
 
@@ -93,7 +99,7 @@ class SchemaManager(BaseXbrlManager):
 
         for parser in self.parsers:
 
-            id = parser.xbrl_id
+            id = parser.source_file_id
 
             parser = parser.link_base_refs(exclude=exclude)
 
@@ -101,7 +107,6 @@ class SchemaManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key="sc_linkbase_ref", item=data)
+            self._set_items(id=id, key="sc_linkbase_ref", items=data)
 
         self.__link_base_refs = rows
-

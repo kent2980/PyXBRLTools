@@ -1,8 +1,12 @@
 from typing import List, Optional
 
 from app.ix_manager import BaseXbrlManager
-from app.ix_parser import (BaseLinkParser, CalLinkParser, DefLinkParser,
-                           PreLinkParser)
+from app.ix_parser import (
+    BaseLinkParser,
+    CalLinkParser,
+    DefLinkParser,
+    PreLinkParser,
+)
 
 
 class BaseLinkManager(BaseXbrlManager):
@@ -14,7 +18,7 @@ class BaseLinkManager(BaseXbrlManager):
         output_path,
         document_type=None,
         xbrl_id: Optional[str] = None,
-        class_name: Optional[str]=None,
+        class_name: Optional[str] = None,
     ):
         super().__init__(directory_path, xbrl_id=xbrl_id)
 
@@ -105,7 +109,9 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key=f"{self.class_name}_link_roles", item=data)
+            self._set_items(
+                id=id, key=f"{self.class_name}_link_roles", items=data
+            )
 
         self.__link_roles = rows
 
@@ -130,7 +136,9 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key=f"{self.class_name}_link_locs", item=data)
+            self._set_items(
+                id=id, key=f"{self.class_name}_link_locs", items=data
+            )
 
         self.__link_locs = rows
 
@@ -154,7 +162,9 @@ class BaseLinkManager(BaseXbrlManager):
 
             rows.append(data)
 
-            self._set_items(id=id, key=f"{self.class_name}_link_arcs", item=data)
+            self._set_items(
+                id=id, key=f"{self.class_name}_link_arcs", items=data
+            )
 
         self.__link_arcs = rows
 
@@ -178,7 +188,7 @@ class CalLinkManager(BaseLinkManager):
             output_path,
             document_type,
             xbrl_id=xbrl_id,
-            class_name="cal"
+            class_name="cal",
         )
         self.role = "calculationLinkbaseRef"
         self.parser = CalLinkParser
@@ -205,7 +215,11 @@ class DefLinkManager(BaseLinkManager):
         xbrl_id: Optional[str] = None,
     ):
         super().__init__(
-            directory_path, output_path, document_type, xbrl_id=xbrl_id, class_name="def"
+            directory_path,
+            output_path,
+            document_type,
+            xbrl_id=xbrl_id,
+            class_name="def",
         )
         self.role = "definitionLinkbaseRef"
         self.parser = DefLinkParser
@@ -232,7 +246,11 @@ class PreLinkManager(BaseLinkManager):
         xbrl_id: Optional[str] = None,
     ):
         super().__init__(
-            directory_path, output_path, document_type, xbrl_id=xbrl_id, class_name="pre"
+            directory_path,
+            output_path,
+            document_type,
+            xbrl_id=xbrl_id,
+            class_name="pre",
         )
         self.role = "presentationLinkbaseRef"
         self.parser = PreLinkParser
