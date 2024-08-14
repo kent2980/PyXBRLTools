@@ -195,6 +195,7 @@ class Utils:
         """
         テキストを正規化します。
         """
+        # テキストをNFKC正規化
         return re.sub(" ", "", unicodedata.normalize("NFKC", text))
 
     def date_str_to_format(text, format_str):

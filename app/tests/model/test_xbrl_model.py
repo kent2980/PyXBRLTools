@@ -210,7 +210,7 @@ def test_sf_id_list(
 
     is_urls = get_api_is
 
-    get_xbrl_zip_dir = "/Users/user/Documents/tdnet/xbrl/20240425"
+    get_xbrl_zip_dir = "/Users/user/Documents/tdnet/xbrl/20240807"
 
     zips = list(Path(get_xbrl_zip_dir).rglob("*.zip"))
 
@@ -272,6 +272,7 @@ def test_sf_id_list(
                         pprint.pprint(response.json())
 
                     # print(response.json())
+                    # print(model.xbrl_zip_path)
                     assert response.status_code == 200
 
             pbar.update(1)

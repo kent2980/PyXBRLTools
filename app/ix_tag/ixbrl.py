@@ -57,11 +57,11 @@ class IxHeader(BaseTag):
     market_section: Optional[str] = Field(default=None)
     url: Optional[str] = Field(default=None)
     is_bs: Optional[bool] = Field(default=None)
-    is_is: Optional[bool] = Field(default=None)
+    is_pl: Optional[bool] = Field(default=None)
     is_cf: Optional[bool] = Field(default=None)
     is_ci: Optional[bool] = Field(default=None)
     is_sce: Optional[bool] = Field(default=None)
-    notes: Optional[str] = Field(default=None)
+    is_sfp: Optional[bool] = Field(default=None)
     fiscal_year_end: Optional[str] = Field(default=None)
     tel: Optional[str] = Field(default=None)
 

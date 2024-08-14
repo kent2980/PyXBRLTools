@@ -2,6 +2,7 @@ import re
 from typing import List, Optional
 
 from app.exception import XbrlListEmptyError
+from app.exception.xbrl_parser_exception import DocumentNameTagNotFoundError
 from app.ix_manager import BaseXbrlManager
 from app.ix_parser import IxbrlParser
 from app.ix_tag import IxContext, IxHeader, IxNonFraction, IxNonNumeric
@@ -62,8 +63,13 @@ class IXBRLManager(BaseXbrlManager):
         """parserを初期化します。"""
         parsers: List[IxbrlParser] = []
         for _, row in self.files.iterrows():
-            parser = IxbrlParser(row["xlink_href"], xbrl_id=self.xbrl_id)
-            parsers.append(parser)
+            try:
+                parser = IxbrlParser(row["xlink_href"], xbrl_id=self.xbrl_id)
+                parsers.append(parser)
+            except DocumentNameTagNotFoundError:
+                # 後でエラーログを出力する処理を追加するために注釈を追加
+                # logger.error(f"DocumentNameタグが見つかりません。[xbrl_id]: {self.xbrl_id}")
+                pass
 
         self._set_parsers(parsers)
 
@@ -169,11 +175,11 @@ class IXBRLManager(BaseXbrlManager):
         market_section = None
         url = None
         is_bs = False
-        is_is = False
+        is_pl = False
         is_cf = False
         is_ci = False
         is_sce = False
-        notes = None
+        is_sfp = False
         fiscal_year_end = None
         tel = None
         xbrl_id = None
@@ -204,18 +210,18 @@ class IXBRLManager(BaseXbrlManager):
                         market_section = item.name
                 elif re.search(r".*URL.*", item.name):  # URL
                     url = item.value
-                elif re.search(r".*BalanceSheetTextBlock$", item.name):  # 貸借対照表の存在フラグ
+                elif re.search(r".*BalanceSheet.*TextBlock$", item.name):  # 貸借対照表の存在フラグ
                     is_bs = True
-                elif re.search(r".*IncomeStatementTextBlock$", item.name):  # 損益計算書の存在フラグ
-                    is_is = True
-                elif re.search(r".*CashFlowsStatementTextBlock$", item.name):  # キャッシュフロー計算書の存在フラグ
+                elif re.search(r"(.*StatementOfIncome|.*StatementOfProfitOrLoss).*TextBlock$", item.name):  # 損益計算書の存在フラグ
+                    is_pl = True
+                elif re.search(r".*StatementOfCashFlows.*TextBlock$", item.name):  # キャッシュフロー計算書の存在フラグ
                     is_cf = True
-                elif re.search(r".*ComprehensiveIncomeTextBlock$", item.name):  # 総合利益計算書の存在フラグ
+                elif re.search(r".*StatementOfComprehensiveIncome.*TextBlock$", item.name):  # 包括利益計算書の存在フラグ
                     is_ci = True
-                elif re.search(r".*StatementOfChangesInEquityTextBlock$", item.name):  # 株主資本変動計算書の存在フラグ
+                elif re.search(r".*StatementOfChangesInEquity.*TextBlock$", item.name):  # 株主資本変動計算書の存在フラグ
                     is_sce = True
-                elif re.search(r".*NotesTextBlock$", item.name):  # 注記
-                    notes = item.value
+                elif re.search(r".*StatementOfFinancialPositionI.*TextBlock$", item.name):  # 財政状態計算書の存在フラグ
+                    is_sfp = True
                 elif re.search(r".*FiscalYearEnd$", item.name):  # 決算期
                     fiscal_year_end = item.value
                 elif re.search(r".*Tel$", item.name):   # 電話番号
@@ -235,11 +241,11 @@ class IXBRLManager(BaseXbrlManager):
             market_section=market_section,
             url=url,
             is_bs=is_bs,
-            is_is=is_is,
+            is_pl=is_pl,
             is_cf=is_cf,
             is_ci=is_ci,
             is_sce=is_sce,
-            notes=notes,
+            is_sfp=is_sfp,
             fiscal_year_end=fiscal_year_end,
             tel=tel,
         )

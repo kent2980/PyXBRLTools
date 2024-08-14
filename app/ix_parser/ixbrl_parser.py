@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Optional
 from urllib.parse import urlparse
 
+from app.exception.xbrl_parser_exception import DocumentNameTagNotFoundError
 from app.ix_tag import IxContext, IxNonFraction, IxNonNumeric
 from app.utils import Utils
 
@@ -78,10 +79,15 @@ class IxbrlParser(BaseXBRLParser):
                 "en_label": "FinancialReportSummary",
             }
         else:
+            try:
+                en_label_tag = self.soup.find(name="ix:nonNumeric", attrs={"name": re.compile(r"^.*TextBlock$")})
+                en_label = en_label_tag.get("name").split(":")[-1].replace("TextBlock", "")
+            except AttributeError:
+                raise DocumentNameTagNotFoundError(self.basename)
             role = {
                 "type": ixbrl_type,
-                "jp_label": const["document_name"][ixbrl_type],
-                "en_label": const["document_element"][ixbrl_type],
+                # "jp_label": const["document_name"][ixbrl_type],
+                "en_label": en_label,
             }
         return role
 
@@ -127,6 +133,8 @@ class IxbrlParser(BaseXBRLParser):
                     lambda x: chr(ord(x.group(0)) - 0xFEE0),
                     text,
                 )
+                # textの全角文字を半角に変換
+                text = Utils.normalize_text(text)
             else:
                 text = None
 
@@ -151,6 +159,23 @@ class IxbrlParser(BaseXBRLParser):
             # textが空白の場合はNoneに変換
             if text == "":
                 text = None
+
+            # format_strがbooleantrueの場合はtrueに変換
+            text = 'true' if format_str == 'booleantrue' else text
+            # format_strがbooleanfalseの場合はfalseに変換
+            text = 'false' if format_str == 'booleanfalse' else text
+
+            # _____attr[format_str]
+            # textがtrueまたはfalseの場合はformat_strをbooleanに変換
+            if text:
+                format_str = 'string' if text else format_str
+                format_str = 'number' if re.search(r'^\d+$', text) else format_str
+                format_str = 'decimal' if re.search(r'^\d+\.\d+$', text) else format_str
+                format_str = 'boolean' if text in ['true', 'false'] else format_str
+                format_str = 'dateyearmonthday' if re.search(r'^\d{4}-\d{2}-\d{2}$', text) else format_str
+                format_str = 'telephone' if re.search(r'^\(?\d{2,4}\)?-?\d{2,4}-?\d{4}$', text) else format_str
+                format_str = 'url' if re.search(r'^https?://[\w/:%#\$&\?\(\)~\.=\+\-]+$', text) else format_str
+
 
             # 辞書に追加
             inn = IxNonNumeric(
@@ -222,6 +247,8 @@ class IxbrlParser(BaseXBRLParser):
             if numeric is not None or numeric != "":
                 if len(numeric) > 0:
                     try:
+                        # xx円xx銭の場合は、xx.xxに変換
+                        numeric = numeric.replace("円", ".").replace("銭", "")
 
                         # numericのカンマを削除
                         numeric = numeric.replace(",", "")
