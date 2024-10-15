@@ -82,7 +82,7 @@ class LinkArc(BaseTag):
     xlink_type: Optional[str] = Field(default=None)
     xlink_from: Optional[str] = Field(default=None)
     xlink_to: Optional[str] = Field(default=None)
-    xlink_arcrole: Optional[str] = Field(default=None)
+    xlink_arcrole: str = Field(default=None)
     xlink_order: Optional[float] = Field(default=None)
     xlink_weight: Optional[float] = Field(default=None)
     source_file_id: Optional[str] = Field(default=None)

@@ -11,6 +11,7 @@ from .link import (
     LinkSchemaImport,
     LinkTag,
 )
+from .qualitative import QualitativeDocument
 from .schema import SchemaElement, SchemaImport, SchemaLinkBaseRef
 
 __all__ = [
@@ -35,4 +36,5 @@ __all__ = [
     "SchemaElement",
     "SchemaImport",
     "SchemaLinkBaseRef",
+    "QualitativeDocument",
 ]

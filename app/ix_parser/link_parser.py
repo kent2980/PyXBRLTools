@@ -71,6 +71,10 @@ class BaseLinkParser(BaseXBRLParser):
 
             attr_value = link_tag.get("xlink:role").split("_")[-1]
 
+            # httpが含まれている場合は、attr_valueを変更
+            if "http" in attr_value:
+                attr_value = attr_value.split("/Role")[-1]
+
             tags = link_tag.find_all(["link:loc", "loc"])
             for tag in tags:
 
@@ -107,6 +111,11 @@ class BaseLinkParser(BaseXBRLParser):
 
             attr_value = link_tag.get("xlink:role").split("_")[-1]
 
+            # httpが含まれている場合は、attr_valueを変更
+            if "http" in attr_value:
+                attr_value = attr_value.split("/Role")[-1]
+
+
             tags = link_tag.find_all(self.arc_tag_name)
             for tag in tags:
                 # _____attr[xlink:order]
@@ -129,7 +138,7 @@ class BaseLinkParser(BaseXBRLParser):
                     xlink_type=tag.get("xlink:type"),
                     xlink_from=tag.get("xlink:from"),
                     xlink_to=tag.get("xlink:to"),
-                    xlink_arcrole=tag.get("arcrole"),
+                    xlink_arcrole=tag.get("xlink:arcrole"),
                     xlink_order=xlink_order,
                     xlink_weight=xlink_weight,
                     source_file_id=self.source_file_id,

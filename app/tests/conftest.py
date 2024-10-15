@@ -78,7 +78,7 @@ def get_xbrl_test_label(get_xbrl_in_edjp):
 @pytest.fixture(scope="module")
 def get_api_url():
 
-    url_base = "http://localhost/api/v1/xbrl"
+    url_base = "/api/v1/xbrl"
 
     urls = {
         "ix_head_title": f"{url_base}/ix/head/list/",
@@ -106,6 +106,7 @@ def get_api_url():
         # "sc_link_elements": f"{url_base}/schema/elements/list/",
         # "sc_link_import": f"{url_base}/schema/imports/list/",
         "sc_linkbase_ref": f"{url_base}/schema/linkbase/list/",
+        "qualitative_info": f"{url_base}/qualitative/list/",
     }
 
     return urls
@@ -115,7 +116,7 @@ def get_api_url():
 def get_api_is():
     """APIに登録されているかを確認するためのsource_file_idを取得"""
 
-    url_base = "http://localhost/api/v1/xbrl"
+    url_base = "/api/v1/xbrl"
 
     urls = {
         "ix_head_title": f"{url_base}/ix/head/is/",
@@ -138,6 +139,7 @@ def get_api_is():
         "pre_link_arcs": f"{url_base}/link/pre/arc/is/",
         "sc_source_file": f"{url_base}/source/is/",
         "sc_linkbase_ref": f"{url_base}/schema/linkbase/is/",
+        "qualitative_info": f"{url_base}/qualitative/is/",
     }
 
     return urls

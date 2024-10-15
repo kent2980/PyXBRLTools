@@ -75,7 +75,7 @@ class BaseLinkManager(BaseXbrlManager):
     def _init_parser(self):
         """パーサーを設定します。"""
         parsers: List[BaseLinkParser] = []
-        for _, row in self.files.iterrows():
+        for _, row in self.related_files.iterrows():
             parser = self.parser(
                 row["xlink_href"], self.output_path, xbrl_id=self.xbrl_id
             )
@@ -96,7 +96,7 @@ class BaseLinkManager(BaseXbrlManager):
 
         rows = []
 
-        files = self.files
+        files = self.related_files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:
@@ -123,7 +123,7 @@ class BaseLinkManager(BaseXbrlManager):
 
         rows = []
 
-        files = self.files
+        files = self.related_files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:
@@ -149,7 +149,7 @@ class BaseLinkManager(BaseXbrlManager):
 
         rows = []
 
-        files = self.files
+        files = self.related_files
         if self.document_type is not None:
             files = files.query(f"document_type == '{self.document_type}'")
         for parser in self.parsers:

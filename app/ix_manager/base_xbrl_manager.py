@@ -4,6 +4,7 @@ from typing import List, Optional
 from uuid import uuid4
 
 import pandas as pd
+from pandas import DataFrame
 
 from app.exception import XbrlDirectoryNotFoundError, XbrlListEmptyError
 from app.ix_parser import BaseXBRLParser, SchemaParser
@@ -16,12 +17,25 @@ class BaseXbrlManager:
     def __init__(
         self, directory_path, xbrl_id: Optional[str] = None
     ) -> None:
-        self.directory_path = Path(directory_path)
-        self.files = None
+        self.__directory_path = Path(directory_path)
+        self.__files = self._to_filelist()
+        self.__related_files: Optional[DataFrame] = None
         self.__items = []
         self.__xbrl_id = xbrl_id if xbrl_id else str(uuid4())
         self.__parsers: Optional[list[BaseXBRLParser]] = None
         self.__source_file_id_list = None
+
+    @property
+    def files(self):
+        return self.__files
+
+    @property
+    def related_files(self):
+        return self.__related_files
+
+    @related_files.setter
+    def related_files(self, related_files):
+        self.__related_files = related_files
 
     @property
     def items(self):
@@ -86,7 +100,7 @@ class BaseXbrlManager:
     def source_file_id_list(self):
         return self.__source_file_id_list
 
-    def __to_filelist(self):
+    def _to_filelist(self):
         """ディレクトリ内のファイル一覧を取得する"""
         return [
             file.as_posix()
@@ -96,7 +110,7 @@ class BaseXbrlManager:
 
     def xbrl_type(self):
         """書類品種を取得します"""
-        files = self.__to_filelist()
+        files = self.files
         for file_str in files:
             file = Path(file_str)
             if file.suffix == ".xsd" and "fr" not in file.name:
@@ -108,7 +122,7 @@ class BaseXbrlManager:
 
     def _set_linkbase_files(self, xlink_role=None):
         """関係ファイルのリストを取得する"""
-        files = self.__to_filelist()
+        files = self.files
         xsd_files = [file for file in files if Path(file).suffix == ".xsd"]
 
         data_frames = [
@@ -157,13 +171,13 @@ class BaseXbrlManager:
                 f"{xlink_role}ファイルが見つかりません。"
             )
 
-        self.files = df
+        self.related_files = df
         return self
 
     def _set_htmlbase_files(self, xlink_role=None):
         """HTMLベースのファイルリストを取得する"""
         lists = []
-        files = self.__to_filelist()
+        files = self.files
         for file_str in files:
             file = Path(file_str)
             if file.suffix == ".htm" or file.suffix == ".html":
@@ -198,7 +212,7 @@ class BaseXbrlManager:
                 f"{xlink_role}ファイルが見つかりません。"
             )
 
-        self.files = df
+        self.related_files = df
 
         return self
 

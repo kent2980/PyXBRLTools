@@ -57,22 +57,26 @@ class LabelManager(BaseXbrlManager):
                 "言語の設定が不正です。[jp, en]を指定してください。"
             )
 
-        if len(self.files) > 0:
+        if len(self.related_files) > 0:
             if lang == "jp":
-                # self.filesのxlink_hrefの末尾が"lab.xml"であるものを抽出
-                self.files = self.files[
-                    self.files["xlink_href"].str.endswith("lab.xml")
+                # self.related_filesのxlink_hrefの末尾が"lab.xml"であるものを抽出
+                self.related_files = self.related_files[
+                    self.related_files["xlink_href"].str.endswith(
+                        "lab.xml"
+                    )
                 ]
             elif lang == "en":
-                # self.filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
-                self.files = self.files[
-                    self.files["xlink_href"].str.endswith("lab-en.xml")
+                # self.related_filesのxlink_hrefの末尾が"lab-en.xml"であるものを抽出
+                self.related_files = self.related_files[
+                    self.related_files["xlink_href"].str.endswith(
+                        "lab-en.xml"
+                    )
                 ]
 
     def __init_parser(self):
         """パーサーを設定します。"""
         parsers: List[LabelParser] = []
-        for _, row in self.files.iterrows():
+        for _, row in self.related_files.iterrows():
             parser = LabelParser(
                 row["xlink_href"], self.output_path, xbrl_id=self.xbrl_id
             )

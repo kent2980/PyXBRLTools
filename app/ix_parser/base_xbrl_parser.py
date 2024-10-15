@@ -239,7 +239,12 @@ class BaseXBRLParser:
             if isinstance(item, BaseTag):
                 item = item.__dict__
                 lists.append(item)
+            elif isinstance(item, list):
+                return DataFrame(item)
+            elif isinstance(item, dict):
+                lists.append(item)
             else:
+                print(type(item))
                 raise Exception("itemがBaseTagクラスではありません。")
 
         return DataFrame(lists)

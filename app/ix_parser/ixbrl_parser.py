@@ -54,17 +54,15 @@ class IxbrlParser(BaseXBRLParser):
 
     def __set_report_type(self, xbrl_url):
         """レポートの種類を設定する"""
+        types = ["edjp", "edus", "edif", "edit", "rvdf", "rvfc", "rejp", "rrdf", "rrfc", "efjp"]
         if xbrl_url.startswith("http"):
             parse_url = urlparse(xbrl_url)
             file_name = os.path.basename(parse_url.path)
         else:
             file_name = os.path.basename(xbrl_url)
-        if "sm" in file_name:
-            return file_name.split("-")[1][2:6]
-        elif "fr" in file_name:
-            return file_name.split("-")[3][2:6]
-        else:
-            return file_name.split("-")[1]
+        for type in types:
+            if type in file_name:
+                return type
 
     def __set_ixbrl_role(self):
         """ドキュメントの要素を設定する"""

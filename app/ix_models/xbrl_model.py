@@ -6,6 +6,7 @@ from app.ix_manager import (
     IXBRLManager,
     LabelManager,
     PreLinkManager,
+    QualitativeManager,
     SchemaManager,
 )
 
@@ -25,6 +26,9 @@ class XBRLModel(BaseXbrlModel):
         self.__def_link_manager = self._init_manager(DefLinkManager)
         self.__pre_link_manager = self._init_manager(PreLinkManager)
         self.__schema_manager: SchemaManager = SchemaManager(
+            self.directory_path, xbrl_id=self.xbrl_id
+        )
+        self.__qualitative_manager = QualitativeManager(
             self.directory_path, xbrl_id=self.xbrl_id
         )
 
@@ -61,6 +65,10 @@ class XBRLModel(BaseXbrlModel):
     def pre_link_manager(self):
         return self.__pre_link_manager
 
+    @property
+    def qualitative_manager(self):
+        return self.__qualitative_manager
+
     def __del__(self):
         super().__del__()
         self.__ixbrl_manager = None
@@ -69,6 +77,7 @@ class XBRLModel(BaseXbrlModel):
         self.__def_link_manager = None
         self.__pre_link_manager = None
         self.__schema_manager = None
+        self.__qualitative_manager = None
 
     def get_schema(self):
         return self.schema_manager
@@ -88,6 +97,9 @@ class XBRLModel(BaseXbrlModel):
     def get_pre_link(self):
         return self.pre_link_manager
 
+    def get_qualitative(self):
+        return self.qualitative_manager
+
     def get_all_manager(self):
         all_data = {
             "ix": self.get_ixbrl(),
@@ -96,6 +108,7 @@ class XBRLModel(BaseXbrlModel):
             "def": self.get_def_link(),
             "pre": self.get_pre_link(),
             "schema": self.get_schema(),
+            "qualitative": self.get_qualitative(),
         }
         # all_dataから値がNoneのものを削除
         return {k: v for k, v in all_data.items() if v is not None}
@@ -119,8 +132,6 @@ class XBRLModel(BaseXbrlModel):
     def __str__(self) -> str:
 
         header = self.ix_header().__dict__
-
-        print(header)
 
         return f" - [{header['securities_code']}] \
             {header['company_name']} <{header['document_name']}>"

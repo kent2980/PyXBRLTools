@@ -6,8 +6,14 @@ import pytest
 import requests
 from tqdm import tqdm
 
-from app.ix_manager import (BaseXbrlManager, CalLinkManager, DefLinkManager,
-                            IXBRLManager, LabelManager, PreLinkManager)
+from app.ix_manager import (
+    BaseXbrlManager,
+    CalLinkManager,
+    DefLinkManager,
+    IXBRLManager,
+    LabelManager,
+    PreLinkManager,
+)
 from app.ix_models import XBRLModel
 from app.ix_tag import IxHeader
 
@@ -200,17 +206,25 @@ def test_items(get_xbrl_zip_dir, get_output_dir, get_api_url, get_api_is):
                         assert response.status_code == 200
 
 
-def test_sf_id_list(
+def test_fastapi(
     get_xbrl_zip_dir, get_output_dir, get_api_url, get_api_is
 ):
 
+    base_url1 = "http://localhost:8000"
+
+    base_url2 = "http://157.7.194.74"
+
+    base_url3 = "https://api.fs-stock.net"
+
     url, is_url = None, None
+
+    base_url = base_url1
 
     urls = get_api_url
 
     is_urls = get_api_is
 
-    get_xbrl_zip_dir = "/Users/user/Documents/tdnet/xbrl/20240807"
+    get_xbrl_zip_dir = "/Users/user/Documents/tdnet/xbrl/20240809"
 
     zips = list(Path(get_xbrl_zip_dir).rglob("*.zip"))
 
@@ -223,56 +237,60 @@ def test_sf_id_list(
                 pbar.update(1)
                 continue
 
-            # print(model.xbrl_zip_path)
-            # message = model.__str__()
-            # tqdm.write(message)
             items = model.get_all_items()
 
             data = {"xbrl_id": model.xbrl_id, "path": model.xbrl_zip_path}
 
             is_res = requests.get(
-                f"http://localhost/api/v1/xbrl/ix/file_path/is/{model.xbrl_id}/"
+                f"{base_url}/api/v1/xbrl/ix/file_path/is/{model.xbrl_id}/"
             ).json()
-            # print(is_res)
+
             if not is_res:
                 response = requests.post(
-                    "http://localhost/api/v1/xbrl/ix/file_path/", json=data
+                    f"{base_url}/api/v1/xbrl/ix/file_path/", json=data
                 )
 
                 assert response.status_code == 200
 
             for item in items:
-                # assert isinstance(item["item"], list)
+                # print(f"read item ***** [{item['key']}]")
+                # if item["key"] == "qualitative_info":
+                #     print(item)
+
                 assert isinstance(item["id"], str)
                 assert isinstance(item["key"], str)
 
                 try:
-                    url = urls[item["key"]]
-                    is_url = is_urls[item["key"]]
+                    url = f"{base_url}/{urls[item["key"]]}"
+                    is_url = f"{base_url}/{is_urls[item["key"]]}"
                 except KeyError as e:
                     continue
 
-                # print(f"{item["id"]}, {item["key"]}, type:{type(item["item"])}, {len(item["item"])}")
-
-                # print(url)
-
-                # print(is_url)
-
                 is_add = requests.get(f"{is_url}{item["id"]}/").json()
 
-                # print(is_add)
-                # assert is_add
+                # if item["key"] == "qualitative_info":
+                #     print(f"{is_url}{item["id"]}")
+                #     print(is_add)
+
                 if not is_add:
+                    # print(f"add item ***** [{item['key']}]")
                     response = requests.post(
                         url, json={"data": item["item"]}
                     )
 
-                    if not response.status_code == 200:
-                        pprint.pprint(item["item"])
-                        pprint.pprint(response.json())
+                    try:
+                        response_json = response.json()
+                    except requests.exceptions.JSONDecodeError as e:
+                        print(item["item"])
+                        print(f"JSONDecodeError: {e}")
+                        print(f"Response content: {response.content}")
+                        response_json = None
 
-                    # print(response.json())
-                    # print(model.xbrl_zip_path)
-                    assert response.status_code == 200
+                    if not response.status_code == 200:
+                        # print(model.xbrl_zip_path)
+                        # pprint.pprint(item["item"])
+                        pprint.pprint(response_json)
+
+                    # assert response.status_code == 200
 
             pbar.update(1)

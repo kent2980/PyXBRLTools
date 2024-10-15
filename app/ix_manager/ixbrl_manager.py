@@ -2,7 +2,9 @@ import re
 from typing import List, Optional
 
 from app.exception import XbrlListEmptyError
-from app.exception.xbrl_parser_exception import DocumentNameTagNotFoundError
+from app.exception.xbrl_parser_exception import (
+    DocumentNameTagNotFoundError,
+)
 from app.ix_manager import BaseXbrlManager
 from app.ix_parser import IxbrlParser
 from app.ix_tag import IxContext, IxHeader, IxNonFraction, IxNonNumeric
@@ -29,7 +31,7 @@ class IXBRLManager(BaseXbrlManager):
         super().__init__(directory_path, xbrl_id=xbrl_id)
         self._set_htmlbase_files("ixbrl")
 
-        if len(self.files) == 0:
+        if len(self.related_files) == 0:
             raise XbrlListEmptyError("ixbrlファイルが見つかりません。")
 
         # プロパティの初期化
@@ -62,9 +64,11 @@ class IXBRLManager(BaseXbrlManager):
     def __init_parser(self):
         """parserを初期化します。"""
         parsers: List[IxbrlParser] = []
-        for _, row in self.files.iterrows():
+        for _, row in self.related_files.iterrows():
             try:
-                parser = IxbrlParser(row["xlink_href"], xbrl_id=self.xbrl_id)
+                parser = IxbrlParser(
+                    row["xlink_href"], xbrl_id=self.xbrl_id
+                )
                 parsers.append(parser)
             except DocumentNameTagNotFoundError:
                 # 後でエラーログを出力する処理を追加するために注釈を追加
@@ -185,46 +189,75 @@ class IXBRLManager(BaseXbrlManager):
         xbrl_id = None
         report_type = None
 
-
         # ix_non_numericがNoneの場合は、ix_non_numericを設定する
         if self.ix_non_numeric is None:
             self.__set_ix_non_numeric()
 
         for items in self.ix_non_numeric:
             for item in items:
-                if re.search(r"CompanyName|AssetManagerREIT", item.name):   # 会社名
+                if re.search(
+                    r"CompanyName|AssetManagerREIT", item.name
+                ):  # 会社名
                     company_name = item.value
-                elif re.search(r"Securit.*Code$", item.name):   # 証券コード
+                elif re.search(r"Securit.*Code$", item.name):  # 証券コード
                     securities_code = item.value
                 elif re.search(r"DocumentName", item.name):  # 書類名
                     document_name = item.value
-                elif re.search(r"_FilingDate$|_ReportingDateOf.*Correction.*", item.name): # 提出日
+                elif re.search(
+                    r"_FilingDate$|_ReportingDateOf.*Correction.*",
+                    item.name,
+                ):  # 提出日
                     reporting_date = item.value
                 elif re.search(r"TypeOfCurrentPeriod", item.name):  # 期間
                     current_period = item.value
-                elif re.search(r"TokyoStockExchange$", item.name):  # 上場市場
-                    if item.format == 'booleantrue' or item.value == 'true':
-                        listed_market = '東京証券取引所'
-                elif re.search(r"TokyoStockExchange(?!$)", item.name):  # 上場区分
-                    if item.format == 'booleantrue' or item.value == 'true':
+                elif re.search(
+                    r"TokyoStockExchange$", item.name
+                ):  # 上場市場
+                    if (
+                        item.format == "booleantrue"
+                        or item.value == "true"
+                    ):
+                        listed_market = "東京証券取引所"
+                elif re.search(
+                    r"TokyoStockExchange(?!$)", item.name
+                ):  # 上場区分
+                    if (
+                        item.format == "booleantrue"
+                        or item.value == "true"
+                    ):
                         market_section = item.name
                 elif re.search(r".*URL.*", item.name):  # URL
                     url = item.value
-                elif re.search(r".*BalanceSheet.*TextBlock$", item.name):  # 貸借対照表の存在フラグ
+                elif re.search(
+                    r".*BalanceSheet.*TextBlock$", item.name
+                ):  # 貸借対照表の存在フラグ
                     is_bs = True
-                elif re.search(r"(.*StatementOfIncome|.*StatementOfProfitOrLoss).*TextBlock$", item.name):  # 損益計算書の存在フラグ
+                elif re.search(
+                    r"(.*StatementOfIncome|.*StatementOfProfitOrLoss).*TextBlock$",
+                    item.name,
+                ):  # 損益計算書の存在フラグ
                     is_pl = True
-                elif re.search(r".*StatementOfCashFlows.*TextBlock$", item.name):  # キャッシュフロー計算書の存在フラグ
+                elif re.search(
+                    r".*StatementOfCashFlows.*TextBlock$", item.name
+                ):  # キャッシュフロー計算書の存在フラグ
                     is_cf = True
-                elif re.search(r".*StatementOfComprehensiveIncome.*TextBlock$", item.name):  # 包括利益計算書の存在フラグ
+                elif re.search(
+                    r".*StatementOfComprehensiveIncome.*TextBlock$",
+                    item.name,
+                ):  # 包括利益計算書の存在フラグ
                     is_ci = True
-                elif re.search(r".*StatementOfChangesInEquity.*TextBlock$", item.name):  # 株主資本変動計算書の存在フラグ
+                elif re.search(
+                    r".*StatementOfChangesInEquity.*TextBlock$", item.name
+                ):  # 株主資本変動計算書の存在フラグ
                     is_sce = True
-                elif re.search(r".*StatementOfFinancialPositionI.*TextBlock$", item.name):  # 財政状態計算書の存在フラグ
+                elif re.search(
+                    r".*StatementOfFinancialPositionI.*TextBlock$",
+                    item.name,
+                ):  # 財政状態計算書の存在フラグ
                     is_sfp = True
                 elif re.search(r".*FiscalYearEnd$", item.name):  # 決算期
                     fiscal_year_end = item.value
-                elif re.search(r".*Tel$", item.name):   # 電話番号
+                elif re.search(r".*Tel$", item.name):  # 電話番号
                     tel = item.value
                 xbrl_id = item.xbrl_id  # XBRL ID
                 report_type = item.report_type  # 提出種別
