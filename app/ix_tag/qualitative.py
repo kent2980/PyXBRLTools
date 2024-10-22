@@ -18,9 +18,6 @@ class QualitativeDocument(BaseTag):
         default=None, max_length=36, description="親ID"
     )
     type: Optional[str] = Field(default=None, description="タイプ")
-    content: Optional[str] = Field(
-        default=None, description="タイトル,本文"
-    )
     order: Optional[int] = Field(default=None, description="順番")
     xbrl_id: Optional[str] = Field(
         default=None, max_length=36, description="XBRLの固有ID"
@@ -28,3 +25,7 @@ class QualitativeDocument(BaseTag):
     source_file_id: Optional[str] = Field(
         default=None, max_length=36, description="XBRLのソースファイルID"
     )
+    content: Optional[str] = Field(
+        default=None, description="タイトル,本文"
+    )
+    photo_url: Optional[str] = Field(default=None, description="画像URL")
